@@ -21,7 +21,7 @@
 | 📋 **Plan** | Pick drawer or sustainer, size, options → only the files to print, one section per option. |
 | 🧊 **See it** | Live 3D preview of your exact unit. ↻ flips to the back. |
 | 🎨 **Color it** | 8 Matte + 13 Basic colors on a 3D tower. Save templates. |
-| ✅ **Print it** | Tick parts off, copy the list, gather files into one folder. |
+| ✅ **Print it** | Tick parts off, gather files into one folder. |
 | 🔍 **Browse** | Search 700+ files, orbit any STL, read manuals. English / 中文, phone-friendly. |
 
 ## 🔎 Details
@@ -35,7 +35,7 @@
 - **One version, never both:** pick a base *whole* or *split*, and backbone / handle-lock parts *sized to the width* or *universal*. The handle lock and knob come with the pull-out handle. On 4F a note says handles need a 1F / 2F backbone elsewhere in the tower.
 - **The list mirrors the options:** one section per option, same name and order, showing only the parts you selected. Nothing unneeded is listed.
 - **Every STL is reachable from the options** (checked for all 110 type / width / length / height combinations): all 723 appear for at least one choice, and only for sizes they fit.
-- A row's switch leaves that part out; it is greyed and skipped by totals, *Copy list* and *Gather*.
+- A row's switch leaves that part out; it is greyed and skipped by totals and *Gather*.
 - The preview shows the outside only (key, label, lid, latches, hinges, roofs) and follows your colors.
 
 ![Six sizes](docs/builder-preview.png)

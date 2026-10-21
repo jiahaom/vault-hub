@@ -204,7 +204,12 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 }
 .summary h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; line-height: 1.15; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .summary h1 em { font-style: normal; color: var(--accent); }
-.summary h1 small { font-size: 15px; font-weight: 500; color: var(--muted); }
+.summary h1 .hero-ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; letter-spacing: 0; }
+.summary h1 .hero-ctl i { font-style: normal; color: var(--faint); }
+.hero-ctl .seg, .hero-ctl .stepper { height: 38px; box-sizing: border-box; }
+.hero-ctl .seg { width: auto; }
+.hero-ctl .seg button { flex: none; padding: 0 14px; justify-content: center; }
+.hero-ctl .stepper button { height: 100%; }
 .summary .facts { color: var(--muted); font-size: 13px; margin-top: 4px; }
 .summary .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
@@ -226,19 +231,14 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
   .specs[data-n] { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
   .specs[data-n] .spec:nth-child(n) { grid-column: auto; }
 }
-/* Hero picker. Row 1: Type · Quantity. Row 2: Width · Length · Height (W × L × H, like the Outer spec below).
-   Narrow: Type · Quantity, then one row each for Width, Length and Height. */
+/* Hero picker: Width · Length · Height (W × L × H, like the Outer spec below); narrow: one row each. Type and Quantity sit in the title row. */
 .summary { container: hero / inline-size; }
 .unit-pick { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px 16px; }
 .pick { min-width: 0; grid-column: span 6; }
 .pick > .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
 .pick > .lbl small { font-size: 11px; font-weight: 450; letter-spacing: 0; text-transform: none; }
-.pick.p-type { grid-column: span 4; }
-.pick.p-n { grid-column: span 2; }
 @container hero (min-width: 540px) {
   .unit-pick { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .pick.p-type { grid-column: span 9; }
-  .pick.p-n { grid-column: span 3; }
   .pick.p-w { grid-column: span 4; }
   .pick.p-d { grid-column: span 5; }
   .pick.p-h { grid-column: span 3; }
@@ -639,7 +639,7 @@ const I18N = {
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
     liveTip: 'Served locally — 3D preview works. Start from the launcher to also get Show in folder.',
     staticTip: 'Opened by double-clicking index.html, so the browser can’t read STL files or open folders. Use “Open VAULT Hub (Mac).command” or “Open VAULT Hub (Windows).bat” in this folder instead.',
-    type: 'Type', drawer: 'Drawer', sustainer: 'Sustainer', drawerSub: 'pull-out', sustainerSub: 'hinged lid', mmNote: 'outer · mm', width: 'Width', depth: 'Length', 
+    type: 'Type', drawer: 'Drawer', sustainer: 'Sustainer', mmNote: 'outer · mm', width: 'Width', depth: 'Length', 
     height: 'Height', count: 'Quantity', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
@@ -651,11 +651,11 @@ const I18N = {
     specOuter: 'Outer', specInside: 'Inside', specWLH: 'W × L × H', specGrid: 'Gridfinity', specGridSub: '42 mm units',
     specPrint: h => `${h} module`, specRoof: 'Roof + extras', specPerUnit: 'per unit · published', specOnce: 'once per stack · published', specX3: 'published for the x3 size',
     printed: 'printed', files: n => `${n} files`,
-    gather: 'Gather into folder', gathered: f => `Copied to ${f}`, copyList: 'Copy list', copied: 'List copied', clear: 'Clear checks',
+    gather: 'Gather into folder', gathered: f => `Copied to ${f}`, clear: 'Clear checks',
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the length', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
+    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the length', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -679,7 +679,7 @@ const I18N = {
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
     liveTip: '已通过本地服务打开，可 3D 预览。用启动器打开还可以“在文件夹中显示”。',
     staticTip: '当前是双击 index.html 打开的，浏览器无法读取 STL 或打开文件夹。请改用本文件夹中的“Open VAULT Hub (Mac).command”或“Open VAULT Hub (Windows).bat”。',
-    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', drawerSub: '抽拉式', sustainerSub: '翻盖式', mmNote: '外形 · mm', width: '宽度', depth: '长度', 
+    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', mmNote: '外形 · mm', width: '宽度', depth: '长度', 
     height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
@@ -691,11 +691,11 @@ const I18N = {
     specOuter: '外形', specInside: '内部', specWLH: '宽 × 长 × 高', specGrid: 'Gridfinity', specGridSub: '每格 42 mm',
     specPrint: h => `${h} 盒体打印`, specRoof: '顶盖 + 配件', specPerUnit: '每个 · 官方数据', specOnce: '每组堆叠一次 · 官方数据', specX3: '官方数据为 x3 尺寸',
     printed: '已打印', files: n => `${n} 个文件`,
-    gather: '汇总到文件夹', gathered: f => `已复制到 ${f}`, copyList: '复制清单', copied: '清单已复制', clear: '清除勾选',
+    gather: '汇总到文件夹', gathered: f => `已复制到 ${f}`, clear: '清除勾选',
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是长度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
+    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是长度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -716,7 +716,6 @@ const ICON = {
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
   cube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5v10l-9 5-9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>',
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>',
-  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>',
   folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v5m0 0-2-2m2 2 2-2" opacity="0"/></svg>',
   gather: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6m-3-3h6"/></svg>',
   bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l2 4H5z"/><path d="M10 7v13m4-13v13M10 11h4m-4 4h4"/></svg>',
@@ -1158,8 +1157,6 @@ function unitPicker() {
   const { w, d } = state;
   const pick = (cls, label, body, note = '') => `<div class="pick ${cls}"><div class="lbl">${esc(label)}${note ? `<small>${esc(note)}</small>` : ''}</div>${body}</div>`;
   return `<div class="unit-pick">
-    ${pick('p-type', t('type'), seg('type', [{ val: 'drawer', label: t('drawer'), small: t('drawerSub') }, { val: 'sustainer', label: t('sustainer'), small: t('sustainerSub') }]))}
-    ${pick('p-n', t('count'), stepperCtl('count'))}
     ${pick('p-w', t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: mm(SPEC.width[v]) }))), t('mmNote'))}
     ${pick('p-d', t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: `x${v}`, small: SPEC.length(v), disabled: !HEIGHTS.some(h => available(w, v, h)) }))))}
     ${pick('p-h', t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: SPEC.height[state.type][v], disabled: !available(w, d, v) }))))}
@@ -1189,16 +1186,13 @@ function renderResults() {
   const files = activeItems(sections).filter(i => i.f);
   const unique = [...new Map(files.map(i => [i.f.p, i.f])).values()];
   const done = unique.filter(f => printed.has(f.p)).length;
-  const bytes = unique.reduce((a, f) => a + f.s, 0);
-  const label = state.type === 'drawer' ? t('drawer') : t('sustainer');
   $('#results').innerHTML = `
     <div class="summary">
       <div>
-        <h1><span>${esc(state.w + state.d)} <em>·</em> ${esc(state.h)}</span><small>${esc(label)} × ${state.count}</small></h1>
-        <div class="facts">${esc(t('files', unique.length))} · ${fmtSize(bytes)}${['matte', 'basic', 'tpu'].map(m => { const n = unique.filter(f => material(f) === m).length; return n ? `<span class="badge mat ${m}">${esc(t(m))} × ${n}</span>` : ''; }).join('')}</div>
+        <h1><span class="hero-ctl" role="group" aria-label="${esc(t('type') + ' / ' + t('count'))}">${seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }])}<i>×</i>${stepperCtl('count')}</span></h1>
+        <div class="facts">${['matte', 'basic', 'tpu'].map(m => { const n = unique.filter(f => material(f) === m).length; return n ? `<span class="badge mat ${m}">${esc(t(m))} × ${n}</span>` : ''; }).join('')}</div>
       </div>
       <div class="acts">
-        <button class="btn" data-act="copy">${ICON.copy}<span>${esc(t('copyList'))}</span></button>
         <button class="btn primary" data-act="gather" title="_Print Jobs/…">${ICON.gather}<span>${esc(t('gather'))}</span></button>
       </div>
       ${unitPicker()}
@@ -1371,20 +1365,6 @@ document.addEventListener('click', async e => {
     const f = BY_PATH.get(row.dataset.path);
     if (f.name.toLowerCase().endsWith('.pdf')) { manual = f.p; store.set('manual', f.p); showTab('manuals'); return; }
     openPreview(paths.map(p => BY_PATH.get(p)).filter(x => isModel(x) || isImage(x)), f);
-  } else if (act === 'copy') {
-    const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
-    const lines = [`${state.w}${state.d} ${state.h} ${state.type === 'drawer' ? t('drawer') : t('sustainer')} × ${state.count}`];
-    for (const s of sections) {
-      const mine = s.items.filter(isOn);
-      if (!mine.length) continue;
-      lines.push('', `## ${s.title}`);
-      for (const i of mine) {
-        const q = i.qty == null ? t('asNeeded') : '×' + (i.once || i.raw || s.raw ? i.qty : i.qty * state.count);
-        lines.push(`[${i.f && printed.has(i.f.p) ? 'x' : ' '}] ${q}  ${i.f ? i.f.p : i.hw || i.missing}${i.f && material(i.f) ? `  (${t(material(i.f))})` : ''}`);
-      }
-    }
-    await copyText(lines.join('\n'));
-    toast(t('copied'));
   } else if (act === 'reveal') {
     reveal(el.closest('[data-path]').dataset.path);
   } else if (act === 'gather') {
