@@ -243,7 +243,6 @@ button.meta:hover .nm { color: var(--accent); }
 .badge.pcs { background: var(--accent-soft); color: var(--accent); }
 .badge.muted { border-color: var(--line); color: var(--faint); }
 .badge.mat { display: inline-flex; align-items: center; gap: 5px; }
-.sw.sm { width: 9px; height: 9px; border-color: rgba(128, 128, 128, .65); }
 .badge.mat.matte { background: var(--text); color: var(--bg); }
 .badge.mat.basic { border-color: var(--line-strong); color: var(--muted); }
 .badge.mat.tpu { border: 1px dashed var(--line-strong); color: var(--muted); }
@@ -913,7 +912,9 @@ function colorRole(f) {
 const matBadge = (m, cls = '', f = null) => {
   if (!m) return '';
   const role = f ? colorRole(f) : '', c = role ? colorOf(role) : null;
-  return `<span class="badge mat ${m}${cls}" title="${esc(t(m + 'Tip') + (c ? ' · ' + colorName(c) : ''))}">${c ? `<i class="sw sm" style="background:${c.hex}"></i>` : ''}${esc(t(m))}</span>`;
+  // The whole tag takes the picked color (with light or dark text for contrast); parts without a color role keep the plain tag.
+  const paint = c ? ` style="background:${c.hex};color:${isDarkHex(c.hex) ? '#fff' : '#18191b'};border-color:rgba(128,128,128,.5)"` : '';
+  return `<span class="badge mat ${m}${cls}"${paint} title="${esc(t(m + 'Tip') + (c ? ' · ' + colorName(c) : ''))}">${esc(t(m))}</span>`;
 };
 
 function badges(f, item = {}) {
