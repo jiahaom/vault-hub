@@ -680,7 +680,7 @@ const I18N = {
     height: 'Height', count: 'Quantity', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
-    divKind: 'Divider type', div_depth: 'Depth', div_width: 'Width', div_seal: 'Seal', whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
+    divKind: 'Divider type', div_depth: 'Depth', div_width: 'Width', div_seal: 'Seal', flatNoSlots: 'The Flat module has no divider slots. Pick the Dividers or Sealed style to use dividers.', whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
     secUnit: 'Unit', secMech: 'Slides & latch', secTopNote: 'print once per stack',
     secHinge: 'Hinges & rods', secLockNote: n => `× ${n} per unit`, secHw: 'Hardware',
     perUnit: 'per unit', bolts: 'M4 bolts, 14–20 mm', boltsNote: n => `${n} per drawer · fix the facade`, boltsSus: 'fix the facade',
@@ -720,7 +720,7 @@ const I18N = {
     height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
-    divKind: '隔板类型', div_depth: '深度', div_width: '宽度', div_seal: '密封', whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
+    divKind: '隔板类型', div_depth: '深度', div_width: '宽度', div_seal: '密封', flatNoSlots: '平面款盒体没有隔板卡槽。要用隔板,请选「Dividers」或「Sealed」款。', whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
     secUnit: '主体', secMech: '滑轨与卡扣', secTopNote: '每组堆叠只打印一次',
     secHinge: '铰链与销杆', secLockNote: n => `每个盒子 × ${n}`, secHw: '五金件',
     perUnit: '每个', bolts: 'M4 螺丝，14–20 mm', boltsNote: n => `每层抽屉 ${n} 颗 · 固定面板`, boltsSus: '固定面板',
@@ -999,15 +999,21 @@ function extraSections() {
 }
 
 // Sustainer dividers come from the sustainer folder, by kind: S and M have one; L and XL have Depth, Width and Seal.
+// Which kinds fit depends on the module style (measured on the STLs): the Dividers module has wall slots for the Depth and Width plates,
+// the Sealed module has a center wall and takes the compartment-sized Seal plates, the Flat module has no slots at all.
+const DIVIDER_STYLE = { Dividers: ['depth', 'width'], Sealed: ['seal'], Flat: [] };
 function sustainerDividerKinds() {
   const { w, d, h } = state, dv = `${S_UNI}Dividers/`;
+  const styles = sustainerVariants(), style = (styles.find(v => v.id === state.variant) || styles[0])?.id;
   if (w === 'S' || w === 'M') return [{ id: 'all', label: t('dividers'), files: find(`${dv}${w} Dividers/${w}${h} Divider\\.stl$`) }].filter(k => k.files.length);
   const kind = (id, re) => ({ id, label: t('div_' + id), files: find(re) });
+  const fit = k => !(style in DIVIDER_STYLE) || DIVIDER_STYLE[style].includes(k.id);
   return (w === 'L'
     ? [kind('depth', `${dv}L Depth Dividers/L${d}-${h} Depth Divider\\.stl$`), kind('width', `${dv}L Width Dividers/L-${h} Width Divider\\.stl$`), kind('seal', `${dv}L Seal Dividers/L-${h} Seal Divider\\.stl$`)]
     : [kind('depth', `${dv}XL Depth Dividers/XL${d} Depth Divider\\.stl$`), kind('width', `${dv}XL Width Divider\\.stl$`), kind('seal', `${dv}XL Seal Divider \\(\\w+\\)\\.stl$`)]
-  ).filter(k => k.files.length);
+  ).filter(k => k.files.length && fit(k));
 }
+const flatNoSlots = () => { const v = sustainerVariants(); const st = (v.find(x => x.id === state.variant) || v[0])?.id; return st === 'Flat'; };
 const sustainerDividers = () => sustainerDividerKinds().flatMap(k => k.files);
 const sustainerBaseplates = () => find(`${S_UNI}Baseplates/[^/]+/${state.w}${state.d}( Part \\d)? +(Gridfinity )?Baseplate\\.stl$`);
 
@@ -1041,7 +1047,7 @@ function sustainerSections() {
     sec(t('lid'), lid ? lid.files.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
     sec(t('secHinge'), hinge),
     sec(t('locks'), lock, { sub: t('secLockNote', n), raw: true }),
-    sec(t('dividers'), state.dividers ? sustainerDividerKinds().filter(k => k.id === 'all' || state.divKinds?.[k.id]).flatMap(k => k.files).map(f => part(f, null)) : []),
+    sec(t('dividers'), state.dividers ? sustainerDividerKinds().filter((k, _, all) => all.length === 1 || state.divKinds?.[k.id]).flatMap(k => k.files).map(f => part(f, null)) : []),
     sec(t('baseplate'), state.sbase ? sustainerBaseplates().map(f => part(f)) : []),
     ...extraSections(),
     sec(t('secHw'), [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }]),
@@ -1190,6 +1196,7 @@ function renderConfig() {
     html += stepper('locks', t('locks'), 0, 4);
     const dk = sustainerDividerKinds(), sbases = sustainerBaseplates();
     if (dk.length) html += toggle('dividers', t('dividers'));
+    else if (flatNoSlots()) html += field(t('dividers'), `<p class="note" style="padding:0">${esc(t('flatNoSlots'))}</p>`);
     if (dk.length > 1 && state.dividers) html += field(t('divKind'), `<div class="chips">${dk.map(k => `<button type="button" class="chip" data-dk="${k.id}" aria-pressed="${!!state.divKinds?.[k.id]}">${esc(k.label)}</button>`).join('')}</div>`);
     if (sbases.length) html += field(t('baseplate'), opts('sbase', [{ val: false, label: t('none') }, { val: true, label: sbases.length > 1 ? t('twoParts') : t('include'), file: sbases[0] }]));
   }
