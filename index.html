@@ -134,6 +134,9 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 .bcol { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - 108px); overflow: auto; }
 .bcol .config { position: static; max-height: none; overflow: visible; }
 .bp { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; flex: none; }
+.bp { position: relative; }
+.bp-flip { position: absolute; top: 8px; right: 8px; z-index: 2; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: rgba(255, 255, 255, .85); color: #18191b; font-size: 16px; line-height: 1; }
+.bp-flip:hover { background: #fff; }
 .bp-stage { position: relative; height: 250px; background: radial-gradient(ellipse at 50% 25%, #eceded, #bfc2c7); }
 .bp-stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
 .builder { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
@@ -471,7 +474,7 @@ button.thumb:hover { border-color: var(--line-strong); }
   <section class="view" id="view-build">
     <div class="builder">
       <div class="bcol">
-        <div class="bp" id="bp"><div class="bp-stage" id="bp-stage"></div></div>
+        <div class="bp" id="bp"><div class="bp-stage" id="bp-stage"></div><button class="bp-flip" id="bp-flip" type="button" data-t-title="bpFlip">↻</button></div>
         <aside class="config" id="config"></aside>
       </div>
       <div class="results" id="results"></div>
@@ -583,7 +586,7 @@ const I18N = {
     colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: 'Save', colTplExists: 'That color combination is already saved', colTplSavedPlain: 'Template saved', colTplLoaded: n => `Loaded ${n}`, colTplDel: 'Delete template', colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
     colDownload: 'Export', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file',
     colNote: 'On-screen colors are approximate. Check against a physical swatch before printing.',
-    role_body: 'Body', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
+    role_body: 'Body', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_rod: 'Hinge rod', role_lock: 'Lock latch', bpFlip: 'Show the back / front',
     c_white: 'White', c_black: 'Black', c_lime: 'Lime', c_grey: 'Grey', c_pink: 'Pink', c_lightblue: 'Light blue', c_violet: 'Violet', c_avocado: 'Avocado', c_orange: 'Orange', c_red: 'Red', c_yellow: 'Yellow', c_green: 'Green', c_blue: 'Blue', c_darkblue: 'Dark Blue', c_beige: 'Beige', c_brown: 'Brown', c_bluegrey: 'Blue Grey', c_darkgreen: 'Dark Green',
     live: '3D preview on', static: 'Static mode',
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
@@ -623,7 +626,7 @@ const I18N = {
     colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '保存', colTplExists: '这个配色组合已经保存过了', colTplSavedPlain: '模板已保存', colTplLoaded: n => `已载入 ${n}`, colTplDel: '删除模板', colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
     colDownload: '导出', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色',
     colNote: '屏幕上的颜色仅供参考,打印前请对照实物色卡确认。',
-    role_body: '主体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
+    role_body: '主体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_rod: '铰链轴', role_lock: '锁扣', bpFlip: '切换正面 / 背面',
     c_white: '白色', c_black: '黑色', c_lime: '黄绿色', c_grey: '灰色', c_pink: '粉色', c_lightblue: '浅蓝色', c_violet: '紫罗兰', c_avocado: '牛油果绿', c_orange: '橙色', c_red: '红色', c_yellow: '黄色', c_green: '绿色', c_blue: '蓝色', c_darkblue: '深蓝色', c_beige: '米色', c_brown: '棕色', c_bluegrey: '蓝灰色', c_darkgreen: '深绿色',
     live: '3D 预览可用', static: '静态模式',
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
@@ -909,6 +912,8 @@ function colorRole(f) {
   const m = material(f), n = f.name;
   if (m === 'matte') return /Facade/i.test(n) || /\/Facades?\//.test(f.p) ? 'facade' : /Roof/i.test(n) ? 'roof' : 'body';
   if (m !== 'basic') return '';
+  if (/Hinge/i.test(n) || /\/Hinges\//.test(f.p)) return 'hinge';
+  if (/Rods/i.test(n) || /\/Rods\//.test(f.p)) return 'rod';
   if (/Key Cap/i.test(n)) return 'keycap';
   if (/Key/i.test(n)) return 'key';
   if (/Handle/i.test(n)) return 'handle';
@@ -1475,8 +1480,8 @@ const PALETTE = {
   ],
 };
 // What gets a color: the finish of each role follows the Matte / Basic tags above.
-const ROLE_FINISH = { body: 'matte', facade: 'matte', roof: 'matte', handle: 'basic', key: 'basic', keycap: 'basic', lock: 'basic', label: 'basic', stopper: 'basic' };
-const ROLE_DEFAULT = { body: 'white', facade: 'white', roof: 'white', handle: 'black', key: 'black', keycap: 'white', lock: 'black', label: 'white', stopper: 'orange' };
+const ROLE_FINISH = { body: 'matte', facade: 'matte', roof: 'matte', handle: 'basic', key: 'basic', keycap: 'basic', lock: 'basic', hinge: 'basic', rod: 'basic', label: 'basic', stopper: 'basic' };
+const ROLE_DEFAULT = { body: 'white', facade: 'white', roof: 'white', handle: 'black', key: 'black', keycap: 'white', lock: 'black', hinge: 'black', rod: 'orange', label: 'white', stopper: 'orange' };
 const ROLES = Object.keys(ROLE_FINISH);
 const isDarkHex = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) < 120; };
 const colorUI = (() => {
@@ -1556,23 +1561,32 @@ async function createStudio(stage, fov, isActive) {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.LinearToneMapping;   // a little under-exposed, so white plastic keeps its shading
+  renderer.toneMappingExposure = 0.82;
   stage.prepend(renderer.domElement);
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
   const camera = new THREE.PerspectiveCamera(fov, 1, 1, 20000);
   scene.add(camera);
-  const sun = new THREE.DirectionalLight(0xffffff, 1.25);
+  const sun = new THREE.DirectionalLight(0xffffff, 1.05);
   sun.position.set(40, 1200, 560);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -700, right: 700, top: 700, bottom: -300, near: 100, far: 2200 });
   sun.shadow.bias = -0.0006;
-  sun.shadow.radius = 3;
+  sun.shadow.radius = 6;
   scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xffffff, 0.75);   // soft light from the left so side walls don't go dark
+  const fill = new THREE.DirectionalLight(0xffffff, 0.55);   // soft light from the left so side walls don't go dark
   fill.position.set(-700, 260, 380);
   scene.add(fill);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000), new THREE.ShadowMaterial({ opacity: 0.14 }));
+  const fill2 = new THREE.DirectionalLight(0xffffff, 0.22);
+  fill2.position.set(700, 200, 420);
+  scene.add(fill2);
+  const back = new THREE.DirectionalLight(0xffffff, 0.7);   // so the back (hinges) is lit when you swing round to it
+  back.position.set(-300, 400, -800);
+  scene.add(back);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xcfcfd4, 0.4));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000), new THREE.ShadowMaterial({ opacity: 0.1 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.5;
   floor.receiveShadow = true;
@@ -1599,8 +1613,8 @@ async function createStudio(stage, fov, isActive) {
 const colorEngine = () => (col.enginePromise ??= createStudio($('#col-stage'), 12, () => tab === 'colors').then(e => { col.engine = e; attachColorPicking(e); return e; }));
 
 const colorMaterial = (THREE, finish, hex) => finish === 'basic'
-  ? new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.38, clearcoat: 0.3, clearcoatRoughness: 0.35, envMapIntensity: 0.8 })
-  : new THREE.MeshStandardMaterial({ color: hex, roughness: 0.95, metalness: 0, envMapIntensity: 0.85 });
+  ? new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.5, clearcoat: 0.15, clearcoatRoughness: 0.5, envMapIntensity: 0.9 })
+  : new THREE.MeshStandardMaterial({ color: hex, roughness: 0.9, metalness: 0, envMapIntensity: 0.8 });
 
 /* --- Simplified drawers and sustainers built from plain shapes (no STL files needed). --- */
 // The Colors tab shows a tower that follows the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
@@ -1643,7 +1657,7 @@ function shapeKit(e) {
   const fixed = (hex, rough = 0.7) => new THREE.MeshStandardMaterial({ color: hex, roughness: rough, envMapIntensity: 0.5 });
   const bolt = fixed('#1b1b1d', 0.5), slot = fixed('#e8e8e8', 0.6);
   const inkMat = (opacity) => new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity, depthWrite: false });
-  const ink = inkMat(0.3), soft = inkMat(0.13);
+  const ink = inkMat(0.16), soft = inkMat(0.09);
   const rb = (w, h, d, r = 3) => new RBG(w, h, d, 4, Math.min(r, w / 2 - 0.05, h / 2 - 0.05, d / 2 - 0.05));
   const add = (geo, material, x, y, z, role) => {
     const m = new THREE.Mesh(geo, material);
@@ -1655,7 +1669,7 @@ function shapeKit(e) {
   };
   // Flat marks printed on the front (seams, screw dimples, recesses): a see-through dark layer, so they work on every color.
   const decal = (geo, x, y, z, material = ink) => { const m = new THREE.Mesh(geo, material); m.position.set(x, y, z); g.add(m); return m; };
-  const ring = (r, x, y, z = 7.7) => decal(new THREE.RingGeometry(r * 0.82, r, 32), x, y, z);
+  const ring = (r, x, y, z = 7.7) => decal(new THREE.RingGeometry(r * 0.9, r, 40), x, y, z);
   const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(THREE, isDarkHex(colorOf('label').hex)), transparent: true, depthWrite: false });
   // The label is a small plate (about 40 x 14 mm) near the left edge of the facade.
   const label = (cx, w, y, h, ly, inset = 30) => {
@@ -1680,8 +1694,8 @@ const roundedRect = (THREE, w, h, r) => {
 // screw dimples, and the label at the left.
 function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
   const { THREE, add, mat, rb, label, decal, ring, bolt } = k;
-  add(rb(w - 1.5, h - 1.5, depth, 7), mat('body'), cx, y + h / 2, -depth / 2, 'body');
-  add(rb(w - 3, h - 3.5, 8, 6), mat('facade'), cx, y + h / 2, 3.5, 'facade');
+  add(rb(w - 1.5, h - 1.5, depth, 12), mat('body'), cx, y + h / 2, -depth / 2, 'body');
+  add(rb(w - 3, h - 3.5, 8, 10), mat('facade'), cx, y + h / 2, 3.5, 'facade');
   const tall = h > 70, ky = y + (h > 150 ? 0.16 * h : tall ? 0.27 * h : 0.5 * h), kx = cx;
   if (tall) {
     decal(new THREE.PlaneGeometry(0.9, h - 12), cx, y + h / 2, 7.7);          // facade seam
@@ -1692,9 +1706,9 @@ function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
   if (lock === 'hidden') {   // hidden key: just a small round cover on the facade
     add(new THREE.CylinderGeometry(6, 6, 3, 28), mat('key'), kx, ky, 9, 'key').rotation.x = Math.PI / 2;
   } else {
-    add(new THREE.CylinderGeometry(18, 18, 8, 48), mat('key'), kx, ky, 11.5, 'key').rotation.x = Math.PI / 2;
-    add(rb(41, 12, 8, 4.5), mat('keycap'), kx, ky, 19.5, 'keycap');           // the lever lies across the knob
-    const dot = add(new THREE.CylinderGeometry(2.2, 2.2, 1, 20), bolt, kx + 14, ky, 23.7); dot.rotation.x = Math.PI / 2;
+    add(new THREE.CylinderGeometry(18, 18, 10, 48), mat('key'), kx, ky, 12.5, 'key').rotation.x = Math.PI / 2;
+    add(rb(41, 13, 14, 5), mat('keycap'), kx, ky, 24, 'keycap');           // the lever lies across the knob
+    const dot = add(new THREE.CylinderGeometry(2.2, 2.2, 1, 20), bolt, kx + 14, ky, 31.1); dot.rotation.x = Math.PI / 2;
   }
   label(cx, w, y, h, ky - (y + h / 2));
 }
@@ -1703,15 +1717,23 @@ function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
 function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
   const { THREE, add, mat, rb, label, bolt, slot, decal, soft } = k;
   const { LID } = STACK;
-  add(rb(w - 1.5, h - LID - 1, depth, 7), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
+  add(rb(w - 1.5, h - LID - 1, depth, 12), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
   add(rb(w, LID, depth + 2, 8), mat('roof'), cx, y + h - LID / 2, -depth / 2 + 1, 'roof');
-  add(rb(w - 3, h - LID - 3.5, 8, 6), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
+  add(rb(w - 3, h - LID - 3.5, 8, 10), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
   const n = Math.max(0, Math.min(locks, Math.floor(w / 70))), lh = h < 80 ? h - 8 : h > 150 ? 88 : 62;
   for (let i = 0; i < n; i++) {
     const lx = cx + ((i + 0.5) / n - 0.5) * w, ly = y + h - lh / 2 - 2;
     decal(new THREE.PlaneGeometry(58, 20), lx, ly - lh / 2 - 7, 7.7, soft);   // the recess under the latch
     add(rb(54, lh, 10, 5), mat('lock'), lx, ly, 9, 'lock');
     add(rb(26, 5, 3, 2), slot, lx, ly, 14.5);
+  }
+  // Hinges at the back, across the lid seam, with the rod ends showing at both sides.
+  for (const hx of [-0.3, 0.3]) {
+    const x = cx + hx * w;
+    add(rb(38, 40, 3, 1.5), mat('hinge'), x, y + h - LID - 2, -depth - 1.5, 'hinge');
+    add(rb(36, 8, 8, 2), mat('hinge'), x, y + h - LID, -depth - 6.5, 'hinge');
+    add(new THREE.CylinderGeometry(7, 7, 38, 28), mat('hinge'), x, y + h - LID, -depth - 10, 'hinge').rotation.z = Math.PI / 2;
+    for (const sx of [-1, 1]) add(new THREE.CylinderGeometry(3.4, 3.4, 5, 20), mat('rod'), x + sx * 21, y + h - LID, -depth - 10, 'rod').rotation.z = Math.PI / 2;
   }
   const rows = h > 150 ? [10, (h - LID) / 2, h - LID - 8] : [10, h - LID - 8];
   for (const sx of [-1, 1]) for (const yy of rows) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 9), y + yy, 8).rotation.x = Math.PI / 2;
@@ -1723,7 +1745,7 @@ function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
 function addStoppers(k, { y, h, kind }, depth, wallX) {
   const { THREE } = k;
   const fractions = h < 80 ? [0.5] : h > 150 ? [0.87, 0.62, 0.38, 0.13] : kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3];
-  const geo = new THREE.ExtrudeGeometry(roundedRect(THREE, 18, 8, 4), { depth: 0.9, bevelEnabled: false, curveSegments: 12 });
+  const geo = new THREE.ExtrudeGeometry(roundedRect(THREE, 22, 9, 4.5), { depth: 0.9, bevelEnabled: false, curveSegments: 12 });
   geo.translate(0, 0, -0.45);
   geo.rotateY(Math.PI / 2);
   for (const f of fractions) k.add(geo, k.mat('stopper'), wallX, y + h * f, -0.28 * depth, 'stopper');
@@ -1736,8 +1758,8 @@ function addRoof(k, style, w, depth, y) {
   add(rb(rw, 8, depth + 4, 4), mat('roof'), 0, y + 4, -depth / 2, 'roof');
   if (style === 'grid') {
     const nx = Math.max(2, Math.round(rw / 42)), nz = Math.max(2, Math.round(depth / 42));
-    for (let i = 0; i <= nx; i++) add(new THREE.BoxGeometry(2.6, 5, depth + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / nx), y + 9, -depth / 2, 'roof');
-    for (let i = 0; i <= nz; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, y + 9, -depth + 4 + i * ((depth - 8) / nz), 'roof');
+    for (let i = 0; i <= nx; i++) add(new THREE.BoxGeometry(4, 6, depth + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / nx), y + 10, -depth / 2, 'roof');
+    for (let i = 0; i <= nz; i++) add(new THREE.BoxGeometry(rw - 2, 6, 4), mat('roof'), 0, y + 10, -depth + 4 + i * ((depth - 8) / nz), 'roof');
   } else if (style === 'bowl') {   // a shallow tray: raised rim all round
     add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, -depth - 0.5, 'roof');
     add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, 1.5, 'roof');
@@ -1747,14 +1769,15 @@ function addRoof(k, style, w, depth, y) {
   }
 }
 
-// The top handle: about 126 mm wide, with a flange that sits on the roof.
-function addHandle(k, base, depth) {
+// The top handle: up to 126 mm wide, with a flange that sits on the roof.
+function addHandle(k, base, depth, w = 330) {
   const { THREE, add, mat } = k;
-  const shape = roundedRect(THREE, 126, 44, 12);
-  shape.holes.push(new THREE.Path(roundedRect(THREE, 88, 17, 8).getPoints(24)));
-  const hg = new THREE.ExtrudeGeometry(shape, { depth: 30, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 16 });
-  hg.translate(0, 0, -15);
-  add(hg, mat('handle'), 0, base + 24, -depth * 0.45, 'handle');
+  const hw = Math.min(126, 0.6 * w);   // on the small S box the handle is about 60% of the width
+  const shape = roundedRect(THREE, hw, 50, 14);
+  shape.holes.push(new THREE.Path(roundedRect(THREE, hw * 0.7, 19, 9).getPoints(24)));
+  const hg = new THREE.ExtrudeGeometry(shape, { depth: 38, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 16 });
+  hg.translate(0, 0, -19);
+  add(hg, mat('handle'), 0, base + 27, -depth * 0.45, 'handle');
 }
 
 // Two small feet under the bottom of the stack; the whole group is lifted by their height.
@@ -1792,7 +1815,7 @@ function buildPreviewUnit(e, st) {
   if (drawer) {
     const style = /Under/i.test(st.roof) ? 'mount' : /Grid/i.test(st.roof) ? 'grid' : /Bowl/i.test(st.roof) ? 'bowl' : /Table/i.test(st.roof) ? 'table' : '';
     if (style) { addRoof(k, style, w, depth, base); base += 8; }
-    if (st.handle) addHandle(k, base, depth);
+    if (st.handle) addHandle(k, base, depth, w);
   }
   addFeet(k, w, depth);
   return k;
@@ -1807,6 +1830,13 @@ const bpEngine = () => (bp.enginePromise ??= createStudio($('#bp-stage'), 14, ()
 function disposeGroup(g) {
   g.traverse(o => { o.geometry?.dispose(); if (o.material) [].concat(o.material).forEach(m => { m.map?.dispose(); m.dispose(); }); });
 }
+$('#bp-flip').addEventListener('click', () => {   // swing the camera round to the other side (the hinges are at the back)
+  const e = bp.engine;
+  if (!e) return;
+  const t = e.controls.target;
+  e.camera.position.sub(t).applyAxisAngle(new e.THREE.Vector3(0, 1, 0), Math.PI).add(t);
+  e.controls.update();
+});
 async function renderPreview() {
   const token = ++bp.token;
   let e;

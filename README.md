@@ -31,6 +31,7 @@ The VAULT file pack has 700+ STL files spread over dozens of nested folders (Dra
 Pick a unit and the hub lists every file you need, so nothing gets missed.
 
 - **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate. The shapes follow the real product: rounded modules, a centered rotary key with a horizontal lever (set low on 2F / 4F boxes), a seam down the middle of tall facades, screw dimples, a small label, pill-shaped runner stoppers on the left wall, sustainer latches in a recessed pocket with columns of bolts, a handle about 126 mm wide, and two feet.
+- **Front / back view** – the ↻ button on the preview swings the camera round to the back, where a sustainer's hinges and hinge rods are.
 - **Unit type** – Drawer or Sustainer (hinged-lid box).
 - **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
@@ -46,6 +47,10 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 *The sustainer view adds hinges & rods, a lock set and a locks-per-unit counter.*
 
 ![Live preview for different sizes and shapes](docs/builder-preview.png)
+
+![Sustainer hinges seen from the back](docs/sustainer-hinge.png)
+
+*A sustainer from the front, from the back (hinges and rods) and from the back with custom hinge colors.*
 
 *The preview for six different configurations (from the top left): S3 1F drawer, M4 2F drawer with grid roof and handle, L5 4F drawer with bowl roof and handle, XL3 1F drawer with under-table mount, and M4 2F and XL sustainers.*
 
@@ -64,7 +69,7 @@ The rules live in the `material()` function in `index.html`, so you can adjust t
 Try filament colors on a rendered VAULT tower before you print. The tower is a simplified model built from plain shapes, so it works without any STL files, and it uses the same size and combination as the reference photo (S + S, L 1F, L 2F, sustainer, S 1F over S 1F beside S 2F, with grid roof and handle), seen front-on and turned slightly to the left, so the left side wall (where the runner stoppers are) shows.
 
 - **Matte palette (8):** White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado. **Basic palette (13):** Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green. A part gets the palette that matches its finish tag.
-- **Nine colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Label, Runner stopper (Basic). Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.
+- **Eleven colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Hinge, Hinge rod, Label, Runner stopper (Basic). The hinges are on the back of the sustainer: use the ↻ button in the Builder preview to see them. Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.
 - **🎲 Shuffle** gives every part a random color.
 - **Templates** – *Save* stores the combination as a row of small color circles (one per distinct color, no name needed). Click one to load it, × to delete it (kept in your browser). **Reset colors** puts every part back to its default.
 - **Save / Import / Export** – all live in the Templates box. *Export* saves your picks as `colors.json`; *Import* loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
