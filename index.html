@@ -1819,10 +1819,10 @@ function addRoof(k, style, w, depth, y) {
     return g;
   };
   const plate = (t = 9) => add(rb(rw, t, rd, 4), mat('roof'), 0, y + t / 2, -depth / 2, 'roof');
-  if (style === 'heavy') {   // heavyweight cover: a thick lid with a bar handle (about 156 x 30 mm) on two posts
+  if (style === 'heavy') {   // heavyweight cover: a thick lid plus its one-piece U-shaped handle (about 156 x 30 x 30 mm, legs included)
     add(rb(rw, 12, rd, 5), mat('roof'), 0, y + 6, -depth / 2, 'roof');
-    for (const sx of [-1, 1]) add(rb(26, 18, 26, 4), mat('roof'), sx * 56, y + 21, -depth / 2, 'roof');
-    add(rb(156, 22, 30, 11), mat('handle'), 0, y + 38, -depth / 2, 'handle');
+    for (const sx of [-1, 1]) add(rb(24, 18, 28, 4), mat('handle'), sx * 66, y + 20, -depth / 2, 'handle');   // the handle's legs
+    add(rb(156, 14, 28, 7), mat('handle'), 0, y + 35, -depth / 2, 'handle');                               // the handle's bar
     return;
   }
   plate();
