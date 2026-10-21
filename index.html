@@ -791,14 +791,13 @@ const thumb = (f, icon = ICON.cube) => {
 };
 const prettyName = n => n.replace(/\.stl$/i, '').replace(/\s*\(turn on supports\)/i, '').replace(/\s+/g, ' ').trim();
 
-// Suggested filament finish: 'matte', 'basic' or 'tpu'; '' = no recommendation yet (Modifications/Base).
+// Suggested filament finish: 'matte', 'basic' or 'tpu'; '' = no recommendation.
 const MATERIAL_PATHS = [
   [/^03\. MODIFICATIONS\/Wheels\/Cover/, 'matte'],
-  [/^03\. MODIFICATIONS\/(Wheels|Backbone|Feet|Pegboard Attachment|Wall Mounts)\//, 'basic'],
-  [/^03\. MODIFICATIONS\/Base\//, ''],
+  [/^03\. MODIFICATIONS\/(Wheels|Backbone|Feet|Pegboard Attachment|Wall Mounts|Base)\//, 'basic'],
   [/\/Grid Dividers\//, 'matte'],
   [/\/L\u00b2 Accessories\//, 'basic'],
-  [/\/Manual Supports\//, 'matte'],
+  [/\/Manual Supports\//, 'basic'],
   [/^02\. SUSTAINERS\/05\. Universal\/(Hinges|Rods|Locks)\//, 'basic'],
 ];
 function material(f) {
