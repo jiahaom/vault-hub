@@ -49,13 +49,9 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 - **Matte palette (8):** White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado. **Basic palette (13):** Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green. A part gets the palette that matches its finish tag.
 - **Nine colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Label, Runner stopper (Basic). Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.
 - **🎲 Shuffle** gives every part a random color.
-- **Compare** shows up to three Matte colors side by side, like the reference photo.
-- **Parts** assembles one real drawer and one real sustainer (M4 · 2F) from your STL files.
 - **Templates** save the current picks under a name, load them back with one click, and delete them again (kept in your browser). **Reset colors** puts every part back to its default.
 - **Import / Download** – Download saves your picks as `colors.json`; Import loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
 - On-screen colors are approximate. Check a physical swatch before printing.
-
-![Colors tab: compare two colors](docs/colors-compare-en.png)
 
 ### Print checklist
 

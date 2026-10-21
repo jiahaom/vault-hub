@@ -363,7 +363,6 @@ button.thumb:hover { border-color: var(--line-strong); }
 .colors { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
 .col-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .col-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.col-bar .seg { min-width: 300px; }
 .col-hint { flex: 1; color: var(--faint); font-size: 12.5px; text-align: right; }
 .col-stage {
   position: relative; height: min(78vh, 820px); min-height: 420px; overflow: hidden;
@@ -372,18 +371,6 @@ button.thumb:hover { border-color: var(--line-strong); }
 }
 .col-stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; touch-action: none; }
 .col-labels { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.col-lbl {
-  position: absolute; left: 0; top: 0; pointer-events: auto; white-space: nowrap;
-  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 6px;
-  background: rgba(255, 255, 255, .92); color: #18191b; border: 1px solid rgba(0, 0, 0, .08); border-radius: 999px;
-  font-size: 12px; font-weight: 600; box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
-}
-.col-lbl small { font-weight: 500; color: #5d6168; }
-.col-lbl.hd { padding: 6px 14px 6px 8px; gap: 10px; font-size: 14px; background: rgba(255, 255, 255, .95); }
-.col-lbl.hd span { display: flex; flex-direction: column; line-height: 1.2; }
-.col-lbl.hd small { font-family: var(--mono); font-size: 11px; }
-.sw.lg { width: 30px; height: 30px; border-radius: 7px; }
-.col-lbl[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft), 0 1px 4px rgba(0, 0, 0, .18); }
 .col-msg { position: absolute; inset: 0; display: grid; place-items: center; z-index: 3; padding: 24px; text-align: center; color: #2a2d31; font-weight: 600; }
 .col-msg .box { background: rgba(255, 255, 255, .92); border-radius: 12px; padding: 16px 20px; max-width: 420px; font-weight: 500; }
 .col-msg h3 { margin: 0 0 6px; font-size: 15px; }
@@ -444,7 +431,6 @@ button.thumb:hover { border-color: var(--line-strong); }
   .mat-sm { display: inline-block; }
   .specs { grid-template-columns: 1fr 1fr; }
   .col-hint { display: none; }
-  .col-bar .seg { min-width: 0; flex: 1 1 100%; }
   .col-bar .btn { flex: 1; justify-content: center; }
   .col-stage { height: 64vh; min-height: 380px; }
   .palette { grid-template-columns: repeat(3, 1fr); }
@@ -492,14 +478,12 @@ button.thumb:hover { border-color: var(--line-strong); }
       <input type="file" id="col-file" accept=".json,application/json" hidden>
       <div class="col-main">
         <div class="col-bar">
-          <div class="seg" id="col-mode" role="group"></div>
           <span class="col-hint" data-t="orbitHint"></span>
           <button class="btn" id="col-shuffle" type="button">🎲 <span data-t="colShuffle"></span></button>
           <button class="btn" id="col-clear" type="button">↺ <span data-t="colReset"></span></button>
           <button class="btn" id="col-reset" type="button" data-t="resetView"></button>
         </div>
         <div class="col-stage" id="col-stage">
-          <div class="col-labels" id="col-labels"></div>
           <div class="col-msg" id="col-msg" hidden></div>
         </div>
         <div class="col-sum" id="col-sum"></div>
@@ -590,10 +574,10 @@ const store = {
 const I18N = {
   en: {
     langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals', tabColors: 'Colors',
-    colSet: 'Set', colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current', colTplName: 'Template name', colTplSaved: n => `Saved “${n}”`, colTplLoaded: n => `Loaded “${n}”`, colTplDel: 'Delete template', colTplDelAsk: n => `Delete the template “${n}”?`, colTplOverwrite: n => `Replace the existing template “${n}”?`, colStack: 'Stack', colParts: 'Parts', colCompareWith: 'Compare colors', colCompareHint: 'Pick up to 3 colors. Every Matte part switches to each color, side by side.', colNoFiles: 'Real parts need the VAULT STL files in this folder', colCompare: 'Compare', colAll: n => `Use for all Matte parts`,
-    colLoading: 'Loading models…', colCopy: 'Copy JSON', colDownload: 'Download', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file', colCopied: 'Color choices copied',
+    colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current', colTplName: 'Template name', colTplSaved: n => `Saved “${n}”`, colTplLoaded: n => `Loaded “${n}”`, colTplDel: 'Delete template', colTplDelAsk: n => `Delete the template “${n}”?`, colTplOverwrite: n => `Replace the existing template “${n}”?`, colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
+    colDownload: 'Download', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file',
     colNote: 'On-screen colors are approximate. Check against a physical swatch before printing.',
-    role_body: 'Body', role_box: 'Box', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
+    role_body: 'Body', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
     c_white: 'White', c_black: 'Black', c_lime: 'Lime', c_grey: 'Grey', c_pink: 'Pink', c_lightblue: 'Light blue', c_violet: 'Violet', c_avocado: 'Avocado', c_orange: 'Orange', c_red: 'Red', c_yellow: 'Yellow', c_green: 'Green', c_blue: 'Blue', c_darkblue: 'Dark Blue', c_beige: 'Beige', c_brown: 'Brown', c_bluegrey: 'Blue Grey', c_darkgreen: 'Dark Green',
     live: '3D preview on', static: 'Static mode',
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
@@ -630,10 +614,10 @@ const I18N = {
   },
   zh: {
     langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书', tabColors: '配色',
-    colSet: '类型', colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplName: '模板名称', colTplSaved: n => `已保存“${n}”`, colTplLoaded: n => `已载入“${n}”`, colTplDel: '删除模板', colTplDelAsk: n => `删除模板“${n}”?`, colTplOverwrite: n => `替换已有的模板“${n}”?`, colStack: '整机堆叠', colParts: '零件', colCompareWith: '对比颜色', colCompareHint: '最多选 3 种颜色,所有哑光零件会并排显示为各个颜色。', colNoFiles: '需要把 VAULT 的 STL 文件放在本文件夹中才能显示真实零件', colCompare: '对比', colAll: n => `所有哑光零件用同一颜色`,
-    colLoading: '正在加载模型…', colCopy: '复制 JSON', colDownload: '下载', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色', colCopied: '配色已复制',
+    colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplName: '模板名称', colTplSaved: n => `已保存“${n}”`, colTplLoaded: n => `已载入“${n}”`, colTplDel: '删除模板', colTplDelAsk: n => `删除模板“${n}”?`, colTplOverwrite: n => `替换已有的模板“${n}”?`, colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
+    colDownload: '下载', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色',
     colNote: '屏幕上的颜色仅供参考,打印前请对照实物色卡确认。',
-    role_body: '主体', role_box: '箱体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
+    role_body: '主体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
     c_white: '白色', c_black: '黑色', c_lime: '黄绿色', c_grey: '灰色', c_pink: '粉色', c_lightblue: '浅蓝色', c_violet: '紫罗兰', c_avocado: '牛油果绿', c_orange: '橙色', c_red: '红色', c_yellow: '黄色', c_green: '绿色', c_blue: '蓝色', c_darkblue: '深蓝色', c_beige: '米色', c_brown: '棕色', c_bluegrey: '蓝灰色', c_darkgreen: '深绿色',
     live: '3D 预览可用', static: '静态模式',
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
@@ -1463,71 +1447,45 @@ const PALETTE = {
   ],
 };
 // What gets a color: the finish of each role follows the Matte / Basic tags above.
-const ROLE_FINISH = { body: 'matte', box: 'matte', facade: 'matte', roof: 'matte', handle: 'basic', key: 'basic', keycap: 'basic', lock: 'basic', label: 'basic', stopper: 'basic' };
-const ROLE_DEFAULT = { body: 'white', box: 'white', facade: 'white', roof: 'white', handle: 'black', key: 'black', keycap: 'white', lock: 'black', label: 'white', stopper: 'orange' };
-const STACK_ROLES = ['body', 'facade', 'roof', 'handle', 'key', 'keycap', 'lock', 'label', 'stopper'];
+const ROLE_FINISH = { body: 'matte', facade: 'matte', roof: 'matte', handle: 'basic', key: 'basic', keycap: 'basic', lock: 'basic', label: 'basic', stopper: 'basic' };
+const ROLE_DEFAULT = { body: 'white', facade: 'white', roof: 'white', handle: 'black', key: 'black', keycap: 'white', lock: 'black', label: 'white', stopper: 'orange' };
+const ROLES = Object.keys(ROLE_FINISH);
 const isDarkHex = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) < 120; };
-// "Parts" mode: one real drawer and one real sustainer assembled from the print files (M4 · 2F).
-// Each matrix (row-major) moves a part from its print position into the assembled box:
-// X = width, Y = up, Z = toward the front. Calibrated to the official STL pack; the drawer is shown half open.
-const PART_SETS = {
-  drawer: [
-    ['body', `${D_FAM('M')}M4/Modules/M4 Module 2F\\.stl$`, [1,0,0,-5501.4688,0,1,0,-726.8888,0,0,1,-583.001,0,0,0,1]],
-    ['box', `${D_FAM('M')}M4/Boxes/M4 Box 2F\\.stl$`, [1,0,0,-5501.5544,0,0,1,-47.7503,0,-1,0,1431.8832,0,0,0,1]],
-    ['facade', `${D_FAM('M')}Facades/M2F\\b.*\\.stl$`, [1,0,0,-5501.575,0,1,0,-1907.6023,0,0,1,126.03,0,0,0,1]],
-    ['roof', `${D_FAM('M')}M4/Roofs?/M4 Grid Roof\\.stl$`, [-0.7092,-0.705,0,4914.1601,0.705,-0.7092,0,-3133.6433,0,0,1,-709.8674,0,0,0,1]],
-    ['handle', `${D_UNI}Top Handle.*\\.stl$`, [0,0,1,-84.0689,-1,0,0,-5902.5163,0,-1,0,1875.4659,0,0,0,1]],
-    ['key', `${D_UNI}Key \\(Turn On Supports\\)\\.stl$`, [1,0,0,-9001.6558,0,1,0,-1862.8227,0,0,1,252.4406,0,0,0,1]],
-    ['keycap', `${D_UNI}Key Cap\\.stl$`, [1,0,0,-9001.5576,0,1,0,-1875.7033,0,0,1,266.9695,0,0,0,1]],
-  ],
-  sustainer: [
-    ['body', `${S_FAM('M')}M4/Modules/M4 2F Module ?\\.stl$`, [1,0,0,-4001.5546,0,-1,0,-1628.7346,0,0,-1,730.658,0,0,0,1]],
-    ['facade', `${S_FAM('M')}(Facades/)?M2F'? Facade\\.stl$`, [1,0,0,-4001.5543,0,1,0,-1907.5918,0,0,1,105.3492,0,0,0,1]],
-    ['roof', `${S_FAM('M')}M4/Roofs?/M4 Roof\\.stl$`, [0.736,0.6769,0,-1139.5953,0.6769,-0.736,0,-3761.0765,0,0,-1,769.8591,0,0,0,1]],
-    ['lock', `${S_UNI}Locks/LOCK OUTER PART 2-4F\\.stl$`, [-1,0,0,6501.2212,0,0,1,-163.4249,0,1,0,-1654.0425,0,0,0,1]],
-  ],
-};
-const colorUI = Object.assign({ mode: 'stack', set: 'drawer', role: 'body', choice: {}, compare: ['white', 'grey'] }, store.get('colors', {}));
-if (!['stack', 'compare', 'parts'].includes(colorUI.mode)) colorUI.mode = 'stack';
-if (!ROLE_FINISH[colorUI.role]) colorUI.role = 'body';
-if (colorUI.choice.drawer || colorUI.choice.sustainer) colorUI.choice = {};
+const colorUI = (() => {
+  const saved = store.get('colors', {});
+  return { role: ROLE_FINISH[saved.role] ? saved.role : 'body', choice: saved.choice && !saved.choice.drawer ? saved.choice : {} };
+})();
 const saveColors = () => store.set('colors', colorUI);
 const colorOf = role => PALETTE[ROLE_FINISH[role]].find(c => c.id === colorUI.choice[role]) ?? PALETTE[ROLE_FINISH[role]].find(c => c.id === ROLE_DEFAULT[role]);
 const colorName = c => t('c_' + c.id);
-const rolesShown = () => colorUI.mode === 'parts' ? PART_SETS[colorUI.set].map(r => r[0]) : STACK_ROLES;
-const realParts = () => PART_SETS[colorUI.set]
-  .map(([id, pattern, m]) => { const f = first(pattern); return f ? { id, f, m, finish: ROLE_FINISH[id] } : null; })
-  .filter(Boolean);
-const col = { engine: null, cache: new Map(), key: '', token: 0, tiles: [], home: null, group: null };
+const col = { enginePromise: null, engine: null, tower: null, home: null };
 
 // Templates: named sets of color picks kept in this browser, loaded with one click.
 const templates = () => store.get('colorTemplates', []);
 const saveTemplates = list => store.set('colorTemplates', list);
-const roleIds = () => Object.keys(ROLE_FINISH);
-const snapshot = () => ({ choice: Object.fromEntries(roleIds().map(r => [r, colorOf(r).id])), compare: [...colorUI.compare] });
-const matchesTemplate = tpl => roleIds().every(r => (tpl.choice?.[r] ?? ROLE_DEFAULT[r]) === colorOf(r).id);
-function loadTemplate(tpl) {
-  colorUI.choice = { ...(tpl.choice ?? {}) };
-  if (tpl.compare?.length) colorUI.compare = [...tpl.compare];
-}
+// A new template is named after its colors by default: one colored heart per distinct color, in the order of the part list.
+const COLOR_EMOJI = {
+  white: '🤍', black: '🖤', grey: '🩶', bluegrey: '🩶', pink: '🩷', red: '❤️', orange: '🧡', yellow: '💛', beige: '🤎', brown: '🤎',
+  lime: '💚', avocado: '💚', green: '💚', darkgreen: '💚', lightblue: '🩵', blue: '💙', darkblue: '💙', violet: '💜',
+};
+const suggestedName = () => [...new Set(ROLES.map(r => COLOR_EMOJI[colorOf(r).id] ?? '⬜'))].join('');
+const snapshot = () => ({ choice: Object.fromEntries(ROLES.map(r => [r, colorOf(r).id])) });
+const matchesTemplate = tpl => ROLES.every(r => (tpl.choice?.[r] ?? ROLE_DEFAULT[r]) === colorOf(r).id);
+const loadTemplate = tpl => { colorUI.choice = { ...(tpl.choice ?? {}) }; };
 
-// Accepts a colors.json from Download (role -> {color, hex}) or a template ({choice, compare}); unknown roles and colors are skipped.
+// Accepts a colors.json from Download (role -> {color, hex}) or a template ({choice}); unknown roles and colors are skipped.
 function importColors(text) {
   let data;
   try { data = JSON.parse(text); } catch { return 0; }
   const src = data?.choice ?? data;
   let n = 0;
-  for (const r of roleIds()) {
+  for (const r of ROLES) {
     const v = src?.[r];
     if (!v) continue;
     const id = typeof v === 'string' ? v : v.color, hex = typeof v === 'object' ? String(v.hex ?? '').toLowerCase() : '';
     const pal = PALETTE[ROLE_FINISH[r]];
     const c = pal.find(x => x.id === id) ?? (hex && pal.find(x => x.hex.toLowerCase() === hex));
     if (c) { colorUI.choice[r] = c.id; n++; }
-  }
-  if (Array.isArray(data?.compare)) {
-    const ids = data.compare.filter(id => PALETTE.matte.some(c => c.id === id)).slice(0, 3);
-    if (ids.length) colorUI.compare = ids;
   }
   return n;
 }
@@ -1540,34 +1498,27 @@ $('#col-file').addEventListener('change', async e => {
 });
 
 function colorsExport() {
-  return Object.fromEntries(Object.keys(ROLE_FINISH).map(role => { const c = colorOf(role); return [role, { finish: ROLE_FINISH[role], color: c.id, hex: c.hex }]; }));
+  return Object.fromEntries(ROLES.map(role => { const c = colorOf(role); return [role, { finish: ROLE_FINISH[role], color: c.id, hex: c.hex }]; }));
 }
 
 function renderColors() {
-  if (!rolesShown().includes(colorUI.role)) colorUI.role = rolesShown()[0];
-  const role = colorUI.role, finish = ROLE_FINISH[role], compare = colorUI.mode === 'compare';
-  const segBtn = (attr, val, label, on) => `<button type="button" ${attr}="${val}" aria-pressed="${on}">${esc(label)}</button>`;
-  const picking = compare && finish === 'matte';
-  const isOn = c => picking ? colorUI.compare.includes(c.id) : c.id === colorOf(role).id;
+  const role = colorUI.role, finish = ROLE_FINISH[role];
   $('#col-config').innerHTML =
-    (colorUI.mode === 'parts' ? field(t('colSet'), `<div class="seg" role="group">${segBtn('data-cset', 'drawer', t('drawer'), colorUI.set === 'drawer')}${segBtn('data-cset', 'sustainer', t('sustainer'), colorUI.set === 'sustainer')}</div>`, 'M4 · 2F') : '') +
     field(t('colTpl'), `<div class="tpl"><span class="tplchip"><button type="button" data-ctpl="default" aria-pressed="${matchesTemplate({ choice: {} })}">${esc(t('colTplDefault'))}</button></span>${templates().map((x, i) =>
       `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${esc(x.name)}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><button type="button" class="btn" data-cact="save">${esc(t('colTplSave'))}</button>`) +
-    field(t('colPart'), `<div class="plist">${rolesShown().map(r => {
+    field(t('colPart'), `<div class="plist">${ROLES.map(r => {
       const c = colorOf(r);
       return `<button type="button" class="prow" data-crole="${r}" aria-pressed="${r === role}"><i class="sw" style="background:${c.hex}"></i><span class="nm">${esc(t('role_' + r))}</span><span class="badge mat ${ROLE_FINISH[r]}">${esc(t(ROLE_FINISH[r]))}</span><span class="cn">${esc(colorName(c))}</span></button>`;
     }).join('')}</div>`) +
-    field(t(picking ? 'colCompareWith' : 'colColor'), `<div class="palette">${PALETTE[finish].map(c =>
-      `<button type="button" data-ccolor="${c.id}" aria-pressed="${isOn(c)}"><i class="sw" style="background:${c.hex}"></i>${esc(colorName(c))}<small>${c.hex}</small></button>`).join('')}</div>`, t(finish)) +
-    (picking ? `<p class="col-note">${esc(t('colCompareHint'))}</p>` : '') +
-    (finish === 'matte' && !compare ? `<button type="button" class="btn" data-cact="all">${esc(t('colAll'))}</button>` : '') +
+    field(t('colColor'), `<div class="palette">${PALETTE[finish].map(c =>
+      `<button type="button" data-ccolor="${c.id}" aria-pressed="${c.id === colorOf(role).id}"><i class="sw" style="background:${c.hex}"></i>${esc(colorName(c))}<small>${c.hex}</small></button>`).join('')}</div>`, t(finish)) +
+    (finish === 'matte' ? `<button type="button" class="btn" data-cact="all">${esc(t('colAll'))}</button>` : '') +
     `<p class="col-note">${esc(t('colNote'))}</p>`;
-  $('#col-mode').innerHTML = segBtn('data-cmode', 'stack', t('colStack'), colorUI.mode === 'stack') + segBtn('data-cmode', 'compare', t('colCompare'), compare) + segBtn('data-cmode', 'parts', t('colParts'), colorUI.mode === 'parts');
-  $('#col-sum').innerHTML = `<div class="picks"><div class="pk">${Object.keys(ROLE_FINISH).filter(r => r !== 'box').map(r => {
+  $('#col-sum').innerHTML = `<div class="picks"><div class="pk">${ROLES.map(r => {
     const c = colorOf(r);
     return `<span><i class="sw" style="background:${c.hex}"></i><b>${esc(t('role_' + r))}</b> ${esc(colorName(c))}</span>`;
   }).join('')}</div></div><div class="acts"><button class="btn" data-cact="import"><span>↥ ${esc(t('colImport'))}</span></button> <button class="btn primary" data-cact="download"><span>${esc(t('colDownload'))}</span></button></div>`;
-  rebuildColors();
+  buildColors();
 }
 
 function colorMessage(html) { const m = $('#col-msg'); m.innerHTML = html ? `<div class="box">${html}</div>` : ''; m.hidden = !html; }
@@ -1575,7 +1526,6 @@ function colorMessage(html) { const m = $('#col-msg'); m.innerHTML = html ? `<di
 const colorEngine = () => (col.enginePromise ??= makeColorEngine());
 async function makeColorEngine() {
   const THREE = await import('three');
-  const { STLLoader } = await import('three/addons/loaders/STLLoader.js');
   const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
   const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
   const { RoundedBoxGeometry } = await import('three/addons/geometries/RoundedBoxGeometry.js');
@@ -1587,7 +1537,7 @@ async function makeColorEngine() {
   stage.prepend(renderer.domElement);
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-  const camera = new THREE.PerspectiveCamera(22, 1, 1, 20000);
+  const camera = new THREE.PerspectiveCamera(12, 1, 1, 20000);
   scene.add(camera);
   const sun = new THREE.DirectionalLight(0xffffff, 1.25);
   sun.position.set(40, 1200, 560);
@@ -1617,20 +1567,12 @@ async function makeColorEngine() {
     camera.updateProjectionMatrix();
   };
   new ResizeObserver(resize).observe(stage);
-  const v = new THREE.Vector3();
   renderer.setAnimationLoop(() => {
     if (tab !== 'colors') return;
     controls.update();
     renderer.render(scene, camera);
-    const w = stage.clientWidth, h = stage.clientHeight;
-    for (const tile of col.tiles) {
-      if (!tile.el) continue;
-      v.copy(tile.anchor).project(camera);
-      tile.el.style.transform = `translate(${(v.x * .5 + .5) * w}px, ${(-v.y * .5 + .5) * h}px) translate(-50%, -100%)`;
-      tile.el.style.opacity = v.z < 1 ? 1 : 0;
-    }
   });
-  col.engine = { THREE, loader: new STLLoader(), RoundedBoxGeometry, scene, camera, controls, group, resize, renderer };
+  col.engine = { THREE, RoundedBoxGeometry, scene, camera, controls, group, resize, renderer };
   attachColorPicking(col.engine);
   return col.engine;
 }
@@ -1639,9 +1581,9 @@ const colorMaterial = (THREE, finish, hex) => finish === 'basic'
   ? new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.38, clearcoat: 0.3, clearcoatRoughness: 0.35, envMapIntensity: 0.8 })
   : new THREE.MeshStandardMaterial({ color: hex, roughness: 0.95, metalness: 0, envMapIntensity: 0.85 });
 
-/* --- Stack: a simplified tower of drawers and a sustainer, built from plain shapes (no STL files needed). --- */
-// Same size and combination as the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
-const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, SPINE: 0, LID: 22 };
+/* --- A simplified tower of drawers and a sustainer, built from plain shapes (no STL files needed). --- */
+// Size and combination follow the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
+const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, LID: 22 };
 function stackUnits() {
   const { S, L, F1, F2 } = STACK;
   return [
@@ -1668,12 +1610,12 @@ function labelTexture(THREE, dark) {
   return tex;
 }
 
-function buildTower(e, hexOf) {
+function buildTower(e) {
   const { THREE, RoundedBoxGeometry: RBG } = e;
-  const { L, DEPTH, SPINE, LID } = STACK;
+  const { L, DEPTH, LID } = STACK;
   const g = new THREE.Group();
   const mats = {};
-  const mat = role => mats[role] ??= colorMaterial(THREE, ROLE_FINISH[role], hexOf(role));
+  const mat = role => mats[role] ??= colorMaterial(THREE, ROLE_FINISH[role], colorOf(role).hex);
   const fixed = (hex, rough = 0.7) => new THREE.MeshStandardMaterial({ color: hex, roughness: rough, envMapIntensity: 0.5 });
   const bolt = fixed('#1b1b1d', 0.5), slot = fixed('#e8e8e8', 0.6);
   const rb = (w, h, d, r = 3) => new RBG(w, h, d, 3, Math.min(r, w / 2 - 0.05, h / 2 - 0.05, d / 2 - 0.05));
@@ -1685,7 +1627,7 @@ function buildTower(e, hexOf) {
     g.add(m);
     return m;
   };
-  const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(THREE, isDarkHex(hexOf('label'))), transparent: true, depthWrite: false });
+  const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(THREE, isDarkHex(colorOf('label').hex)), transparent: true, depthWrite: false });
   const label = (cx, w, y, h, ly) => {
     add(rb(54, 23, 1.6, 3), mat('label'), cx - w / 2 + 40, y + h / 2 + ly, 8.3, 'label');
     const text = new THREE.Mesh(new THREE.PlaneGeometry(46, 17), labelMat);
@@ -1694,9 +1636,8 @@ function buildTower(e, hexOf) {
   };
   for (const u of stackUnits()) {
     const { cx, w, y, h } = u;
-    // Runner stoppers lock the drawer on its rail. They sit on the box's left side wall, about a third of the way back from the front:
-    // one per 1F, two per 2F (heights measured from the reference photo). Only the stack's left wall is visible, so only those boxes get them.
-    // The stopper is a flat plate, flush with the wall; on a sustainer both sit on the body, below the lid seam.
+    // Runner stoppers lock the drawer on its rail: flat plates flush with the box's left side wall, about a third of the way back
+    // from the front, one per 1F and two per 2F. Only the stack's left wall is visible, so only those boxes get them.
     if (cx - w / 2 === -L / 2) {
       for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3]) add(rb(0.9, 10.5, 18, 1), mat('stopper'), -L / 2 + 0.75, y + h * f, -0.28 * DEPTH, 'stopper');
     }
@@ -1724,148 +1665,60 @@ function buildTower(e, hexOf) {
     }
   }
   // Grid roof and top handle.
-  const rw = L + SPINE + 2, rx = -SPINE / 2, ry = STACK_TOP + 5;
-  add(rb(rw, 10, DEPTH + 4, 3), mat('roof'), rx, ry, -DEPTH / 2, 'roof');
-  for (let i = 0; i <= 8; i++) add(new THREE.BoxGeometry(2.6, 5, DEPTH + 2), mat('roof'), rx - rw / 2 + 4 + i * ((rw - 8) / 8), ry + 6, -DEPTH / 2, 'roof');
-  for (let i = 0; i <= 4; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), rx, ry + 6, -DEPTH + 4 + i * ((DEPTH - 8) / 4), 'roof');
+  const rw = L + 2, ry = STACK_TOP + 5;
+  add(rb(rw, 10, DEPTH + 4, 3), mat('roof'), 0, ry, -DEPTH / 2, 'roof');
+  for (let i = 0; i <= 8; i++) add(new THREE.BoxGeometry(2.6, 5, DEPTH + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / 8), ry + 6, -DEPTH / 2, 'roof');
+  for (let i = 0; i <= 4; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, ry + 6, -DEPTH + 4 + i * ((DEPTH - 8) / 4), 'roof');
   const rr = (w, h, r) => { const s = new THREE.Shape(); s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.absarc(w / 2 - r, -h / 2 + r, r, -Math.PI / 2, 0); s.lineTo(w / 2, h / 2 - r); s.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI / 2); s.lineTo(-w / 2 + r, h / 2); s.absarc(-w / 2 + r, h / 2 - r, r, Math.PI / 2, Math.PI); s.lineTo(-w / 2, -h / 2 + r); s.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5); return s; };
   const shape = rr(158, 54, 16);
-  const hole = rr(112, 24, 12);
-  shape.holes.push(new THREE.Path(hole.getPoints(24)));
+  shape.holes.push(new THREE.Path(rr(112, 24, 12).getPoints(24)));
   const hg = new THREE.ExtrudeGeometry(shape, { depth: 36, bevelEnabled: true, bevelSize: 2.5, bevelThickness: 2.5, bevelSegments: 3, curveSegments: 16 });
   hg.translate(0, 0, -18);
   add(hg, mat('handle'), 0, ry + 5 + 27, -DEPTH * 0.45, 'handle');
-  return { group: g, mats, labelMat, height: STACK_TOP + 90, width: L + SPINE };
+  return { group: g, mats, labelMat };
 }
 
-/* --- Parts: one real drawer / sustainer assembled from the STL files. --- */
-async function colorGeometry(e, f) {
-  if (col.cache.has(f.p)) return col.cache.get(f.p);
-  const res = await fetch(fileUrl(f.p));
-  if (!res.ok) throw new Error(res.status);
-  const g = e.loader.parse(await res.arrayBuffer());
-  g.computeVertexNormals();
-  g.computeBoundingBox();
-  col.cache.set(f.p, g);
-  return g;
-}
-
-async function rebuildColors() {
-  const token = ++col.token;
-  const mode = colorUI.mode;
-  const key = [mode, mode === 'parts' ? colorUI.set : '', mode === 'compare' ? colorUI.compare.join() : ''].join('|');
-  if (key === col.key && col.tiles.length) { colorApply(); return; }
-  let e, parts = [];
-  if (mode === 'parts') {
-    if (LOCAL) { colorMessage(`<h3>${esc(t('blockedTitle'))}</h3>${t('blockedBody')}`); return; }
-    parts = realParts();
-    if (!parts.length) { colorMessage(`<h3>${esc(t('colNoFiles'))}</h3>`); return; }
-    colorMessage(esc(t('colLoading')));
-  }
-  try {
-    e = await colorEngine();
-    await Promise.all(parts.map(p => colorGeometry(e, p.f)));
-  } catch { if (token === col.token) colorMessage(`<h3>${esc(t('failTitle'))}</h3>`); return; }
-  if (token !== col.token) return;
+// Builds the tower once; after that a color change only recolors it.
+async function buildColors() {
+  if (col.tower) { colorApply(); return; }
+  let e;
+  try { e = await colorEngine(); } catch { colorMessage(`<h3>${esc(t('colNo3d'))}</h3>`); return; }
+  if (col.tower) { colorApply(); return; }
   const { THREE } = e;
-  for (const g of [...e.group.children]) { g.traverse(o => { if (o.material) [].concat(o.material).forEach(m => { m.map?.dispose(); m.dispose(); }); }); e.group.remove(g); }
-  for (const tile of col.tiles) tile.el?.remove();
-  e.helper = null;
-  col.tiles = [];
-  if (mode === 'parts') {
-    const box = new THREE.Box3();
-    const placed = parts.map(p => { const m = new THREE.Matrix4().set(...p.m); return { p, m, box: col.cache.get(p.f.p).boundingBox.clone().applyMatrix4(m) }; });
-    placed.forEach(x => box.union(x.box));
-    const mid = box.getCenter(new THREE.Vector3());
-    const tileGroup = new THREE.Group();
-    tileGroup.position.set(-mid.x, 0, -mid.z);
-    const meshes = placed.map(x => {
-      const mesh = new THREE.Mesh(col.cache.get(x.p.f.p), colorMaterial(THREE, x.p.finish, '#ffffff'));
-      mesh.matrixAutoUpdate = false;
-      mesh.matrix.copy(x.m);
-      mesh.castShadow = mesh.receiveShadow = true;
-      tileGroup.add(mesh);
-      return { mesh, part: x.p, box: x.box };
-    });
-    e.group.add(tileGroup);
-    col.tiles = [{ group: tileGroup, meshes, parts: true }];
-  } else {
-    const colors = mode === 'compare' ? colorUI.compare.map(id => PALETTE.matte.find(c => c.id === id)).filter(Boolean) : [null];
-    const gap = (STACK.L + STACK.SPINE) * 1.3;
-    col.tiles = colors.map((c, i) => {
-      const tower = buildTower(e, role => (c && ROLE_FINISH[role] === 'matte' ? c.hex : colorOf(role).hex));
-      tower.group.position.set((i - (colors.length - 1) / 2) * gap, 0, 0);
-      e.group.add(tower.group);
-      const tile = { ...tower, color: c };
-      if (c) {
-        tile.el = document.createElement('div');
-        tile.el.className = 'col-lbl hd';
-        $('#col-labels').append(tile.el);
-        tile.anchor = new THREE.Vector3(tower.group.position.x, tower.height + 12, 0);
-        tile.el.innerHTML = `<i class="sw lg" style="background:${c.hex}"></i><span>${esc(colorName(c))}<small>${c.hex}</small></span>`;
-      }
-      return tile;
-    });
-  }
+  col.tower = buildTower(e);
+  e.group.add(col.tower.group);
   colorApply();
   e.resize();
-  const total = new THREE.Box3().setFromObject(e.group);
-  const size = total.getSize(new THREE.Vector3()), center = total.getCenter(new THREE.Vector3());
-  e.camera.fov = mode === 'parts' ? 32 : 12;
-  e.camera.updateProjectionMatrix();
+  const box = new THREE.Box3().setFromObject(e.group);
+  const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
   const vfov = THREE.MathUtils.degToRad(e.camera.fov), hfov = 2 * Math.atan(Math.tan(vfov / 2) * e.camera.aspect);
-  const front = mode !== 'parts';
-  const dir = front ? new THREE.Vector3(-0.3, 0.2, 1) : new THREE.Vector3(0.55, 0.55, 1);
-  const dist = Math.max((size.y / 2) / Math.tan(vfov / 2), (size.x / 2) / Math.tan(hfov / 2)) * (front ? 1.12 : 1.05) + size.z / 2;
-  e.controls.target.copy(center).add(front ? new THREE.Vector3(0, 6, 0) : new THREE.Vector3());
-  e.camera.position.copy(e.controls.target).add(dir.normalize().multiplyScalar(dist));
+  // Front-on, turned slightly to the left so the left side wall (with the runner stoppers) shows.
+  const dist = Math.max((size.y / 2) / Math.tan(vfov / 2), (size.x / 2) / Math.tan(hfov / 2)) * 1.12 + size.z / 2;
+  e.controls.target.copy(center).add(new THREE.Vector3(0, 6, 0));
+  e.camera.position.copy(e.controls.target).add(new THREE.Vector3(-0.3, 0.2, 1).normalize().multiplyScalar(dist));
   e.camera.near = dist / 100; e.camera.far = dist * 20; e.camera.updateProjectionMatrix();
   col.home = e.camera.position.clone();
   e.controls.update();
-  col.key = key;
-  colorMessage('');
 }
 
-// Cheap update when only the picks change: recolor materials and move the selection outline.
+// Cheap update when only the picks change: recolor the materials.
 function colorApply() {
-  const e = col.engine;
-  if (!e) return;
-  for (const tile of col.tiles) {
-    if (tile.parts) for (const { mesh, part } of tile.meshes) mesh.material.color.set(colorOf(part.id).hex);
-    else {
-      for (const [role, m] of Object.entries(tile.mats)) m.color.set(tile.color && ROLE_FINISH[role] === 'matte' ? tile.color.hex : colorOf(role).hex);
-      const dark = isDarkHex(colorOf('label').hex);
-      if (tile.dark !== dark) { tile.labelMat.map.dispose(); tile.labelMat.map = labelTexture(e.THREE, dark); tile.labelMat.needsUpdate = true; tile.dark = dark; }
-    }
-  }
-  e.helper?.removeFromParent();
-  e.helper = null;
-  if (colorUI.mode === 'parts' && col.tiles[0]) {
-    const target = col.tiles[0].meshes.find(m => m.part.id === colorUI.role);
-    if (target) {
-      e.helper = new e.THREE.Box3Helper(target.box, new e.THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8622a'));
-      col.tiles[0].group.add(e.helper);
-    }
-  }
+  const e = col.engine, tower = col.tower;
+  if (!e || !tower) return;
+  for (const [role, m] of Object.entries(tower.mats)) m.color.set(colorOf(role).hex);
+  const dark = isDarkHex(colorOf('label').hex);
+  if (tower.dark !== dark) { tower.labelMat.map.dispose(); tower.labelMat.map = labelTexture(e.THREE, dark); tower.labelMat.needsUpdate = true; tower.dark = dark; }
 }
 
-// Click a part to select its role; hover shows the name. The stack uses real ray hits, the real parts use their placed bounding boxes.
+// Click a part to select its role; hover shows its name.
 function attachColorPicking(e) {
-  const { THREE } = e, canvas = e.renderer.domElement, ray = new THREE.Raycaster(), pt = new THREE.Vector2(), hit = new THREE.Vector3();
+  const { THREE } = e, canvas = e.renderer.domElement, ray = new THREE.Raycaster(), pt = new THREE.Vector2();
   const tip = Object.assign(document.createElement('div'), { className: 'col-tip', hidden: true });
   $('#col-stage').append(tip);
   const pick = ev => {
     const r = canvas.getBoundingClientRect();
     pt.set((ev.clientX - r.left) / r.width * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(pt, e.camera);
-    if (colorUI.mode === 'parts') {
-      let best = null, bestD = Infinity;
-      for (const m of col.tiles[0]?.meshes ?? []) {
-        const b = m.box.clone().applyMatrix4(col.tiles[0].group.matrixWorld);
-        if (ray.ray.intersectBox(b, hit)) { const d = hit.distanceTo(ray.ray.origin); if (d < bestD) { bestD = d; best = m.part.id; } }
-      }
-      return best;
-    }
     return ray.intersectObjects(e.group.children, true).find(h => h.object.userData.role)?.object.userData.role ?? null;
   };
   let down = null;
@@ -1880,8 +1733,8 @@ function attachColorPicking(e) {
     tip.hidden = !role;
     canvas.style.cursor = role ? 'pointer' : '';
     if (role) {
-      const r = canvas.getBoundingClientRect(), c = colorOf(role);
-      tip.textContent = `${t('role_' + role)} · ${t(ROLE_FINISH[role])} · ${colorName(c)}`;
+      const r = canvas.getBoundingClientRect();
+      tip.textContent = `${t('role_' + role)} · ${t(ROLE_FINISH[role])} · ${colorName(colorOf(role))}`;
       tip.style.transform = `translate(${ev.clientX - r.left + 14}px, ${ev.clientY - r.top + 14}px)`;
     }
   });
@@ -1891,18 +1744,9 @@ function attachColorPicking(e) {
 $('#view-colors').addEventListener('click', async e => {
   const b = e.target.closest('button');
   if (!b) return;
-  const role = colorUI.role, finish = ROLE_FINISH[role];
-  if (b.dataset.cset) colorUI.set = b.dataset.cset;
-  else if (b.dataset.cmode) colorUI.mode = b.dataset.cmode;
-  else if (b.dataset.crole) colorUI.role = b.dataset.crole;
-  else if (b.dataset.ccolor) {
-    const id = b.dataset.ccolor;
-    if (colorUI.mode === 'compare' && finish === 'matte') {
-      const i = colorUI.compare.indexOf(id);
-      if (i >= 0) { if (colorUI.compare.length > 1) colorUI.compare.splice(i, 1); }
-      else colorUI.compare = [...colorUI.compare, id].slice(-3);
-    } else colorUI.choice[role] = id;
-  }
+  const role = colorUI.role;
+  if (b.dataset.crole) colorUI.role = b.dataset.crole;
+  else if (b.dataset.ccolor) colorUI.choice[role] = b.dataset.ccolor;
   else if (b.dataset.ctpl) {
     const tpl = b.dataset.ctpl === 'default' ? { name: t('colTplDefault'), choice: {} } : templates()[Number(b.dataset.ctpl)];
     if (!tpl) return;
@@ -1916,7 +1760,7 @@ $('#view-colors').addEventListener('click', async e => {
     saveTemplates(list);
   }
   else if (b.dataset.cact === 'save') {
-    const name = (prompt(t('colTplName')) ?? '').trim().slice(0, 28);
+    const name = (prompt(t('colTplName'), suggestedName()) ?? '').trim().slice(0, 40);
     if (!name) return;
     const list = templates(), at = list.findIndex(x => x.name === name);
     if (at >= 0 && !confirm(t('colTplOverwrite', name))) return;
@@ -1924,18 +1768,14 @@ $('#view-colors').addEventListener('click', async e => {
     saveTemplates(list);
     toast(t('colTplSaved', name));
   }
-  else if (b.id === 'col-clear') { colorUI.choice = {}; colorUI.compare = ['white', 'grey']; }
-  else if (b.dataset.cact === 'all') { const c = colorOf(role).id; Object.keys(ROLE_FINISH).filter(r => ROLE_FINISH[r] === 'matte').forEach(r => { colorUI.choice[r] = c; }); }
+  else if (b.id === 'col-clear') colorUI.choice = {};
+  else if (b.dataset.cact === 'all') { const c = colorOf(role).id; ROLES.filter(r => ROLE_FINISH[r] === 'matte').forEach(r => { colorUI.choice[r] = c; }); }
   else if (b.dataset.cact === 'import') { $('#col-file').click(); return; }
   else if (b.dataset.cact === 'download') {
     const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([JSON.stringify(colorsExport(), null, 2)], { type: 'application/json' })), download: 'colors.json' });
     a.click(); URL.revokeObjectURL(a.href); return;
   }
-  else if (b.id === 'col-shuffle') {
-    const pick = list => list[Math.floor(Math.random() * list.length)].id;
-    for (const r of Object.keys(ROLE_FINISH)) colorUI.choice[r] = pick(PALETTE[ROLE_FINISH[r]]);
-    if (colorUI.mode === 'compare') colorUI.compare = PALETTE.matte.map(c => c.id).sort(() => Math.random() - 0.5).slice(0, colorUI.compare.length);
-  }
+  else if (b.id === 'col-shuffle') { for (const r of ROLES) { const pal = PALETTE[ROLE_FINISH[r]]; colorUI.choice[r] = pal[Math.floor(Math.random() * pal.length)].id; } }
   else if (b.id === 'col-reset') { if (col.engine && col.home) { col.engine.camera.position.copy(col.home); col.engine.controls.update(); } return; }
   else return;
   saveColors();
