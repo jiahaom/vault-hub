@@ -1691,10 +1691,12 @@ function buildTower(e, hexOf) {
   };
   for (const u of stackUnits()) {
     const { cx, w, y, h } = u;
-    if (cx - w / 2 === -L / 2) {   // left spine with the little orange clips
-      add(rb(SPINE, h - 1.5, DEPTH * 0.8, 3), mat('body'), -L / 2 - SPINE / 2, y + h / 2, -DEPTH * 0.4, 'body');
-      // Runner stoppers show through the module's side flange: one per 1F tier, two per 2F tier (heights measured from the reference photo).
-      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) add(rb(7.5, 11, 2.4, 1.5), mat('stopper'), -L / 2 - 0.36 * SPINE, y + h * f, 0.9, 'stopper');
+    const leftmost = cx - w / 2 === -L / 2;
+    if (leftmost) add(rb(SPINE, h - 1.5, DEPTH * 0.8, 3), mat('body'), -L / 2 - SPINE / 2, y + h / 2, -DEPTH * 0.4, 'body');   // module side flange
+    // Every box has its own runner stopper(s) at its left edge: one per 1F, two per 2F (heights measured from the reference photo).
+    // The far-left boxes show them on the flange, the others just inside the left edge of their front.
+    for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) {
+      add(rb(7.5, 11, 2.4, 1.5), mat('stopper'), leftmost ? -L / 2 - 0.36 * SPINE : cx - w / 2 + 9, y + h * f, leftmost ? 0.9 : 8.7, 'stopper');
     }
     if (u.kind === 'drawer') {
       add(rb(w - 1.5, h - 1.5, DEPTH, 3), mat('body'), cx, y + h / 2, -DEPTH / 2, 'body');
