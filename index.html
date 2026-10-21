@@ -226,21 +226,22 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
   .specs[data-n] { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
   .specs[data-n] .spec:nth-child(n) { grid-column: auto; }
 }
-/* Unit picker in the hero, laid out by the hero's own width: wide = Unit · Width / Depth · Height · How many; narrow = Unit · How many,
-   then Width, Depth and Height on their own rows. */
+/* Hero picker. Row 1: Type · Quantity. Row 2: Width · Length · Height (W × L × H, like the Outer spec below).
+   Narrow: Type · Quantity, then one row each for Width, Length and Height. */
 .summary { container: hero / inline-size; }
-.unit-pick { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 14px 16px; }
+.unit-pick { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px 16px; }
 .pick { min-width: 0; grid-column: span 6; }
-.pick > .lbl { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+.pick > .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+.pick > .lbl small { font-size: 11px; font-weight: 450; letter-spacing: 0; text-transform: none; }
 .pick.p-type { grid-column: span 4; }
 .pick.p-n { grid-column: span 2; }
-@container hero (min-width: 600px) {
+@container hero (min-width: 540px) {
   .unit-pick { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .pick.p-type { grid-column: span 4; }
-  .pick.p-w { grid-column: span 8; }
-  .pick.p-d { grid-column: span 6; }
-  .pick.p-h { grid-column: span 4; }
-  .pick.p-n { grid-column: span 2; }
+  .pick.p-type { grid-column: span 9; }
+  .pick.p-n { grid-column: span 3; }
+  .pick.p-w { grid-column: span 4; }
+  .pick.p-d { grid-column: span 5; }
+  .pick.p-h { grid-column: span 3; }
 }
 /* Every picker control is the same height, whether its buttons carry a mm line or not. */
 .unit-pick { --pick-h: 58px; }
@@ -638,8 +639,8 @@ const I18N = {
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
     liveTip: 'Served locally — 3D preview works. Start from the launcher to also get Show in folder.',
     staticTip: 'Opened by double-clicking index.html, so the browser can’t read STL files or open folders. Use “Open VAULT Hub (Mac).command” or “Open VAULT Hub (Windows).bat” in this folder instead.',
-    type: 'Unit', drawer: 'Drawer', sustainer: 'Sustainer', width: 'Width', depth: 'Depth', 
-    height: 'Height', count: 'How many', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
+    type: 'Type', drawer: 'Drawer', sustainer: 'Sustainer', drawerSub: 'pull-out', sustainerSub: 'hinged lid', mmNote: 'outer · mm', width: 'Width', depth: 'Length', 
+    height: 'Height', count: 'Quantity', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
     whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
@@ -654,7 +655,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the depth', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
+    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the length', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -678,7 +679,7 @@ const I18N = {
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
     liveTip: '已通过本地服务打开，可 3D 预览。用启动器打开还可以“在文件夹中显示”。',
     staticTip: '当前是双击 index.html 打开的，浏览器无法读取 STL 或打开文件夹。请改用本文件夹中的“Open VAULT Hub (Mac).command”或“Open VAULT Hub (Windows).bat”。',
-    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', width: '宽度', depth: '深度', 
+    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', drawerSub: '抽拉式', sustainerSub: '翻盖式', mmNote: '外形 · mm', width: '宽度', depth: '长度', 
     height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
@@ -694,7 +695,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是深度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
+    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是长度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -1152,16 +1153,16 @@ function renderConfig() {
   $('#config').innerHTML = html;
 }
 
-// Unit, width, depth, height and count sit in the hero, right above the sizes they produce.
+// The hero picker: what you build (type, quantity), then its size in the same W × L × H order as the Outer spec right below it.
 function unitPicker() {
   const { w, d } = state;
-  const pick = (cls, label, body) => `<div class="pick ${cls}"><div class="lbl">${esc(label)}</div>${body}</div>`;
+  const pick = (cls, label, body, note = '') => `<div class="pick ${cls}"><div class="lbl">${esc(label)}${note ? `<small>${esc(note)}</small>` : ''}</div>${body}</div>`;
   return `<div class="unit-pick">
-    ${pick('p-type', t('type'), seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }]))}
-    ${pick('p-w', t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: `${mm(SPEC.width[v])}mm` }))))}
-    ${pick('p-d', t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: v, small: `${SPEC.length(v)}mm`, disabled: !HEIGHTS.some(h => available(w, v, h)) }))))}
-    ${pick('p-h', t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: `${SPEC.height[state.type][v]}mm`, disabled: !available(w, d, v) }))))}
+    ${pick('p-type', t('type'), seg('type', [{ val: 'drawer', label: t('drawer'), small: t('drawerSub') }, { val: 'sustainer', label: t('sustainer'), small: t('sustainerSub') }]))}
     ${pick('p-n', t('count'), stepperCtl('count'))}
+    ${pick('p-w', t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: mm(SPEC.width[v]) }))), t('mmNote'))}
+    ${pick('p-d', t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: `x${v}`, small: SPEC.length(v), disabled: !HEIGHTS.some(h => available(w, v, h)) }))))}
+    ${pick('p-h', t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: SPEC.height[state.type][v], disabled: !available(w, d, v) }))))}
   </div>`;
 }
 
