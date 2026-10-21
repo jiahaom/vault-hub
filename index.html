@@ -614,7 +614,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -654,7 +654,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -853,7 +853,47 @@ function drawerSections() {
       { hw: t('bolts'), sub: t('boltsNote', bolts), qty: bolts * count, raw: true },
       (state.handle || /Heawyweight/i.test(state.roof)) && { hw: t('m6'), sub: t('m6Note'), qty: null },
     ].filter(Boolean) },
+    ...extraSections(),
   ].filter(Boolean);
+}
+
+/* ---------- Extra sections: grid dividers, L² / XL² variants and Modifications (all off by default) ---------- */
+const GRID_HOLES = { S: 10, M: 18, L: 26, XL: 32 };   // holes across the drawer, by width; across by depth: 10 / 14 / 18 / 22 / 26
+function extraSections() {
+  const { w, d, h, type } = state;
+  const out = [];
+  const offs = (files, extra = {}) => files.map(f => off(part(f, 1, extra)));
+  // Grid dividers (drawers): numbered by length in holes; show the ones that fit this box, in the heights that fit its drawers.
+  if (type === 'drawer') {
+    const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
+    const folders = ['20MM TALL', h === '1F' ? '34.5MM TALL' : '82.5MM TALL'];
+    // XL boxes only come in 1F, but the 82.5 mm tall pieces of XL length (27 to 32 holes) exist, so XL lists those too.
+    const lenOf = f => Number((f.name.match(/^(\d+)/) || [])[1]);
+    const gd = FILES.filter(f => f.p.startsWith('01. DRAWERS/07. Universal/Grid Dividers/') && /\.stl$/i.test(f.p)
+      && lenOf(f) <= reach && (folders.some(x => f.p.includes('/' + x)) || (w === 'XL' && f.p.includes('/82.5MM TALL') && lenOf(f) > 26)));
+    if (gd.length) out.push({ title: t('secGrid'), sub: t('secGridNote', reach), items: gd.map(f => off(part(f, null))), raw: true });
+    // L² / XL² family: same outer size as L / XL, plus the accessories that belong to it.
+    const v2 = [];
+    if (w === 'L' || w === 'XL') {
+      v2.push(...find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`));
+      if (w === 'L') v2.push(...find(`${D_UNI}L² Accessories/x${d} Accessory`));
+    }
+    if (v2.length) out.push({ title: t('secVar'), items: offs(v2), raw: true });
+  }
+  // Modifications for this size, height and depth.
+  const mods = FILES.filter(f => f.p.startsWith('03. MODIFICATIONS/') && /\.stl$/i.test(f.p)).filter(f => {
+    const n = f.name.replace(/\.stl$/i, '');
+    let m = f.p.match(/\/Base\/(XL|[SML])\/(?:XL|[SML])(\d) Base/);
+    if (m) return m[1] === w && Number(m[2]) === d;
+    m = n.match(/^(XL|S|M|L)(1F|2F|4F)?(?= |$)/);
+    if (m) return m[1] === w && (!m[2] || m[2] === h);
+    m = n.match(/^Universal (\dF)?/);
+    if (m) return !m[1] || m[1] === h;
+    m = n.match(/(\dF)$/);
+    return !m || m[1] === h;   // "Connector for Modules 1F" only for 1F; other loose parts (wheels, knobs, connectors) for every size
+  });
+  if (mods.length) out.push({ title: t('secMods'), items: offs(mods), raw: true });
+  return out;
 }
 
 function sustainerDividers() {
@@ -902,6 +942,7 @@ function sustainerSections() {
     lock.length && { title: t('secLock'), sub: t('secLockNote', nLocks), items: lock, raw: true },
     opt.length && { title: t('secOpt'), items: opt },
     { title: t('secHw'), items: [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }] },
+    ...extraSections(),
   ].filter(Boolean);
 }
 
