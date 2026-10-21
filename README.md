@@ -44,7 +44,7 @@ The rules live in the `material()` function in `index.html`, so you can adjust t
 
 ![Colors tab: the stack view](docs/colors-stack-en.png)
 
-Try filament colors on a rendered VAULT tower before you print. The tower is a simplified model built from plain shapes, so it works without any STL files, and it uses the same size and combination as the reference photo (S + S, L 1F, L 2F, sustainer, S 1F over S 1F beside S 2F, with grid roof and handle), seen front-on.
+Try filament colors on a rendered VAULT tower before you print. The tower is a simplified model built from plain shapes, so it works without any STL files, and it uses the same size and combination as the reference photo (S + S, L 1F, L 2F, sustainer, S 1F over S 1F beside S 2F, with grid roof and handle), seen front-on and turned slightly to the left, so the left side wall (where the runner stoppers are) shows.
 
 - **Matte palette (8):** White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado. **Basic palette (13):** Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green. A part gets the palette that matches its finish tag.
 - **Nine colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Label, Runner stopper (Basic). Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.

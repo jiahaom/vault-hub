@@ -1597,6 +1597,9 @@ async function makeColorEngine() {
   sun.shadow.bias = -0.0006;
   sun.shadow.radius = 3;
   scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.75);   // soft light from the left so side walls don't go dark
+  fill.position.set(-700, 260, 380);
+  scene.add(fill);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000), new THREE.ShadowMaterial({ opacity: 0.14 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.5;
@@ -1638,7 +1641,7 @@ const colorMaterial = (THREE, finish, hex) => finish === 'basic'
 
 /* --- Stack: a simplified tower of drawers and a sustainer, built from plain shapes (no STL files needed). --- */
 // Same size and combination as the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
-const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, SPINE: 36.7, LID: 22 };
+const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, SPINE: 0, LID: 22 };
 function stackUnits() {
   const { S, L, F1, F2 } = STACK;
   return [
@@ -1691,12 +1694,10 @@ function buildTower(e, hexOf) {
   };
   for (const u of stackUnits()) {
     const { cx, w, y, h } = u;
-    const leftmost = cx - w / 2 === -L / 2;
-    if (leftmost) add(rb(SPINE, h - 1.5, DEPTH * 0.8, 3), mat('body'), -L / 2 - SPINE / 2, y + h / 2, -DEPTH * 0.4, 'body');   // module side flange
-    // Every box has its own runner stopper(s) at its left edge: one per 1F, two per 2F (heights measured from the reference photo).
-    // The far-left boxes show them on the flange, the others just inside the left edge of their front.
-    for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) {
-      add(rb(7.5, 11, 2.4, 1.5), mat('stopper'), leftmost ? -L / 2 - 0.36 * SPINE : cx - w / 2 + 9, y + h * f, leftmost ? 0.9 : 8.7, 'stopper');
+    // Runner stoppers lock the drawer on its rail. They sit on the box's left side wall, about a third of the way back from the front:
+    // one per 1F, two per 2F (heights measured from the reference photo). Only the stack's left wall is visible, so only those boxes get them.
+    if (cx - w / 2 === -L / 2) {
+      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) add(rb(8, 10.5, 18, 1.5), mat('stopper'), -L / 2 - 3.4, y + h * f, -0.28 * DEPTH, 'stopper');
     }
     if (u.kind === 'drawer') {
       add(rb(w - 1.5, h - 1.5, DEPTH, 3), mat('body'), cx, y + h / 2, -DEPTH / 2, 'body');
@@ -1813,7 +1814,7 @@ async function rebuildColors() {
   e.camera.updateProjectionMatrix();
   const vfov = THREE.MathUtils.degToRad(e.camera.fov), hfov = 2 * Math.atan(Math.tan(vfov / 2) * e.camera.aspect);
   const front = mode !== 'parts';
-  const dir = front ? new THREE.Vector3(0, 0.2, 1) : new THREE.Vector3(0.55, 0.55, 1);
+  const dir = front ? new THREE.Vector3(-0.3, 0.2, 1) : new THREE.Vector3(0.55, 0.55, 1);
   const dist = Math.max((size.y / 2) / Math.tan(vfov / 2), (size.x / 2) / Math.tan(hfov / 2)) * (front ? 1.12 : 1.05) + size.z / 2;
   e.controls.target.copy(center).add(front ? new THREE.Vector3(0, 6, 0) : new THREE.Vector3());
   e.camera.position.copy(e.controls.target).add(dir.normalize().multiplyScalar(dist));
