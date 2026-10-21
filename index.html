@@ -233,7 +233,8 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 
 .facts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: var(--muted); font-size: 12.5px; }
 .fil { display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px 0 8px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--text); background: var(--panel); white-space: nowrap; }
-.fil.any { padding-left: 10px; color: var(--muted); font-weight: 550; }
+.fil.any { color: var(--muted); font-weight: 550; }
+.fil.any .dot { background: repeating-linear-gradient(135deg, var(--line-strong) 0 2px, transparent 2px 4px); }
 .fil.tpu { border-style: dashed; }
 .fil .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgba(128, 128, 128, .5); }
 .fil b { font-family: var(--mono); font-weight: 600; font-size: 11.5px; color: var(--faint); }
@@ -691,7 +692,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the length', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', anyColor: 'any color', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
+    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', gdHeight: 'Divider height', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the length', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', anyColor: 'Any color', anyColorTip: 'Hidden mechanism parts, the color does not show', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -731,7 +732,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是长度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', anyColor: '颜色不限', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
+    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', gdHeight: '隔板高度', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是长度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', anyColor: '颜色不限', anyColorTip: '藏在内部的机构零件,看不见颜色', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -1099,14 +1100,13 @@ function filamentChips(files) {
   for (const f of files) {
     const m = material(f); if (!m) continue;
     const role = colorRole(f), c = role ? colorOf(role) : null, key = m + '|' + (c ? c.id : '');
-    const g = groups.get(key) || { m, c, n: 0, roles: new Set() };
-    g.n++; if (role) g.roles.add(t('role_' + role)); groups.set(key, g);
+    const g = groups.get(key) || { m, c, n: 0, roles: new Set(), names: [] };
+    g.n++; if (role) g.roles.add(t('role_' + role)); else g.names.push(prettyName(f.name).replace(/^(?:XL|[SML])\s+/, '')); groups.set(key, g);
   }
   const order = ['matte', 'basic', 'tpu'];
   return [...groups.values()].sort((a, b) => order.indexOf(a.m) - order.indexOf(b.m) || (!!b.c - !!a.c) || b.n - a.n).map(g => {
-    const tip = g.c ? `${t(g.m + 'Tip')} · ${[...g.roles].join(', ')}` : `${t(g.m + 'Tip')} · ${t('anyColor')}`;
-    const dot = g.c ? `<i class="dot" style="background:${g.c.hex}"></i>` : '';
-    return `<span class="fil ${g.m}${g.c ? '' : ' any'}" title="${esc(tip)}">${dot}<span>${g.c ? esc(colorName(g.c)) + ' · ' : ''}${esc(t(g.m))}</span><b>× ${g.n}</b></span>`;
+    const tip = g.c ? `${t(g.m + 'Tip')} · ${[...g.roles].join(', ')}` : `${t('anyColorTip')}: ${[...new Set(g.names)].slice(0, 6).join(', ')}${g.names.length > 6 ? '…' : ''}`;
+    return `<span class="fil ${g.m}${g.c ? '' : ' any'}" title="${esc(tip)}"><i class="dot"${g.c ? ` style="background:${g.c.hex}"` : ''}></i><span>${esc(g.c ? colorName(g.c) : t('anyColor'))} · ${esc(t(g.m))}</span><b>× ${g.n}</b></span>`;
   }).join('');
 }
 

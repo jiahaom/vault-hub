@@ -36,7 +36,7 @@
 - **The list mirrors the options:** one section per option, same name and order, showing only the parts you selected. Nothing unneeded is listed.
 - **Every STL is reachable from the options** (checked for all 110 type / width / length / height combinations): all 723 appear for at least one choice, and only for sizes they fit.
 - A row's switch leaves that part out; it is greyed and skipped by totals and *Gather*.
-- **Filament list:** under the controls, one chip per spool to load, e.g. *Lime · Matte × 4*, with the colors you picked on the Colors tab, plus one summed print figure (grams, then time).
+- **Filament list:** under the controls, one chip per spool to load, e.g. *Lime · Matte × 4*, with the colors you picked on the Colors tab, Hidden mechanism parts with no color slot are grouped as *Any color*. One summed print figure follows (grams, then time).
 - The preview shows the outside only (key, label, lid, latches, hinges, roofs) and follows your colors.
 
 ![Six sizes](docs/builder-preview.png)
