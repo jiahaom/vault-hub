@@ -24,10 +24,9 @@
 | ✅ **Print it** | Tick parts off, copy the list, gather files into one folder. |
 | 🔍 **Browse** | Search 700+ files, orbit any STL, read manuals. English / 中文, phone-friendly. |
 
-## 🔎 More (click to open)
+## 🔎 Details
 
-<details>
-<summary><b>📋 Plan + 🧊 See it</b></summary>
+### 📋 Plan + 🧊 See it
 
 - Pick type, width S–XL, depth 3–7, height 1F / 2F / 4F, quantity, lock, roof, handle, dividers, baseplate.
 - Every part the unit can use is listed with a switch. Off parts are skipped by totals, *Copy list* and *Gather*.
@@ -35,10 +34,7 @@
 
 ![Six sizes](docs/builder-preview.png)
 
-</details>
-
-<details>
-<summary><b>🎨 Color it + 🏷️ filament tags</b></summary>
+### 🎨 Color it + 🏷️ filament tags
 
 - Click a part in 3D or the list, pick a color. 🎲 Shuffle, ↺ Reset, Save / Import / Export.
 - Every STL is tagged Matte / Basic / TPU in the Builder and filled with your color. Rules: `material()` in `index.html`.
@@ -46,27 +42,19 @@
 
 ![Colors](docs/colors-custom-en.png)
 
-</details>
-
-<details>
-<summary><b>✅ Print + 🔍 Browse</b></summary>
+### ✅ Print + 🔍 Browse
 
 - Progress is saved in your browser. **Gather into folder** copies files to `_Print Jobs/`.
 - File preview: orbit, wireframe, **Open in slicer**, **Show in folder**. Search: press `/`.
 
 ![3D preview](docs/preview-3d.png)
 
-</details>
-
-<details>
-<summary><b>🛠️ More setup</b></summary>
+### 🛠️ More setup
 
 - **Linux:** `python3 _hub/serve_hub.py`. **Windows without Python:** the launcher falls back to PowerShell.
 - **New or renamed files:** `python3 _hub/update_index.py`
 - **Thumbnails** (optional, needs Node, Playwright, Chrome): `VAULT_PORT=8799 python3 _hub/serve_hub.py`, then `node _hub/make_thumbs.mjs`, then `python3 _hub/update_index.py`
 - The Colors tab and the Builder preview work without STL files.
-
-</details>
 
 ## 🧯 If it breaks
 

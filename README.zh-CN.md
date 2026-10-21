@@ -24,10 +24,9 @@
 | ✅ **打印** | 打完一个勾一个,复制清单,把文件汇总到一个文件夹。 |
 | 🔍 **浏览** | 搜索 700 多个文件,旋转查看任意 STL,读说明书。中文 / English,手机可用。 |
 
-## 🔎 更多(点开查看)
+## 🔎 详情
 
-<details>
-<summary><b>📋 规划 + 🧊 看效果</b></summary>
+### 📋 规划 + 🧊 看效果
 
 - 选类型、宽度 S–XL、深度 3–7、高度 1F / 2F / 4F、数量、锁、顶盖、提手、隔板、底板。
 - 这个型号可能用到的每个零件都列出来,带开关。关掉的零件不计入统计、"复制清单"和"汇总到文件夹"。
@@ -35,10 +34,7 @@
 
 ![六种尺寸](docs/builder-preview.png)
 
-</details>
-
-<details>
-<summary><b>🎨 配色 + 🏷️ 耗材标签</b></summary>
+### 🎨 配色 + 🏷️ 耗材标签
 
 - 在 3D 里或列表里点选零件,再选颜色。🎲 随机、↺ 重置、保存 / 导入 / 导出。
 - 每个 STL 在清单里都标有 哑光 / 普通 / TPU,并填充成你选的颜色。规则在 `index.html` 的 `material()`。
@@ -46,27 +42,19 @@
 
 ![配色](docs/colors-custom-zh.png)
 
-</details>
-
-<details>
-<summary><b>✅ 打印 + 🔍 浏览</b></summary>
+### ✅ 打印 + 🔍 浏览
 
 - 进度保存在浏览器里。**汇总到文件夹**会把文件复制到 `_Print Jobs/`。
 - 文件预览:旋转、线框、**用切片软件打开**、**在文件夹中显示**。搜索:按 `/`。
 
 ![3D 预览](docs/preview-3d.png)
 
-</details>
-
-<details>
-<summary><b>🛠️ 更多设置</b></summary>
+### 🛠️ 更多设置
 
 - **Linux:** `python3 _hub/serve_hub.py`。**没有 Python 的 Windows:** 启动器会改用 PowerShell。
 - **新增或改名文件:** `python3 _hub/update_index.py`
 - **缩略图**(可选,需要 Node、Playwright、Chrome):`VAULT_PORT=8799 python3 _hub/serve_hub.py`,然后 `node _hub/make_thumbs.mjs`,再 `python3 _hub/update_index.py`
 - 配色页和清单预览不需要 STL 文件。
-
-</details>
 
 ## 🧯 出问题时
 
