@@ -29,7 +29,7 @@
 ### 📋 Plan + 🧊 See it
 
 - Pick type, width S–XL, depth 3–7, height 1F / 2F / 4F, quantity, lock, roof, handle, dividers, baseplate.
-- **Grid dividers:** pick the height (full, mid 34.5 mm on 2F/4F, low 20 mm) and the lengths (↔ fits the width, ↕ fits the depth). Only lengths and heights that fit the drawer are offered.
+- **Grid dividers (optional):** switch them on (starts with the pieces spanning the width and depth), then pick the height (full, mid 34.5 mm on 2F/4F, low 20 mm) and the lengths (↔ fits the width, ↕ fits the depth). Only lengths and heights that fit the drawer are offered.
 - **XL 2F / 4F:** official sizes the pack has no body files for. They can be selected so their 82.5 mm dividers, rails, runners and roofs have a unit; module, box and facade show as *not in the pack*.
 - **Add-ons:** each chip adds its own section with the parts that fit this size: manual supports (drawers and sustainers), L² version, alternative facade, other baseplate versions, wall mount, pegboards, feet, wheels, handles, backbone, base.
 - **One version, never both:** pick a base *whole* or *split*, and backbone / handle-lock parts *sized to the width* or *universal*. The handle lock and knob come with the pull-out handle. On 4F a note says handles need a 1F / 2F backbone elsewhere in the tower.
