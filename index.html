@@ -680,7 +680,7 @@ const I18N = {
     height: 'Height', count: 'Quantity', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
-    whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
+    divKind: 'Divider type', div_depth: 'Depth', div_width: 'Width', div_seal: 'Seal', whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
     secUnit: 'Unit', secMech: 'Slides & latch', secTopNote: 'print once per stack',
     secHinge: 'Hinges & rods', secLockNote: n => `× ${n} per unit`, secHw: 'Hardware',
     perUnit: 'per unit', bolts: 'M4 bolts, 14–20 mm', boltsNote: n => `${n} per drawer · fix the facade`, boltsSus: 'fix the facade',
@@ -720,7 +720,7 @@ const I18N = {
     height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
-    whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
+    divKind: '隔板类型', div_depth: '深度', div_width: '宽度', div_seal: '密封', whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
     secUnit: '主体', secMech: '滑轨与卡扣', secTopNote: '每组堆叠只打印一次',
     secHinge: '铰链与销杆', secLockNote: n => `每个盒子 × ${n}`, secHw: '五金件',
     perUnit: '每个', bolts: 'M4 螺丝，14–20 mm', boltsNote: n => `每层抽屉 ${n} 颗 · 固定面板`, boltsSus: '固定面板',
@@ -795,7 +795,7 @@ const SPEC = {
 };
 const mm = v => (Math.round(v * 10) / 10).toString();
 const state = Object.assign(
-  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, mods: {}, grid: false, gdh: 'full', gdLens: {}, baseCut: 'whole', kit: 'sized', inc: {} },
+  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, divKinds: {}, sbase: false, mods: {}, grid: false, gdh: 'full', gdLens: {}, baseCut: 'whole', kit: 'sized', inc: {} },
   store.get('state', {}),
 );
 
@@ -951,8 +951,8 @@ function addonItems() {
       if (w === 'L') for (const f of find(`${D_UNI}L² Accessories/x${d} Accessory`)) items.push({ grp: 'l2', f, qty: 1 });
     }
   }
-  // Manual supports go by depth only; the sustainer manual uses them too ("remove manual supports, before filling it with dividers").
-  const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
+  // Manual supports live in the drawer folder, so only drawers get them.
+  const ms = type === 'drawer' && first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
   if (ms) items.push({ grp: 'sup', f: ms, qty: 1 });
   if (type === 'sustainer') for (const f of find(`${S_UNI}Facades/${w}${h}\\.stl$`)) items.push({ grp: 'facade2', f, qty: 1 });   // alternative facade, same size; replaces the standard one
   for (const f of FILES) {
@@ -998,12 +998,17 @@ function extraSections() {
   ].filter(Boolean);
 }
 
-function sustainerDividers() {
+// Sustainer dividers come from the sustainer folder, by kind: S and M have one; L and XL have Depth, Width and Seal.
+function sustainerDividerKinds() {
   const { w, d, h } = state, dv = `${S_UNI}Dividers/`;
-  if (w === 'S' || w === 'M') return find(`${dv}${w} Dividers/${w}${h} Divider\\.stl$`);
-  if (w === 'L') return find(`${dv}L (Depth Dividers/L${d}-${h} Depth|Width Dividers/L-${h} Width|Seal Dividers/L-${h} Seal) Divider\\.stl$`);
-  return find(`${dv}(XL Depth Dividers/XL${d} Depth Divider|XL Width Divider|XL Seal Divider \\(\\w+\\))\\.stl$`);
+  if (w === 'S' || w === 'M') return [{ id: 'all', label: t('dividers'), files: find(`${dv}${w} Dividers/${w}${h} Divider\\.stl$`) }].filter(k => k.files.length);
+  const kind = (id, re) => ({ id, label: t('div_' + id), files: find(re) });
+  return (w === 'L'
+    ? [kind('depth', `${dv}L Depth Dividers/L${d}-${h} Depth Divider\\.stl$`), kind('width', `${dv}L Width Dividers/L-${h} Width Divider\\.stl$`), kind('seal', `${dv}L Seal Dividers/L-${h} Seal Divider\\.stl$`)]
+    : [kind('depth', `${dv}XL Depth Dividers/XL${d} Depth Divider\\.stl$`), kind('width', `${dv}XL Width Divider\\.stl$`), kind('seal', `${dv}XL Seal Divider \\(\\w+\\)\\.stl$`)]
+  ).filter(k => k.files.length);
 }
+const sustainerDividers = () => sustainerDividerKinds().flatMap(k => k.files);
 const sustainerBaseplates = () => find(`${S_UNI}Baseplates/[^/]+/${state.w}${state.d}( Part \\d)? +(Gridfinity )?Baseplate\\.stl$`);
 
 function sustainerSections() {
@@ -1036,7 +1041,7 @@ function sustainerSections() {
     sec(t('lid'), lid ? lid.files.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
     sec(t('secHinge'), hinge),
     sec(t('locks'), lock, { sub: t('secLockNote', n), raw: true }),
-    sec(t('dividers'), state.dividers ? sustainerDividers().map(f => part(f, null)) : []),
+    sec(t('dividers'), state.dividers ? sustainerDividerKinds().filter(k => k.id === 'all' || state.divKinds?.[k.id]).flatMap(k => k.files).map(f => part(f, null)) : []),
     sec(t('baseplate'), state.sbase ? sustainerBaseplates().map(f => part(f)) : []),
     ...extraSections(),
     sec(t('secHw'), [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }]),
@@ -1183,8 +1188,9 @@ function renderConfig() {
     const lids = sustainerLids();
     if (lids.length > 1) html += field(t('lid'), opts('lid', lids.map(l => ({ val: l.id, label: l.label, file: l.files.find(f => !/Connector/i.test(f.name)) }))));
     html += stepper('locks', t('locks'), 0, 4);
-    const dividers = sustainerDividers(), sbases = sustainerBaseplates();
-    if (dividers.length) html += field(t('dividers'), opts('dividers', [{ val: false, label: t('none') }, { val: true, label: t('include'), file: dividers[0] }]));
+    const dk = sustainerDividerKinds(), sbases = sustainerBaseplates();
+    if (dk.length) html += toggle('dividers', t('dividers'));
+    if (dk.length > 1 && state.dividers) html += field(t('divKind'), `<div class="chips">${dk.map(k => `<button type="button" class="chip" data-dk="${k.id}" aria-pressed="${!!state.divKinds?.[k.id]}">${esc(k.label)}</button>`).join('')}</div>`);
     if (sbases.length) html += field(t('baseplate'), opts('sbase', [{ val: false, label: t('none') }, { val: true, label: sbases.length > 1 ? t('twoParts') : t('include'), file: sbases[0] }]));
   }
   if (drawer) html += toggle('grid', t('gridDiv'));
@@ -1292,6 +1298,8 @@ function renderBuilder() {
 $('.builder').addEventListener('click', e => {   // the options panel and the unit picker in the hero
   const gd = e.target.closest('[data-gd]');
   if (gd) { (state.gdLens ||= {})[gd.dataset.gd] = !state.gdLens[gd.dataset.gd]; state.inc = {}; renderBuilder(); return; }
+  const dkb = e.target.closest('[data-dk]');
+  if (dkb) { (state.divKinds ||= {})[dkb.dataset.dk] = !state.divKinds[dkb.dataset.dk]; state.inc = {}; renderBuilder(); return; }
   const mod = e.target.closest('[data-mod]');
   if (mod) { (state.mods ||= {})[mod.dataset.mod] = !state.mods[mod.dataset.mod]; state.inc = {}; renderBuilder(); return; }
   const b = e.target.closest('[data-set], [data-step]');
@@ -1312,6 +1320,7 @@ $('#config').addEventListener('change', e => {
   if (!k) return;
   state[k] = e.target.checked; state.inc = {};
   // Turning grid dividers on starts with the two pieces that span the drawer: across the width and along the depth.
+  if (k === 'dividers' && state.dividers && !Object.values(state.divKinds || {}).some(Boolean)) state.divKinds = { depth: true, width: true };
   if (k === 'grid' && state.grid && !Object.values(state.gdLens || {}).some(Boolean)) state.gdLens = { [GRID_HOLES[state.w]]: true, [10 + 4 * (state.d - 3)]: true };
   renderBuilder();
 });
