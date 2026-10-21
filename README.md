@@ -6,6 +6,10 @@ A local, offline-first browser hub for finding your way around the VAULT modular
 
 > **Unofficial fan tool.** Not affiliated with or endorsed by USSA. This repository contains **no** STL, PDF or image files from the VAULT project. You supply your own copy of the files you received as a backer / customer (see [Setup](#setup)).
 
+![Builder: choose a unit and get the parts to print](docs/builder.png)
+
+![Search all files with thumbnails](docs/files.png)
+
 ## The problem
 
 The VAULT file pack has 700+ STL files spread over dozens of nested folders (Drawers, Sustainers, Modifications, each split by size family S / M / L / XL, then by depth, modules, roofs, facades, dividers, baseplates...). Working out which files make up *one* drawer, and printing them without missing a part, takes a lot of clicking.
