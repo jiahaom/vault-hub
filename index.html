@@ -1605,7 +1605,9 @@ const colorMaterial = (THREE, finish, hex) => finish === 'basic'
 /* --- Simplified drawers and sustainers built from plain shapes (no STL files needed). --- */
 // The Colors tab shows a tower that follows the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
 // The Builder preview shows the unit you configured with the same shapes.
-const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, LID: 22 };
+const STACK = { S: 164.8, L: 329.6, F1: 50, F2: 100, DEPTH: 190, LID: 22, FEET: 5 };
+// Height of one box (nominal outer height plus the little joint between boxes).
+const UNIT_H = { drawer: { '1F': 50, '2F': 100, '4F': 200 }, sustainer: { '1F': 64, '2F': 100, '4F': 200 } };
 function stackUnits() {
   const { S, L, F1, F2 } = STACK;
   return [
@@ -1632,7 +1634,7 @@ function labelTexture(THREE, dark) {
   return tex;
 }
 
-// Helpers bound to one scene group; every mesh carries its Colors-tab role so it can be recolored and picked.
+// Helpers bound to one scene group; every colorable mesh carries its Colors-tab role so it can be recolored and picked.
 function shapeKit(e) {
   const { THREE, RoundedBoxGeometry: RBG } = e;
   const g = new THREE.Group();
@@ -1640,7 +1642,9 @@ function shapeKit(e) {
   const mat = role => mats[role] ??= colorMaterial(THREE, ROLE_FINISH[role], colorOf(role).hex);
   const fixed = (hex, rough = 0.7) => new THREE.MeshStandardMaterial({ color: hex, roughness: rough, envMapIntensity: 0.5 });
   const bolt = fixed('#1b1b1d', 0.5), slot = fixed('#e8e8e8', 0.6);
-  const rb = (w, h, d, r = 3) => new RBG(w, h, d, 3, Math.min(r, w / 2 - 0.05, h / 2 - 0.05, d / 2 - 0.05));
+  const inkMat = (opacity) => new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity, depthWrite: false });
+  const ink = inkMat(0.3), soft = inkMat(0.13);
+  const rb = (w, h, d, r = 3) => new RBG(w, h, d, 4, Math.min(r, w / 2 - 0.05, h / 2 - 0.05, d / 2 - 0.05));
   const add = (geo, material, x, y, z, role) => {
     const m = new THREE.Mesh(geo, material);
     m.position.set(x, y, z);
@@ -1649,79 +1653,114 @@ function shapeKit(e) {
     g.add(m);
     return m;
   };
+  // Flat marks printed on the front (seams, screw dimples, recesses): a see-through dark layer, so they work on every color.
+  const decal = (geo, x, y, z, material = ink) => { const m = new THREE.Mesh(geo, material); m.position.set(x, y, z); g.add(m); return m; };
+  const ring = (r, x, y, z = 7.7) => decal(new THREE.RingGeometry(r * 0.82, r, 32), x, y, z);
   const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(THREE, isDarkHex(colorOf('label').hex)), transparent: true, depthWrite: false });
-  const label = (cx, w, y, h, ly) => {
-    add(rb(54, 23, 1.6, 3), mat('label'), cx - w / 2 + 40, y + h / 2 + ly, 8.3, 'label');
-    const text = new THREE.Mesh(new THREE.PlaneGeometry(46, 17), labelMat);
-    text.position.set(cx - w / 2 + 40, y + h / 2 + ly, 9.3);
+  // The label is a small plate (about 40 x 14 mm) near the left edge of the facade.
+  const label = (cx, w, y, h, ly, inset = 30) => {
+    add(rb(40, 14, 1.6, 5), mat('label'), cx - w / 2 + inset, y + h / 2 + ly, 8.3, 'label');
+    const text = new THREE.Mesh(new THREE.PlaneGeometry(33, 10), labelMat);
+    text.position.set(cx - w / 2 + inset, y + h / 2 + ly, 9.3);
     g.add(text);
   };
-  return { THREE, g, mats, labelMat, mat, fixed, bolt, slot, rb, add, label };
+  return { THREE, g, mats, labelMat, mat, fixed, bolt, slot, ink, soft, rb, add, decal, ring, label };
 }
 
+const roundedRect = (THREE, w, h, r) => {
+  const s = new THREE.Shape();
+  s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.absarc(w / 2 - r, -h / 2 + r, r, -Math.PI / 2, 0);
+  s.lineTo(w / 2, h / 2 - r); s.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI / 2);
+  s.lineTo(-w / 2 + r, h / 2); s.absarc(-w / 2 + r, h / 2 - r, r, Math.PI / 2, Math.PI);
+  s.lineTo(-w / 2, -h / 2 + r); s.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5);
+  return s;
+};
+
+// A drawer: rounded body, facade with a seam down the middle on 2F / 4F, the rotary key (centered; low on tall boxes),
+// screw dimples, and the label at the left.
 function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
-  const { THREE, add, mat, rb, label } = k;
-  add(rb(w - 1.5, h - 1.5, depth, 3), mat('body'), cx, y + h / 2, -depth / 2, 'body');
-  add(rb(w - 3, h - 3.5, 8, 4), mat('facade'), cx, y + h / 2, 3.5, 'facade');
-  const ky = y + h / 2 + (h > 60 ? -0.17 * h : 0), kx = cx + 0.07 * w;
+  const { THREE, add, mat, rb, label, decal, ring, bolt } = k;
+  add(rb(w - 1.5, h - 1.5, depth, 7), mat('body'), cx, y + h / 2, -depth / 2, 'body');
+  add(rb(w - 3, h - 3.5, 8, 6), mat('facade'), cx, y + h / 2, 3.5, 'facade');
+  const tall = h > 70, ky = y + (h > 150 ? 0.16 * h : tall ? 0.27 * h : 0.5 * h), kx = cx;
+  if (tall) {
+    decal(new THREE.PlaneGeometry(0.9, h - 12), cx, y + h / 2, 7.7);          // facade seam
+    ring(3.4, cx, ky + 27);                                                    // lock mark on the seam
+    ring(5.2, cx - w / 2 + 30, y + h - 25); ring(5.2, cx + w / 2 - 30, y + h - 25);
+  }
+  for (const dx of [27, 52]) if (kx + dx < cx + w / 2 - 14) ring(5.2, kx + dx, ky);
   if (lock === 'hidden') {   // hidden key: just a small round cover on the facade
     add(new THREE.CylinderGeometry(6, 6, 3, 28), mat('key'), kx, ky, 9, 'key').rotation.x = Math.PI / 2;
   } else {
-    add(new THREE.CylinderGeometry(17, 17, 6, 40), mat('key'), kx, ky, 10.5, 'key').rotation.x = Math.PI / 2;
-    add(rb(13, 38, 9, 3), mat('keycap'), kx, ky, 17.5, 'keycap');
+    add(new THREE.CylinderGeometry(18, 18, 8, 48), mat('key'), kx, ky, 11.5, 'key').rotation.x = Math.PI / 2;
+    add(rb(41, 12, 8, 4.5), mat('keycap'), kx, ky, 19.5, 'keycap');           // the lever lies across the knob
+    const dot = add(new THREE.CylinderGeometry(2.2, 2.2, 1, 20), bolt, kx + 14, ky, 23.7); dot.rotation.x = Math.PI / 2;
   }
-  label(cx, w, y, h, h > 60 ? -0.2 * h : -0.06 * h);
+  label(cx, w, y, h, ky - (y + h / 2));
 }
 
+// A sustainer: body, lid, facade, latches (in a recessed pocket) and columns of bolts at both ends.
 function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
-  const { THREE, add, mat, rb, label, bolt, slot } = k;
+  const { THREE, add, mat, rb, label, bolt, slot, decal, soft } = k;
   const { LID } = STACK;
-  add(rb(w - 1.5, h - LID - 1, depth, 3), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
-  add(rb(w, LID, depth + 2, 5), mat('roof'), cx, y + h - LID / 2, -depth / 2 + 1, 'roof');
-  add(rb(w - 3, h - LID - 3.5, 8, 4), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
-  const n = Math.max(0, Math.min(locks, Math.floor(w / 70))), lh = Math.min(62, h - 8);
+  add(rb(w - 1.5, h - LID - 1, depth, 7), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
+  add(rb(w, LID, depth + 2, 8), mat('roof'), cx, y + h - LID / 2, -depth / 2 + 1, 'roof');
+  add(rb(w - 3, h - LID - 3.5, 8, 6), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
+  const n = Math.max(0, Math.min(locks, Math.floor(w / 70))), lh = h < 80 ? h - 8 : h > 150 ? 88 : 62;
   for (let i = 0; i < n; i++) {
     const lx = cx + ((i + 0.5) / n - 0.5) * w, ly = y + h - lh / 2 - 2;
-    add(rb(54, lh, 10, 4), mat('lock'), lx, ly, 9, 'lock');
+    decal(new THREE.PlaneGeometry(58, 20), lx, ly - lh / 2 - 7, 7.7, soft);   // the recess under the latch
+    add(rb(54, lh, 10, 5), mat('lock'), lx, ly, 9, 'lock');
     add(rb(26, 5, 3, 2), slot, lx, ly, 14.5);
   }
-  for (const sx of [-1, 1]) for (const yy of [10, h - LID - 8]) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 10), y + yy, 8).rotation.x = Math.PI / 2;
-  label(cx, w, y, h, -h * 0.2);
+  const rows = h > 150 ? [10, (h - LID) / 2, h - LID - 8] : [10, h - LID - 8];
+  for (const sx of [-1, 1]) for (const yy of rows) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 9), y + yy, 8).rotation.x = Math.PI / 2;
+  label(cx, w, y, h, h < 80 ? 0.1 * h : h > 150 ? -0.3 * h : -0.2 * h, 36);
 }
 
-// Runner stoppers lock the drawer on its rail: flat plates flush with the box's left side wall, about a third of the way back
-// from the front, one per 1F and two per 2F. Only the left wall of the stack is visible, so only boxes on that edge get them.
+// Runner stoppers lock the drawer on its rail: flat pill-shaped plates flush with the box's left side wall, about a third of the way
+// back from the front, one per 1F, two per 2F and four per 4F. Only the left wall of the stack is visible, so only boxes on that edge get them.
 function addStoppers(k, { y, h, kind }, depth, wallX) {
-  const fractions = h < 60 ? [0.5] : h > 150 ? [0.87, 0.62, 0.38, 0.13] : kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3];
-  for (const f of fractions) k.add(k.rb(0.9, 10.5, 18, 1), k.mat('stopper'), wallX, y + h * f, -0.28 * depth, 'stopper');
+  const { THREE } = k;
+  const fractions = h < 80 ? [0.5] : h > 150 ? [0.87, 0.62, 0.38, 0.13] : kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3];
+  const geo = new THREE.ExtrudeGeometry(roundedRect(THREE, 18, 8, 4), { depth: 0.9, bevelEnabled: false, curveSegments: 12 });
+  geo.translate(0, 0, -0.45);
+  geo.rotateY(Math.PI / 2);
+  for (const f of fractions) k.add(geo, k.mat('stopper'), wallX, y + h * f, -0.28 * depth, 'stopper');
 }
 
 // Roof styles of the top unit: grid, bowl, table and under-table mount.
 function addRoof(k, style, w, depth, y) {
   const { THREE, add, mat, rb } = k;
   const rw = w + 2;
-  add(rb(rw, 10, depth + 4, 3), mat('roof'), 0, y + 5, -depth / 2, 'roof');
+  add(rb(rw, 8, depth + 4, 4), mat('roof'), 0, y + 4, -depth / 2, 'roof');
   if (style === 'grid') {
     const nx = Math.max(2, Math.round(rw / 42)), nz = Math.max(2, Math.round(depth / 42));
-    for (let i = 0; i <= nx; i++) add(new THREE.BoxGeometry(2.6, 5, depth + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / nx), y + 11, -depth / 2, 'roof');
-    for (let i = 0; i <= nz; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, y + 11, -depth + 4 + i * ((depth - 8) / nz), 'roof');
+    for (let i = 0; i <= nx; i++) add(new THREE.BoxGeometry(2.6, 5, depth + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / nx), y + 9, -depth / 2, 'roof');
+    for (let i = 0; i <= nz; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, y + 9, -depth + 4 + i * ((depth - 8) / nz), 'roof');
   } else if (style === 'bowl') {   // a shallow tray: raised rim all round
-    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 13, -depth - 0.5, 'roof');
-    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 13, 1.5, 'roof');
-    for (const sx of [-1, 1]) add(new THREE.BoxGeometry(3, 7, depth + 4), mat('roof'), sx * (rw / 2 - 1.5), y + 13, -depth / 2, 'roof');
+    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, -depth - 0.5, 'roof');
+    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, 1.5, 'roof');
+    for (const sx of [-1, 1]) add(new THREE.BoxGeometry(3, 7, depth + 4), mat('roof'), sx * (rw / 2 - 1.5), y + 11, -depth / 2, 'roof');
   } else if (style === 'mount') {   // under-table mount: four flanges to screw the unit to a desk
-    for (const sx of [-1, 1]) for (const sz of [-1, 1]) add(rb(24, 4, 26, 2), mat('roof'), sx * (rw / 2 + 10), y + 3, -depth / 2 + sz * (depth / 2 - 4), 'roof');
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) add(rb(24, 4, 26, 2), mat('roof'), sx * (rw / 2 + 10), y + 2, -depth / 2 + sz * (depth / 2 - 4), 'roof');
   }
 }
 
+// The top handle: about 126 mm wide, with a flange that sits on the roof.
 function addHandle(k, base, depth) {
   const { THREE, add, mat } = k;
-  const rr = (w, h, r) => { const s = new THREE.Shape(); s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.absarc(w / 2 - r, -h / 2 + r, r, -Math.PI / 2, 0); s.lineTo(w / 2, h / 2 - r); s.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI / 2); s.lineTo(-w / 2 + r, h / 2); s.absarc(-w / 2 + r, h / 2 - r, r, Math.PI / 2, Math.PI); s.lineTo(-w / 2, -h / 2 + r); s.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5); return s; };
-  const shape = rr(158, 54, 16);
-  shape.holes.push(new THREE.Path(rr(112, 24, 12).getPoints(24)));
-  const hg = new THREE.ExtrudeGeometry(shape, { depth: 36, bevelEnabled: true, bevelSize: 2.5, bevelThickness: 2.5, bevelSegments: 3, curveSegments: 16 });
-  hg.translate(0, 0, -18);
-  add(hg, mat('handle'), 0, base + 27, -depth * 0.45, 'handle');
+  const shape = roundedRect(THREE, 126, 44, 12);
+  shape.holes.push(new THREE.Path(roundedRect(THREE, 88, 17, 8).getPoints(24)));
+  const hg = new THREE.ExtrudeGeometry(shape, { depth: 30, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 16 });
+  hg.translate(0, 0, -15);
+  add(hg, mat('handle'), 0, base + 24, -depth * 0.45, 'handle');
+}
+
+// Two small feet under the bottom of the stack; the whole group is lifted by their height.
+function addFeet(k, w, depth) {
+  for (const sx of [-1, 1]) k.add(k.rb(26, STACK.FEET, 46, 2), k.mat('body'), sx * (w / 2 - 30), STACK.FEET / 2 - 0.01, -depth / 2, 'body');
+  k.g.position.y = STACK.FEET;
 }
 
 // The Colors tab tower.
@@ -1733,7 +1772,8 @@ function buildTower(e) {
     if (u.kind === 'drawer') addDrawer(k, u, DEPTH); else addSustainer(k, u, DEPTH, 2);
   }
   addRoof(k, 'grid', L, DEPTH, STACK_TOP);
-  addHandle(k, STACK_TOP + 10, DEPTH);
+  addHandle(k, STACK_TOP + 8, DEPTH);
+  addFeet(k, L, DEPTH);
   return { group: k.g, mats: k.mats, labelMat: k.labelMat };
 }
 
@@ -1741,7 +1781,7 @@ function buildTower(e) {
 function buildPreviewUnit(e, st) {
   const k = shapeKit(e);
   const w = SPEC.width[st.w], depth = SPEC.length(st.d), drawer = st.type === 'drawer';
-  const pitch = (drawer ? { '1F': 52.5, '2F': 105, '4F': 210 } : { '1F': 66, '2F': 105, '4F': 210 })[st.h];
+  const pitch = UNIT_H[st.type][st.h];
   const n = Math.max(1, Math.min(st.count | 0, 6));
   for (let i = 0; i < n; i++) {
     const u = { kind: st.type, cx: 0, w, y: i * pitch, h: pitch };
@@ -1751,9 +1791,10 @@ function buildPreviewUnit(e, st) {
   let base = n * pitch;
   if (drawer) {
     const style = /Under/i.test(st.roof) ? 'mount' : /Grid/i.test(st.roof) ? 'grid' : /Bowl/i.test(st.roof) ? 'bowl' : /Table/i.test(st.roof) ? 'table' : '';
-    if (style) { addRoof(k, style, w, depth, base); base += 10; }
+    if (style) { addRoof(k, style, w, depth, base); base += 8; }
     if (st.handle) addHandle(k, base, depth);
   }
+  addFeet(k, w, depth);
   return k;
 }
 

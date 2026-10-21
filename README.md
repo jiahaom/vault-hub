@@ -30,7 +30,7 @@ The VAULT file pack has 700+ STL files spread over dozens of nested folders (Dra
 
 Pick a unit and the hub lists every file you need, so nothing gets missed.
 
-- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate.
+- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate. The shapes follow the real product: rounded modules, a centered rotary key with a horizontal lever (set low on 2F / 4F boxes), a seam down the middle of tall facades, screw dimples, a small label, pill-shaped runner stoppers on the left wall, sustainer latches in a recessed pocket with columns of bolts, a handle about 126 mm wide, and two feet.
 - **Unit type** – Drawer or Sustainer (hinged-lid box).
 - **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
