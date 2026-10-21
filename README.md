@@ -23,7 +23,7 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
 - **Spec strip** – outer and inside dimensions, Gridfinity grid size, and estimated print time and filament weight (published figures, where available).
 - **Parts list** – grouped into Body, Slides / latch / lock, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
-- **Filament finish** – every part is tagged **Matte**, **Basic** or **TPU** (the suggested filament), and the Builder header counts how many of each you need so you can plan filament swaps. The tag is also shown in *All files* and included in *Copy list*. Every STL has a recommendation.
+- **Filament finish** – every part is tagged **Matte**, **Basic** or **TPU** (the suggested filament), and the Builder header counts how many of each you need so you can plan filament swaps. The tag is also shown in *All files* and included in *Copy list*, with a small dot in the color you picked for that part in the Colors tab (parts without a color role, such as runners, show no dot). Every STL has a recommendation.
 - **Smart tags** – "2 pcs in file" marks files that already contain a pair (print once); "Supports" marks files that need support material.
 - **Hardware counts** – bolts and other non-printed parts, with quantities.
 - **Part names** – the official exploded diagram, one click away.
@@ -49,8 +49,8 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 - **Matte palette (8):** White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado. **Basic palette (13):** Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green. A part gets the palette that matches its finish tag.
 - **Nine colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Label, Runner stopper (Basic). Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.
 - **🎲 Shuffle** gives every part a random color.
-- **Templates** – *Save current colors* stores the combination as a row of small color circles (one per distinct color, no name needed). Click one to load it, × to delete it (kept in your browser). **Reset colors** puts every part back to its default.
-- **Import / Download** – Download saves your picks as `colors.json`; Import loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
+- **Templates** – *Save* stores the combination as a row of small color circles (one per distinct color, no name needed). Click one to load it, × to delete it (kept in your browser). **Reset colors** puts every part back to its default.
+- **Save / Import / Export** – all live in the Templates box. *Export* saves your picks as `colors.json`; *Import* loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
 - On-screen colors are approximate. Check a physical swatch before printing.
 
 ### Print checklist

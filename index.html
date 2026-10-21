@@ -242,10 +242,12 @@ button.meta:hover .nm { color: var(--accent); }
 .badge.sup { background: var(--warn-soft); color: var(--warn); }
 .badge.pcs { background: var(--accent-soft); color: var(--accent); }
 .badge.muted { border-color: var(--line); color: var(--faint); }
+.badge.mat { display: inline-flex; align-items: center; gap: 5px; }
+.sw.sm { width: 9px; height: 9px; border-color: rgba(128, 128, 128, .65); }
 .badge.mat.matte { background: var(--text); color: var(--bg); }
 .badge.mat.basic { border-color: var(--line-strong); color: var(--muted); }
 .badge.mat.tpu { border: 1px dashed var(--line-strong); color: var(--muted); }
-.mat-sm { display: none; align-self: flex-start; margin-top: 3px; }
+.badge.mat.mat-sm { display: none; align-self: flex-start; margin-top: 3px; }
 .facts .badge { margin-left: 6px; }
 .qty { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
 .qty.na { color: var(--faint); font-weight: 500; font-size: 12px; }
@@ -365,7 +367,7 @@ button.thumb:hover { border-color: var(--line-strong); }
 .col-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .col-hint { flex: 1; color: var(--faint); font-size: 12.5px; text-align: right; }
 .col-stage {
-  position: relative; height: min(78vh, 820px); min-height: 420px; overflow: hidden;
+  position: relative; height: min(84vh, 880px); min-height: 420px; overflow: hidden;
   border: 1px solid var(--line); border-radius: var(--radius);
   background: radial-gradient(ellipse at 50% 25%, #eceded, #bfc2c7);
 }
@@ -374,18 +376,13 @@ button.thumb:hover { border-color: var(--line-strong); }
 .col-msg { position: absolute; inset: 0; display: grid; place-items: center; z-index: 3; padding: 24px; text-align: center; color: #2a2d31; font-weight: 600; }
 .col-msg .box { background: rgba(255, 255, 255, .92); border-radius: 12px; padding: 16px 20px; max-width: 420px; font-weight: 500; }
 .col-msg h3 { margin: 0 0 6px; font-size: 15px; }
-.col-sum { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; align-items: center; }
-.col-sum .acts { display: flex; gap: 8px; }
-.col-sum .picks { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--muted); min-width: 0; }
-.col-sum .pk { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
-.col-sum .pk > em { font-style: normal; font-weight: 650; color: var(--text); min-width: 78px; }
-.col-sum .picks span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.col-sum .picks b { color: var(--text); font-weight: 600; }
 .col-tip { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; background: rgba(24, 25, 27, .9); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 7px; white-space: nowrap; }
 .col-hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .tpl { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .tplchip { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
 .tplchip button { border: 0; background: none; padding: 5px 10px; font-size: 13px; color: var(--muted); }
+.tplact { display: flex; gap: 8px; margin-top: 8px; }
+.tplact .btn { flex: 1; justify-content: center; }
 .tplchip button { display: inline-flex; align-items: center; gap: 6px; }
 .tplchip .dots { display: inline-flex; gap: 3px; }
 .tplchip .sw { width: 12px; height: 12px; }
@@ -417,8 +414,7 @@ button.thumb:hover { border-color: var(--line-strong); }
 @media (max-width: 960px) {
   .colors { grid-template-columns: 1fr; }
   .col-main { order: -1; }
-  .col-sum { grid-template-columns: 1fr; }
-  .builder, .manuals { grid-template-columns: 1fr; }
+    .builder, .manuals { grid-template-columns: 1fr; }
   .config, .doclist { position: static; max-height: none; }
   .brand-sub { display: none; }
 }
@@ -432,7 +428,7 @@ button.thumb:hover { border-color: var(--line-strong); }
   .row, .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) 36px auto; padding-left: 12px; gap: 8px; }
   .thumb { width: 40px; height: 40px; }
   .row .badges, .row .sz { display: none; }
-  .mat-sm { display: inline-block; }
+  .badge.mat.mat-sm { display: inline-flex; }
   .specs { grid-template-columns: 1fr 1fr; }
   .col-hint { display: none; }
   .col-bar .btn { flex: 1; justify-content: center; }
@@ -490,7 +486,6 @@ button.thumb:hover { border-color: var(--line-strong); }
         <div class="col-stage" id="col-stage">
           <div class="col-msg" id="col-msg" hidden></div>
         </div>
-        <div class="col-sum" id="col-sum"></div>
       </div>
     </div>
   </section>
@@ -578,8 +573,8 @@ const store = {
 const I18N = {
   en: {
     langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals', tabColors: 'Colors',
-    colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current colors', colTplExists: 'That color combination is already saved', colTplSavedPlain: 'Template saved', colTplLoaded: n => `Loaded ${n}`, colTplDel: 'Delete template', colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
-    colDownload: 'Download', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file',
+    colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: 'Save', colTplExists: 'That color combination is already saved', colTplSavedPlain: 'Template saved', colTplLoaded: n => `Loaded ${n}`, colTplDel: 'Delete template', colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
+    colDownload: 'Export', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file',
     colNote: 'On-screen colors are approximate. Check against a physical swatch before printing.',
     role_body: 'Body', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
     c_white: 'White', c_black: 'Black', c_lime: 'Lime', c_grey: 'Grey', c_pink: 'Pink', c_lightblue: 'Light blue', c_violet: 'Violet', c_avocado: 'Avocado', c_orange: 'Orange', c_red: 'Red', c_yellow: 'Yellow', c_green: 'Green', c_blue: 'Blue', c_darkblue: 'Dark Blue', c_beige: 'Beige', c_brown: 'Brown', c_bluegrey: 'Blue Grey', c_darkgreen: 'Dark Green',
@@ -618,8 +613,8 @@ const I18N = {
   },
   zh: {
     langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书', tabColors: '配色',
-    colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplExists: '这个配色组合已经保存过了', colTplSavedPlain: '模板已保存', colTplLoaded: n => `已载入 ${n}`, colTplDel: '删除模板', colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
-    colDownload: '下载', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色',
+    colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '保存', colTplExists: '这个配色组合已经保存过了', colTplSavedPlain: '模板已保存', colTplLoaded: n => `已载入 ${n}`, colTplDel: '删除模板', colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
+    colDownload: '导出', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色',
     colNote: '屏幕上的颜色仅供参考,打印前请对照实物色卡确认。',
     role_body: '主体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
     c_white: '白色', c_black: '黑色', c_lime: '黄绿色', c_grey: '灰色', c_pink: '粉色', c_lightblue: '浅蓝色', c_violet: '紫罗兰', c_avocado: '牛油果绿', c_orange: '橙色', c_red: '红色', c_yellow: '黄色', c_green: '绿色', c_blue: '蓝色', c_darkblue: '深蓝色', c_beige: '米色', c_brown: '棕色', c_bluegrey: '蓝灰色', c_darkgreen: '深绿色',
@@ -901,14 +896,32 @@ function material(f) {
   if (/Module|Box|Back Panel|Roof|Baseplate|Divider|Facade/i.test(f.name) || /\/Facades?\//.test(f.p)) return 'matte';
   return '';
 }
-const matBadge = (m, cls = '') => m ? `<span class="badge mat ${m}${cls}" title="${esc(t(m + 'Tip'))}">${esc(t(m))}</span>` : '';
+// Which part of the Colors tab a file belongs to, so its Matte / Basic tag can show the color picked there.
+// Matte parts without a role of their own follow the body color; basic parts without a role (runners, springs, hinges...) show no color.
+function colorRole(f) {
+  const m = material(f), n = f.name;
+  if (m === 'matte') return /Facade/i.test(n) || /\/Facades?\//.test(f.p) ? 'facade' : /Roof/i.test(n) ? 'roof' : 'body';
+  if (m !== 'basic') return '';
+  if (/Key Cap/i.test(n)) return 'keycap';
+  if (/Key/i.test(n)) return 'key';
+  if (/Handle/i.test(n)) return 'handle';
+  if (/Label/i.test(n)) return 'label';
+  if (/Runner Stopper/i.test(n)) return 'stopper';
+  if (/LOCK /i.test(n) || /\/Locks\//.test(f.p)) return 'lock';
+  return '';
+}
+const matBadge = (m, cls = '', f = null) => {
+  if (!m) return '';
+  const role = f ? colorRole(f) : '', c = role ? colorOf(role) : null;
+  return `<span class="badge mat ${m}${cls}" title="${esc(t(m + 'Tip') + (c ? ' · ' + colorName(c) : ''))}">${c ? `<i class="sw sm" style="background:${c.hex}"></i>` : ''}${esc(t(m))}</span>`;
+};
 
 function badges(f, item = {}) {
   const b = [];
-  if (item.mat) b.push(matBadge(material(f)));
   if (/turn on supports/i.test(f.name)) b.push(`<span class="badge sup">${t('supports')}</span>`);
   if (item.pcs) b.push(`<span class="badge pcs">${t('pcs', item.pcs)}</span>`);
   if (!isModel(f)) b.push(`<span class="badge muted">${ext(f).toUpperCase()}</span>`);
+  if (item.mat) b.push(matBadge(material(f), '', f));   // the material tag comes last
   return b.join('');
 }
 
@@ -923,7 +936,7 @@ function fileRow(f, item = null) {
   return `<li class="row${done ? ' done' : ''}" data-path="${esc(f.p)}">
     ${canCheck ? `<label class="ck"><input type="checkbox" data-act="check"${done ? ' checked' : ''} aria-label="${esc(t('markPrinted'))}"><span></span></label>` : '<span></span>'}
     ${thumb(f, isModel(f) ? ICON.cube : ICON.eye)}
-    <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span>${matBadge(material(f), ' mat-sm')}</button>
+    <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span>${matBadge(material(f), ' mat-sm', f)}</button>
     <span class="badges">${badges(f, { ...item, mat: true })}</span>
     ${item ? qty : ''}
     <span class="sz">${fmtSize(f.s)}</span>
@@ -1127,6 +1140,7 @@ function showTab(name) {
   history.replaceState(null, '', '#' + name);
   $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
   $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + name; });
+  if (name === 'build') renderBuilder();   // the Matte / Basic tags show the colors picked in the Colors tab
   if (name === 'manuals') renderManuals();
   if (name === 'files') renderFiles();
   if (name === 'colors') renderColors();
@@ -1508,7 +1522,7 @@ function renderColors() {
   const role = colorUI.role, finish = ROLE_FINISH[role];
   $('#col-config').innerHTML =
     field(t('colTpl'), `<div class="tpl"><span class="tplchip"><button type="button" data-ctpl="default" aria-pressed="${matchesTemplate({ choice: {} })}">${templateLabel({ choice: {} }, t('colTplDefault'))}</button></span>${templates().map((x, i) =>
-      `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${templateLabel(x, '')}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><button type="button" class="btn" data-cact="save">${esc(t('colTplSave'))}</button>`) +
+      `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${templateLabel(x, '')}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><div class="tplact"><button type="button" class="btn" data-cact="save">+ ${esc(t('colTplSave'))}</button></div><div class="tplact"><button type="button" class="btn" data-cact="import">↥ ${esc(t('colImport'))}</button><button type="button" class="btn" data-cact="download">↧ ${esc(t('colDownload'))}</button></div>`) +
     field(t('colPart'), `<div class="plist">${ROLES.map(r => {
       const c = colorOf(r);
       return `<button type="button" class="prow" data-crole="${r}" aria-pressed="${r === role}"><i class="sw" style="background:${c.hex}"></i><span class="nm">${esc(t('role_' + r))}</span><span class="badge mat ${ROLE_FINISH[r]}">${esc(t(ROLE_FINISH[r]))}</span><span class="cn">${esc(colorName(c))}</span></button>`;
@@ -1517,10 +1531,6 @@ function renderColors() {
       `<button type="button" data-ccolor="${c.id}" aria-pressed="${c.id === colorOf(role).id}"><i class="sw" style="background:${c.hex}"></i>${esc(colorName(c))}<small>${c.hex}</small></button>`).join('')}</div>`, t(finish)) +
     (finish === 'matte' ? `<button type="button" class="btn" data-cact="all">${esc(t('colAll'))}</button>` : '') +
     `<p class="col-note">${esc(t('colNote'))}</p>`;
-  $('#col-sum').innerHTML = `<div class="picks"><div class="pk">${ROLES.map(r => {
-    const c = colorOf(r);
-    return `<span><i class="sw" style="background:${c.hex}"></i><b>${esc(t('role_' + r))}</b> ${esc(colorName(c))}</span>`;
-  }).join('')}</div></div><div class="acts"><button class="btn" data-cact="import"><span>↥ ${esc(t('colImport'))}</span></button> <button class="btn primary" data-cact="download"><span>${esc(t('colDownload'))}</span></button></div>`;
   buildColors();
 }
 
