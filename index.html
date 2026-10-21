@@ -198,61 +198,80 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 }
 
 .results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+/* ---------- Hero: a drafting-sheet title block ----------
+   Order: configure (type × quantity, material and print totals, Gather) → size pickers → measured result.
+   Mono numerals, one accent mark on the headline measurement, a faint drafting grid fading in from the corner. */
 .summary {
+  container: hero / inline-size; position: relative; isolation: isolate; overflow: hidden;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 16px 24px; align-items: center;
+  padding: 22px 24px 24px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px 24px; align-items: start;
 }
-.summary h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; line-height: 1.15; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.summary h1 em { font-style: normal; color: var(--accent); }
-.summary h1 .hero-ctl { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; letter-spacing: 0; }
-.summary h1 .hero-ctl i { font-style: normal; color: var(--faint); }
-.hero-ctl .seg, .hero-ctl .stepper { height: 38px; box-sizing: border-box; }
+.summary::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px; background-position: -1px -1px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 90% at 100% 0%, #000 0%, transparent 70%); mask-image: radial-gradient(ellipse 70% 90% at 100% 0%, #000 0%, transparent 70%);
+}
+.hero-main { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.hero-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.hero-ctl > i { font-style: normal; font-size: 15px; color: var(--faint); }
+.hero-ctl .seg, .hero-ctl .stepper { height: 40px; box-sizing: border-box; background: var(--panel-2); }
 .hero-ctl .seg { width: auto; }
-.hero-ctl .seg button { flex: none; padding: 0 14px; justify-content: center; }
-.hero-ctl .stepper button { height: 100%; }
-.summary .facts { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.hero-ctl .seg button { flex: none; padding: 0 16px; justify-content: center; font-size: 13.5px; }
+.hero-ctl .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); box-shadow: none; }
+.hero-ctl .stepper output { font-family: var(--mono); font-size: 14px; min-width: 34px; }
+.hero-ctl .stepper button { height: 100%; width: 36px; }
+
+.facts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; color: var(--muted); font-size: 12.5px; }
+.facts .print { display: inline-flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; margin-left: 4px; }
+.facts .print span { display: inline-flex; align-items: center; gap: 5px; }
+.facts .print svg { width: 14px; height: 14px; color: var(--faint); flex: none; }
+.facts .print em { font-style: normal; color: var(--faint); font-size: 11.5px; }
 .summary .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.spec { background: var(--panel-2); box-shadow: 0 0 0 .5px var(--line); padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.spec span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
-.spec b { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.spec b i { font-style: normal; font-weight: 500; font-size: 12px; color: var(--muted); }
-.spec small { font-size: 11.5px; color: var(--faint); }
-/* Spec cells always fill their rows: phone = Outer on its own row, then pairs; medium = 3 + 2; wide = one row. */
-.specs[data-n="3"] .spec:first-child, .specs[data-n="5"] .spec:first-child { grid-column: span 2; }
-@container hero (min-width: 480px) {
-  .specs[data-n="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .specs[data-n="5"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .specs[data-n="3"] .spec:first-child { grid-column: auto; }
-  .specs[data-n="5"] .spec { grid-column: span 2; }
-  .specs[data-n="5"] .spec:nth-child(n+4) { grid-column: span 3; }
+.summary .acts .btn { height: 40px; padding: 0 16px; }
+
+/* Size pickers: W × L × H, selected = accent ring. All controls share one height. */
+.unit-pick {
+  grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px;
+  padding-top: 20px; border-top: 1px solid var(--line); --pick-h: 58px;
 }
-@container hero (min-width: 760px) {
-  .specs[data-n] { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
-  .specs[data-n] .spec:nth-child(n) { grid-column: auto; }
-}
-/* Hero picker: Width · Length · Height (W × L × H, like the Outer spec below); narrow: one row each. Type and Quantity sit in the title row. */
-.summary { container: hero / inline-size; }
-.unit-pick { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px 16px; }
 .pick { min-width: 0; grid-column: span 6; }
-.pick > .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
-.pick > .lbl small { font-size: 11px; font-weight: 450; letter-spacing: 0; text-transform: none; }
+.pick > .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 11px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.pick > .lbl small { font-size: 11px; font-weight: 450; letter-spacing: 0; text-transform: none; color: var(--faint); }
+.unit-pick .seg { height: var(--pick-h); box-sizing: border-box; background: var(--panel-2); }
+.unit-pick .seg button { justify-content: center; font-size: 14px; }
+.unit-pick .seg button small { font-family: var(--mono); font-size: 10.5px; }
+.unit-pick .seg button[aria-pressed="true"] { background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--text); }
+.unit-pick .seg button[aria-pressed="true"] small { color: var(--accent); }
+
+/* Measured result: Outer is the headline figure. */
+.specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--panel-2) 70%, transparent); overflow: hidden; }
+.spec { padding: 14px 16px 13px; display: flex; flex-direction: column; gap: 3px; min-width: 0; box-shadow: 0 0 0 .5px var(--line); }
+.spec:first-child { grid-column: span 2; box-shadow: 0 0 0 .5px var(--line), inset 3px 0 0 var(--accent); padding-left: 18px; }
+.spec span { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); }
+.spec b { font-family: var(--mono); font-size: 17px; font-weight: 600; letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; animation: spec-in .22s ease both; }
+.spec:first-child b { font-size: 23px; }
+.spec b i { font-style: normal; font-weight: 450; font-size: 12px; letter-spacing: 0; color: var(--muted); margin-left: 7px; }
+.spec small { font-size: 11.5px; color: var(--faint); }
+@keyframes spec-in { from { opacity: 0; transform: translateY(4px); } }
+@container hero (min-width: 760px) {
+  .specs { grid-template-columns: 1.5fr 1.25fr 1fr; }
+  .spec:first-child { grid-column: auto; }
+}
 @container hero (min-width: 540px) {
   .unit-pick { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .pick.p-w { grid-column: span 4; }
   .pick.p-d { grid-column: span 5; }
   .pick.p-h { grid-column: span 3; }
 }
-/* Every picker control is the same height, whether its buttons carry a mm line or not. */
-.unit-pick { --pick-h: 58px; }
-.unit-pick .seg, .unit-pick .stepper { height: var(--pick-h); box-sizing: border-box; }
-.unit-pick .seg button { justify-content: center; }
-.unit-pick .stepper { display: flex; width: 100%; justify-content: space-between; }
-.unit-pick .stepper button { height: 100%; width: 38px; }
-.progress { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--muted); }
-.bar { flex: 1; height: 6px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
-.bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 999px; transition: width .3s ease; }
-.progress b { color: var(--text); font-variant-numeric: tabular-nums; }
+@container hero (max-width: 539px) {
+  .summary { grid-template-columns: 1fr; padding: 18px 18px 20px; }
+  .hero-ctl { flex-wrap: nowrap; gap: 8px; }
+  .hero-ctl .seg { flex: 1; min-width: 0; }
+  .hero-ctl .seg button { flex: 1; padding: 0 6px; }
+  .summary .acts { justify-content: stretch; }
+  .summary .acts .btn { flex: 1; justify-content: center; }
+}
 
 .section { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .section-hd { display: flex; align-items: baseline; gap: 10px; padding: 13px 18px 11px; border-bottom: 1px solid var(--line); }
@@ -297,7 +316,6 @@ button.meta:hover .nm { color: var(--accent); }
 .badge.mat.basic { border-color: var(--line-strong); color: var(--muted); }
 .badge.mat.tpu { border: 1px dashed var(--line-strong); color: var(--muted); }
 .badge.mat.mat-sm { display: none; align-self: flex-start; margin-top: 3px; }
-.facts .badge { margin-left: 6px; }
 .qty { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
 .qty.na { color: var(--faint); font-weight: 500; font-size: 12px; }
 .sz { font-size: 12px; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -650,8 +668,8 @@ const I18N = {
     m6: 'M6 bolt, 40–60 mm', m6Note: 'for the roof handle', seeManual: 'see manual',
     specOuter: 'Outer', specInside: 'Inside', specWLH: 'W × L × H', specGrid: 'Gridfinity', specGridSub: '42 mm units',
     specPrint: h => `${h} module`, specRoof: 'Roof + extras', specPerUnit: 'per unit · published', specOnce: 'once per stack · published', specX3: 'published for the x3 size',
-    printed: 'printed', files: n => `${n} files`,
-    gather: 'Gather into folder', gathered: f => `Copied to ${f}`, clear: 'Clear checks',
+    files: n => `${n} files`,
+    gather: 'Gather into folder', gathered: f => `Copied to ${f}`,
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
@@ -690,8 +708,8 @@ const I18N = {
     m6: 'M6 螺丝，40–60 mm', m6Note: '用于顶部提手', seeManual: '见手册',
     specOuter: '外形', specInside: '内部', specWLH: '宽 × 长 × 高', specGrid: 'Gridfinity', specGridSub: '每格 42 mm',
     specPrint: h => `${h} 盒体打印`, specRoof: '顶盖 + 配件', specPerUnit: '每个 · 官方数据', specOnce: '每组堆叠一次 · 官方数据', specX3: '官方数据为 x3 尺寸',
-    printed: '已打印', files: n => `${n} 个文件`,
-    gather: '汇总到文件夹', gathered: f => `已复制到 ${f}`, clear: '清除勾选',
+    files: n => `${n} 个文件`,
+    gather: '汇总到文件夹', gathered: f => `已复制到 ${f}`,
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
@@ -1163,20 +1181,32 @@ function unitPicker() {
   </div>`;
 }
 
+// Published print time and filament, summed into one figure (grams first, then time). Published for the x3 length only.
+// A drawer prints its roof once per stack; everything else is per unit, so it scales with the quantity.
+const toMin = hm => { const [h, m] = hm.split(':').map(Number); return h * 60 + m; };
+const fmtHM = min => `${Math.floor(min / 60)}:${String(min % 60).padStart(2, '0')}`;
+function printFacts() {
+  const { type, w, d, h, count } = state;
+  const pr = SPEC.print[type][w];
+  if (!pr?.[h]) return '';
+  const mod = pr[h], roof = pr.roof, nm = count;
+  const grams = mod[1] * nm + (roof ? roof[1] * (type === 'drawer' ? 1 : count) : 0);
+  const mins = toMin(mod[0]) * nm + (roof ? toMin(roof[0]) * (type === 'drawer' ? 1 : count) : 0);
+  const note = `${t('specPrint', h)}${nm > 1 ? ` × ${nm}` : ''}${roof ? ` + ${t('specRoof')}${type === 'drawer' ? '' : nm > 1 ? ` × ${nm}` : ''}` : ''} · ${d === 3 ? t('specPerUnit') : t('specX3')}`;
+  const icon = { g: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h12l-1.6-10H7.6L6 20Z"/><circle cx="12" cy="6" r="2.5"/></svg>', t: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9.5 2.5h5"/></svg>' };
+  return `<span class="print" title="${esc(note)}"><span>${icon.g}${grams} g</span><span>${icon.t}${fmtHM(mins)} h${d === 3 ? '' : ' <em>x3</em>'}</span></span>`;
+}
+
 function specGrid() {
   const { type, w, d, h } = state;
   const ins = SPEC.inside[type];
   const outer = `${mm(SPEC.width[w])} × ${SPEC.length(d)} × ${SPEC.height[type][h]}`;
   const inside = ins.width[w] ? `${ins.width[w]} × ${ins.length(d)} × ${ins.height[h]}` : '—';
-  const pr = SPEC.print[type][w];
-  const est = pr?.[h];
   const cell = (label, value, sub = '') => `<div class="spec"><span>${esc(label)}</span><b>${value}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
   const cells = [
-    cell(t('specOuter'), `${outer} <i>mm</i>`, t('specWLH')),
-    cell(t('specInside'), inside === '—' ? '—' : `${inside} <i>mm</i>`, t('specWLH')),
+    cell(t('specOuter'), `${outer}<i>mm</i>`, t('specWLH')),
+    cell(t('specInside'), inside === '—' ? '—' : `${inside}<i>mm</i>`, t('specWLH')),
     cell(t('specGrid'), `${SPEC.gridWidth[w]} × ${d}`, t('specGridSub')),
-    est && cell(t('specPrint', h), `${est[0]} <i>h</i> · ${est[1]} <i>g</i>`, d === 3 ? t('specPerUnit') : t('specX3')),
-    pr?.roof && cell(t('specRoof'), `${pr.roof[0]} <i>h</i> · ${pr.roof[1]} <i>g</i>`, d === 3 ? t('specOnce') : t('specX3')),
   ].filter(Boolean);
   return `<div class="specs" data-n="${cells.length}" style="--n:${cells.length}">${cells.join('')}</div>`;
 }
@@ -1185,20 +1215,17 @@ function renderResults() {
   const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
   const files = activeItems(sections).filter(i => i.f);
   const unique = [...new Map(files.map(i => [i.f.p, i.f])).values()];
-  const done = unique.filter(f => printed.has(f.p)).length;
   $('#results').innerHTML = `
     <div class="summary">
-      <div>
-        <h1><span class="hero-ctl" role="group" aria-label="${esc(t('type') + ' / ' + t('count'))}">${seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }])}<i>×</i>${stepperCtl('count')}</span></h1>
-        <div class="facts">${['matte', 'basic', 'tpu'].map(m => { const n = unique.filter(f => material(f) === m).length; return n ? `<span class="badge mat ${m}">${esc(t(m))} × ${n}</span>` : ''; }).join('')}</div>
+      <div class="hero-main">
+        <div class="hero-ctl" role="group" aria-label="${esc(t('type') + ' / ' + t('count'))}">${seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }])}<i>×</i>${stepperCtl('count')}</div>
+        <div class="facts">${['matte', 'basic', 'tpu'].map(m => { const n = unique.filter(f => material(f) === m).length; return n ? `<span class="badge mat ${m}">${esc(t(m))} × ${n}</span>` : ''; }).join('')}${printFacts()}</div>
       </div>
       <div class="acts">
         <button class="btn primary" data-act="gather" title="_Print Jobs/…">${ICON.gather}<span>${esc(t('gather'))}</span></button>
       </div>
       ${unitPicker()}
       ${specGrid()}
-      <div class="progress"><span><b>${done}</b> / ${unique.length} ${esc(t('printed'))}</span><div class="bar"><i style="width:${unique.length ? done / unique.length * 100 : 0}%"></i></div>
-        ${done ? `<button class="btn" data-act="clear" style="padding:4px 10px;font-size:12px">${esc(t('clear'))}</button>` : ''}</div>
     </div>
     <div data-list style="display:contents">
     ${sections.map(s => `<section class="section">
@@ -1374,10 +1401,6 @@ document.addEventListener('click', async e => {
       const res = await hubCall('/api/gather', { name, paths: JSON.parse($('#results').dataset.files || '[]') });
       toast(t('gathered', res.folder));
     } catch (err) { toast(err.message); }
-  } else if (act === 'clear') {
-    JSON.parse($('#results').dataset.files || '[]').forEach(p => printed.delete(p));
-    savePrinted();
-    renderResults();
   }
 });
 
