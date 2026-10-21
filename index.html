@@ -242,6 +242,10 @@ button.meta:hover .nm { color: var(--accent); }
 .badge.sup { background: var(--warn-soft); color: var(--warn); }
 .badge.pcs { background: var(--accent-soft); color: var(--accent); }
 .badge.muted { border-color: var(--line); color: var(--faint); }
+.badge.mat.matte { background: var(--text); color: var(--bg); }
+.badge.mat.basic { border-color: var(--line-strong); color: var(--muted); }
+.mat-sm { display: none; align-self: flex-start; margin-top: 3px; }
+.facts .badge { margin-left: 6px; }
 .qty { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
 .qty.na { color: var(--faint); font-weight: 500; font-size: 12px; }
 .sz { font-size: 12px; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -369,6 +373,7 @@ button.thumb:hover { border-color: var(--line-strong); }
   .row, .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) 36px auto; padding-left: 12px; gap: 8px; }
   .thumb { width: 40px; height: 40px; }
   .row .badges, .row .sz { display: none; }
+  .mat-sm { display: inline-block; }
   .specs { grid-template-columns: 1fr 1fr; }
   .spec b { font-size: 14px; white-space: normal; }
   .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) auto; }
@@ -509,7 +514,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    supports: 'Supports', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    supports: 'Supports', matte: 'Matte', basic: 'Basic', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -544,7 +549,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    supports: '需支撑', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    supports: '需支撑', matte: '哑光', basic: '普通', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -785,8 +790,18 @@ const thumb = (f, icon = ICON.cube) => {
 };
 const prettyName = n => n.replace(/\.stl$/i, '').replace(/\s*\(turn on supports\)/i, '').replace(/\s+/g, ' ').trim();
 
+// Suggested filament finish per part type. Hinges, rods and the sustainer lock set have no recommendation yet.
+function material(f) {
+  if (!isModel(f)) return '';
+  if (/Handle|Runner|Key|Latch|Spring|Rail|Label|Facade Cap/i.test(f.name)) return 'basic';
+  if (/Module|Box|Back Panel|Roof|Baseplate|Divider|Facade/i.test(f.name) || /\/Facades?\//.test(f.p)) return 'matte';
+  return '';
+}
+const matBadge = (m, cls = '') => m ? `<span class="badge mat ${m}${cls}" title="${esc(t(m + 'Tip'))}">${esc(t(m))}</span>` : '';
+
 function badges(f, item = {}) {
   const b = [];
+  if (item.mat) b.push(matBadge(material(f)));
   if (/turn on supports/i.test(f.name)) b.push(`<span class="badge sup">${t('supports')}</span>`);
   if (item.pcs) b.push(`<span class="badge pcs">${t('pcs', item.pcs)}</span>`);
   if (!isModel(f)) b.push(`<span class="badge muted">${ext(f).toUpperCase()}</span>`);
@@ -804,8 +819,8 @@ function fileRow(f, item = null) {
   return `<li class="row${done ? ' done' : ''}" data-path="${esc(f.p)}">
     ${canCheck ? `<label class="ck"><input type="checkbox" data-act="check"${done ? ' checked' : ''} aria-label="${esc(t('markPrinted'))}"><span></span></label>` : '<span></span>'}
     ${thumb(f, isModel(f) ? ICON.cube : ICON.eye)}
-    <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span></button>
-    <span class="badges">${badges(f, item || {})}</span>
+    <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span>${item ? matBadge(material(f), ' mat-sm') : ''}</button>
+    <span class="badges">${badges(f, item ? { ...item, mat: true } : {})}</span>
     ${item ? qty : ''}
     <span class="sz">${fmtSize(f.s)}</span>
     <span class="acts-row">
@@ -898,7 +913,7 @@ function renderResults() {
     <div class="summary">
       <div>
         <h1><span>${esc(state.w + state.d)} <em>·</em> ${esc(state.h)}</span><small>${esc(label)} × ${state.count}</small></h1>
-        <div class="facts">${esc(t('files', unique.length))} · ${fmtSize(bytes)}</div>
+        <div class="facts">${esc(t('files', unique.length))} · ${fmtSize(bytes)}${['matte', 'basic'].map(m => { const n = unique.filter(f => material(f) === m).length; return n ? `<span class="badge mat ${m}">${esc(t(m))} × ${n}</span>` : ''; }).join('')}</div>
       </div>
       <div class="acts">
         <button class="btn" data-act="copy">${ICON.copy}<span>${esc(t('copyList'))}</span></button>
@@ -1059,7 +1074,7 @@ document.addEventListener('click', async e => {
       lines.push('', `## ${s.title}`);
       for (const i of s.items) {
         const q = i.qty == null ? t('asNeeded') : '×' + (i.once || i.raw || s.raw ? i.qty : i.qty * state.count);
-        lines.push(`[${i.f && printed.has(i.f.p) ? 'x' : ' '}] ${q}  ${i.f ? i.f.p : i.hw || i.missing}`);
+        lines.push(`[${i.f && printed.has(i.f.p) ? 'x' : ' '}] ${q}  ${i.f ? i.f.p : i.hw || i.missing}${i.f && material(i.f) ? `  (${t(material(i.f))})` : ''}`);
       }
     }
     await copyText(lines.join('\n'));

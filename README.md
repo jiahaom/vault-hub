@@ -23,6 +23,7 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
 - **Spec strip** – outer and inside dimensions, Gridfinity grid size, and estimated print time and filament weight (published figures, where available).
 - **Parts list** – grouped into Body, Slides / latch / lock, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
+- **Filament finish** – every part is tagged **Matte** or **Basic** (the suggested filament type), and the header counts how many of each you need so you can plan filament swaps. The tag is included in *Copy list*. Parts with no recommendation (hinges, rods and the sustainer lock set) are left untagged.
 - **Smart tags** – "2 pcs in file" marks files that already contain a pair (print once); "Supports" marks files that need support material.
 - **Hardware counts** – bolts and other non-printed parts, with quantities.
 - **Part names** – the official exploded diagram, one click away.
@@ -30,6 +31,13 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 ![Builder showing an M4 2F sustainer](docs/builder-sustainer.png)
 
 *The sustainer view adds hinges & rods, a lock set and a locks-per-unit counter.*
+
+| Suggested finish | Parts |
+|---|---|
+| **Matte** | Modules, boxes, roofs, facades, baseplates, dividers |
+| **Basic** | Handles, runners (guides / slides / stopper), key and key cap, latch, springs, rails, labels, facade caps |
+
+The rules live in the `material()` function in `index.html`, so you can adjust them.
 
 ### Print checklist
 
