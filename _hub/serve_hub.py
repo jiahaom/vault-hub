@@ -118,7 +118,21 @@ def is_hub(port):
         return False
 
 
+def ensure_index():
+    """First run: the shipped index.html has an empty file list. Build it from the files next to it."""
+    page = ROOT / "index.html"
+    try:
+        empty = '<script id="manifest" type="application/json">[]</script>' in page.read_text(encoding="utf-8")
+    except OSError:
+        return
+    if empty:
+        print("First run: indexing your VAULT files (a few seconds)...")
+        import runpy
+        runpy.run_path(str(ROOT / "_hub" / "update_index.py"), run_name="__main__")
+
+
 def main():
+    ensure_index()
     # A busy port may be this hub (just reopen it) or some other server, such as a
     # leftover plain file server - then move on to the next port instead.
     for port in range(PORT, PORT + 10):

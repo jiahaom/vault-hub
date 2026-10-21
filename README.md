@@ -1,12 +1,12 @@
 # VAULT Hub 🧰
 
-## ▶ Start here (about 2 minutes)
+## ▶ Start here (about 1 minute)
 
 1. 📁 Copy this repo's files into your **VAULT folder root** (the folder that contains `01. DRAWERS`).
-2. 🔧 Run once: `python3 _hub/update_index.py`
-3. 🚀 Double-click **`Open VAULT Hub (Mac).command`** or **`Open VAULT Hub (Windows).bat`**.
+2. 🚀 Double-click **`Open VAULT Hub (Mac).command`** or **`Open VAULT Hub (Windows).bat`**.
 
 ✅ **Done when** your browser opens `http://127.0.0.1:8765` and shows the Builder. Keep the terminal window open.
+(The first launch indexes your files by itself, a few seconds.)
 
 ❓ No VAULT folder yet? Download the files from your own Kickstarter / USSA account first. This repo contains none.
 
@@ -136,6 +136,7 @@ VAULT/
 - **macOS:** double-click the `.command` (first time: right-click → Open).
 - **Windows:** double-click the `.bat`. It uses Python, or a built-in PowerShell server.
 - **Linux:** `python3 _hub/serve_hub.py`
+- **First launch:** the launcher builds the file index automatically (Python launchers only; the PowerShell fallback needs `python3 _hub/update_index.py` first).
 - **After you add or rename files:** `python3 _hub/update_index.py`
 - **Optional thumbnails** (not included; needs Node, Playwright, Chrome): `VAULT_PORT=8799 python3 _hub/serve_hub.py`, then `node _hub/make_thumbs.mjs`, then `python3 _hub/update_index.py`
 
@@ -146,7 +147,7 @@ The Colors tab and the Builder preview are drawn from plain shapes and work with
 ## 🧯 If something breaks
 
 1. **Terminal says Python not found** → install Python 3 from python.org, then double-click the launcher again.
-2. **Page opens but the file list is empty** → you skipped step 2. Run `python3 _hub/update_index.py`, then refresh.
+2. **Page opens but the file list is empty** → the folder has no VAULT files, or you added files later. Run `python3 _hub/update_index.py`, then refresh.
 3. **3D views are blank** → no internet. three.js loads from a CDN. Reconnect and refresh.
 4. **Hub stops after a few seconds** → the terminal window was closed. Re-run the launcher and leave the window open.
 5. **"Show in folder" does nothing** → you opened `index.html` directly. Use the launcher.

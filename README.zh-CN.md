@@ -1,12 +1,12 @@
 # VAULT Hub 🧰
 
-## ▶ 从这里开始(约 2 分钟)
+## ▶ 从这里开始(约 1 分钟)
 
 1. 📁 把本仓库的文件复制到你的 **VAULT 文件夹根目录**(就是有 `01. DRAWERS` 的那个)。
-2. 🔧 运行一次:`python3 _hub/update_index.py`
-3. 🚀 双击 **`Open VAULT Hub (Mac).command`** 或 **`Open VAULT Hub (Windows).bat`**。
+2. 🚀 双击 **`Open VAULT Hub (Mac).command`** 或 **`Open VAULT Hub (Windows).bat`**。
 
 ✅ **成功的标志:** 浏览器打开 `http://127.0.0.1:8765` 并显示"清单"页。使用期间请保持终端窗口不要关闭。
+(第一次启动会自动为你的文件建索引,几秒钟。)
 
 ❓ 还没有 VAULT 文件夹?先从你自己的 Kickstarter / USSA 账号下载文件。本仓库里没有任何 VAULT 文件。
 
@@ -136,6 +136,7 @@ VAULT/
 - **macOS:** 双击 `.command`(第一次请右键 → 打开)。
 - **Windows:** 双击 `.bat`。有 Python 用 Python,否则用自带的 PowerShell 服务。
 - **Linux:** `python3 _hub/serve_hub.py`
+- **第一次启动:** 启动器会自动建文件索引(仅 Python 启动方式;PowerShell 备用方式需要先运行 `python3 _hub/update_index.py`)。
 - **新增或改名文件之后:** `python3 _hub/update_index.py`
 - **可选缩略图**(不随仓库提供;需要 Node、Playwright、Chrome):`VAULT_PORT=8799 python3 _hub/serve_hub.py`,然后 `node _hub/make_thumbs.mjs`,再 `python3 _hub/update_index.py`
 
@@ -146,7 +147,7 @@ VAULT/
 ## 🧯 出问题时
 
 1. **终端提示找不到 Python** → 从 python.org 安装 Python 3,然后重新双击启动器。
-2. **页面能打开但文件列表是空的** → 你漏了第 2 步。运行 `python3 _hub/update_index.py`,再刷新。
+2. **页面能打开但文件列表是空的** → 文件夹里没有 VAULT 文件,或者你后来新增了文件。运行 `python3 _hub/update_index.py`,再刷新。
 3. **3D 画面是空白** → 没有联网。three.js 从 CDN 加载。联网后刷新。
 4. **Hub 几秒后就停了** → 终端窗口被关掉了。重新运行启动器,并保持窗口打开。
 5. **"在文件夹中显示"没反应** → 你是直接打开 `index.html` 的。请用启动器。
