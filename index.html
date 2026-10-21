@@ -1696,8 +1696,9 @@ function buildTower(e, hexOf) {
     const { cx, w, y, h } = u;
     // Runner stoppers lock the drawer on its rail. They sit on the box's left side wall, about a third of the way back from the front:
     // one per 1F, two per 2F (heights measured from the reference photo). Only the stack's left wall is visible, so only those boxes get them.
+    // The stopper is a flat plate, flush with the wall; on a sustainer both sit on the body, below the lid seam.
     if (cx - w / 2 === -L / 2) {
-      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) add(rb(8, 10.5, 18, 1.5), mat('stopper'), -L / 2 - 3.4, y + h * f, -0.28 * DEPTH, 'stopper');
+      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3]) add(rb(0.9, 10.5, 18, 1), mat('stopper'), -L / 2 + 0.75, y + h * f, -0.28 * DEPTH, 'stopper');
     }
     if (u.kind === 'drawer') {
       add(rb(w - 1.5, h - 1.5, DEPTH, 3), mat('body'), cx, y + h / 2, -DEPTH / 2, 'body');
