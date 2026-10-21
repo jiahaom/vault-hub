@@ -244,6 +244,12 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 .meta .nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .meta .pt { font-family: var(--mono); font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 button.meta:hover .nm { color: var(--accent); }
+.row.off { opacity: .48; }
+.row.off .thumb img { filter: grayscale(1); }
+.row.off .qty { text-decoration: line-through; }
+.switch.inc { align-self: center; margin: 0 4px 0 0; width: 32px; height: 18px; }
+.switch.inc span::after { width: 14px; height: 14px; }
+.switch.inc input:checked + span::after { transform: translateX(14px); }
 .row.done .nm { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
 .badges { display: flex; gap: 5px; justify-content: flex-end; flex-wrap: wrap; }
 .badge { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
@@ -608,7 +614,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -648,7 +654,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -712,7 +718,7 @@ const SPEC = {
 };
 const mm = v => (Math.round(v * 10) / 10).toString();
 const state = Object.assign(
-  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false },
+  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, inc: {} },
   store.get('state', {}),
 );
 
@@ -784,6 +790,12 @@ function sustainerVariants() {
 
 /* ---------- Part lists ---------- */
 const part = (f, qty = 1, extra = {}) => f ? { f, qty, ...extra } : { missing: extra.expect || '?', qty };
+// Every part of the unit is in the list; each file row has an include switch. `on` is its default (what the option pickers select);
+// a switch you flip is remembered per file in state.inc and wins over the default.
+const off = it => it && it.f ? { ...it, on: false } : it;
+const choiceParts = (files, selected, extra = {}) => files.map(f => { const it = part(f, 1, extra); return selected ? it : off(it); });
+const isOn = it => !it.f || (state.inc?.[it.f.p] ?? it.on !== false);
+const activeItems = sections => sections.flatMap(s => s.items.map(i => (s.raw ? { ...i, raw: true } : i))).filter(isOn);
 
 function drawerSections() {
   const { w, d, h, count } = state;
@@ -795,9 +807,11 @@ function drawerSections() {
     part(first(`${D_FAM(w)}(Facades/${w}${h} .*|${w} Facade ${h})\\.stl$`), 1, { expect: `${w}${h} Facade` }),
   ];
   const run = w === 'XL' ? `XL${d}` : `x${d}`;
-  const lockFiles = state.lock === 'hidden'
-    ? [part(first(`${D_UNI}Hidden Key \\(`), 1, { expect: 'Hidden Key' }), part(first(`${D_UNI}Hidden Key Part 2`), 1, { expect: 'Hidden Key Part 2' })]
-    : [part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' })];
+  const keyOn = state.lock !== 'hidden';
+  const lockFiles = [
+    keyOn ? part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' }) : off(part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' })),
+    ...[['Hidden Key \\(', 'Hidden Key'], ['Hidden Key Part 2', 'Hidden Key Part 2']].map(([re, name]) => { const it = part(first(`${D_UNI}${re}`), 1, { expect: name }); return keyOn ? off(it) : it; }),
+  ];
   const mech = [
     part(first(`${D_UNI}Geared Rails/${w} Rails\\.stl$`), 1, { pcs: 2, expect: `${w} Rails` }),
     part(first(`${D_UNI}Runners/${run} Runner Guides\\.stl$`), 1, { pcs: 2, expect: `${run} Runner Guides` }),
@@ -811,17 +825,22 @@ function drawerSections() {
     part(first(`${D_UNI}Label\\.stl$`), 1, { expect: 'Label' }),
   ];
   const top = [];
-  const roof = drawerRoofs().find(r => r.id === state.roof);
-  if (roof) {
-    top.push(...roof.files.map(f => part(f, 1, { once: true })));
-    if (/Heawyweight/i.test(roof.id)) {
-      top.push(part(first(`${D_UNI}Heawyweight Roof Handle`), 1, { once: true }), part(first(`${D_UNI}Heawyweight Roof Insert`), 1, { once: true }));
+  for (const r of drawerRoofs()) {
+    const sel = r.id === state.roof;
+    top.push(...choiceParts(r.files, sel, { once: true }));
+    if (/Heawyweight/i.test(r.id)) {
+      top.push(...choiceParts([first(`${D_UNI}Heawyweight Roof Handle`), first(`${D_UNI}Heawyweight Roof Insert`)].filter(Boolean), sel, { once: true }));
     }
   }
-  if (state.handle) top.push(part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' }));
+  top.push(state.handle ? part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' }) : off(part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' })));
   const opt = [];
-  const base = drawerBaseplates().find(b => b.id === state.base);
-  if (base) opt.push(...base.files.map(f => part(f)));
+  for (const b of drawerBaseplates()) opt.push(...choiceParts(b.files, b.id === state.base));
+  // Grid divider that spans the full width of this box (named 10-S, 18-M, 26-L, 32-XL); the loose border parts are in the pack folder.
+  const gdH = { '1F': '34.5MM TALL', '2F': '82.5MM TALL' }[h];
+  const gdName = { S: '10-S', M: '18-M', L: '26-L', XL: '32-XL' }[w];
+  if (gdH) { const gd = first(`${D_UNI}Grid Dividers/${gdH}[^/]*/${gdName}[^/]*\\.stl$`); if (gd) opt.push(off(part(gd, 1, { expect: `${gdName} grid divider` }))); }
+  const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
+  if (ms) opt.push(off(part(ms, 1, { expect: `x${d} manual supports` })));
   const bolts = h === '1F' ? 4 : 6;
   return [
     { title: t('secBody'), items: body },
@@ -851,9 +870,9 @@ function sustainerSections() {
   const lids = sustainerLids();
   const lid = lids.find(l => l.id === state.lid) || lids[0];
   const body = [
-    part(mod?.file, 1, { expect: `${w}${d} ${h} Module` }),
+    ...(variants.length ? variants.map(v => (v === mod ? part(v.file, 1, { expect: `${w}${d} ${h} Module` }) : off(part(v.file, 1)))) : [part(null, 1, { expect: `${w}${d} ${h} Module` })]),
     part(first(`${S_FAM(w)}(Facades/)?${w}${h}'? Facade\\.stl$`), 1, { expect: `${w}${h} Facade` }),
-    ...(lid ? lid.files.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
+    ...(lids.length ? lids.flatMap(l => choiceParts(l.files, l === lid)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
   ];
   const hingeSize = sm ? 'S-M' : (h === '1F' ? 'L-XL' : 'L');
   const hinge = [
@@ -862,19 +881,22 @@ function sustainerSections() {
     part(first(`${S_UNI}Rods/${sm ? 'S-M' : 'L-XL'} Rods\\.stl$`), 1, { pcs: 2, expect: 'Rods' }),
     part(first(`${S_UNI}Label for Sustainers`), 1, { expect: 'Label for Sustainers' }),
   ];
-  const lock = state.locks ? [
-    part(first(`${S_UNI}Locks/LOCK HOLDER`), state.locks),
-    part(first(`${S_UNI}Locks/LOCK INNER PART`), state.locks),
-    part(first(`${S_UNI}Locks/LOCK OUTER PART ${h === '1F' ? '1F' : '2-4F'}`), state.locks),
-    part(first(`${S_UNI}Locks/1 SET OF PINS`), state.locks, { pcs: 4 }),
-  ] : [];
-  const opt = [];
-  if (state.dividers) opt.push(...sustainerDividers().map(f => part(f, null)));
-  if (state.sbase) opt.push(...sustainerBaseplates().map(f => part(f)));
+  const nLocks = state.locks || 1;
+  const lockOn = state.locks > 0;
+  const lock = [
+    part(first(`${S_UNI}Locks/LOCK HOLDER`), nLocks),
+    part(first(`${S_UNI}Locks/LOCK INNER PART`), nLocks),
+    part(first(`${S_UNI}Locks/LOCK OUTER PART ${h === '1F' ? '1F' : '2-4F'}`), nLocks),
+    part(first(`${S_UNI}Locks/1 SET OF PINS`), nLocks, { pcs: 4 }),
+  ].map(it => (lockOn ? it : off(it)));
+  const opt = [
+    ...sustainerDividers().map(f => { const it = part(f, null); return state.dividers ? it : off(it); }),
+    ...sustainerBaseplates().map(f => { const it = part(f); return state.sbase ? it : off(it); }),
+  ];
   return [
     { title: t('secBody'), items: body },
     { title: t('secHinge'), items: hinge },
-    lock.length && { title: t('secLock'), sub: t('secLockNote', state.locks), items: lock, raw: true },
+    lock.length && { title: t('secLock'), sub: t('secLockNote', nLocks), items: lock, raw: true },
     opt.length && { title: t('secOpt'), items: opt },
     { title: t('secHw'), items: [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }] },
   ].filter(Boolean);
@@ -947,14 +969,16 @@ function fileRow(f, item = null) {
     else qty = `<span class="qty">×${item.once || item.raw ? item.qty : item.qty * state.count}</span>`;
   }
   const canCheck = isModel(f);
-  return `<li class="row${done ? ' done' : ''}" data-path="${esc(f.p)}">
-    ${canCheck ? `<label class="ck"><input type="checkbox" data-act="check"${done ? ' checked' : ''} aria-label="${esc(t('markPrinted'))}"><span></span></label>` : '<span></span>'}
+  const on = !item || isOn(item);
+  return `<li class="row${done && on ? ' done' : ''}${on ? '' : ' off'}" data-path="${esc(f.p)}">
+    ${canCheck ? `<label class="ck"><input type="checkbox" data-act="check"${done ? ' checked' : ''}${on ? '' : ' disabled'} aria-label="${esc(t('markPrinted'))}"><span></span></label>` : '<span></span>'}
     ${thumb(f, isModel(f) ? ICON.cube : ICON.eye)}
     <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span>${matBadge(material(f), ' mat-sm', f)}</button>
     <span class="badges">${badges(f, { ...item, mat: true })}</span>
     ${item ? qty : ''}
     <span class="sz">${fmtSize(f.s)}</span>
     <span class="acts-row">
+      ${item && isModel(f) ? `<label class="switch inc" title="${esc(t('incTip'))}"><input type="checkbox" data-act="inc"${on ? ' checked' : ''} aria-label="${esc(t('incTip'))}"><span></span></label>` : ''}
       <button class="ib" data-act="open" title="${esc(t('preview'))}">${isModel(f) ? ICON.cube : ICON.eye}</button>
       <button class="ib" data-act="reveal" title="${esc(t('reveal'))}" aria-label="${esc(t('reveal'))}">${ICON.folder}</button>
     </span>
@@ -1035,7 +1059,7 @@ function specGrid() {
 
 function renderResults() {
   const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
-  const files = sections.flatMap(s => s.items).filter(i => i.f);
+  const files = activeItems(sections).filter(i => i.f);
   const unique = [...new Map(files.map(i => [i.f.p, i.f])).values()];
   const done = unique.filter(f => printed.has(f.p)).length;
   const bytes = unique.reduce((a, f) => a + f.s, 0);
@@ -1060,6 +1084,7 @@ function renderResults() {
       <ul class="list">${s.items.map(i => itemRow(s.raw ? { ...i, raw: true } : i)).join('')}</ul>
     </section>`).join('')}
     </div>
+    <p class="note">${esc(t('incNote'))}</p>
     <p class="note">${esc(t('note'))}</p>`;
   $('#results').dataset.files = JSON.stringify(unique.map(f => f.p));
 }
@@ -1077,15 +1102,17 @@ $('#config').addEventListener('click', e => {
   if (!b || b.disabled) return;
   if (b.dataset.set) {
     const k = b.dataset.set, v = b.dataset.val;
+    if (['lock', 'roof', 'base', 'variant', 'lid', 'dividers', 'sbase'].includes(k)) state.inc = {};   // the defaults follow the option you just picked
     state[k] = k === 'd' ? Number(v) : v === 'true' ? true : v === 'false' ? false : v;
   } else {
     state[b.dataset.step] += Number(b.dataset.val);
+    if (b.dataset.step === 'locks') state.inc = {};
   }
   renderBuilder();
 });
 $('#config').addEventListener('change', e => {
   const k = e.target.dataset.toggle;
-  if (k) { state[k] = e.target.checked; renderBuilder(); }
+  if (k) { state[k] = e.target.checked; state.inc = {}; renderBuilder(); }
 });
 
 /* ---------- All files ---------- */
@@ -1178,6 +1205,12 @@ async function copyText(text) {
   }
 }
 document.addEventListener('change', e => {
+  if (e.target.dataset.act === 'inc') {
+    (state.inc ||= {})[e.target.closest('[data-path]').dataset.path] = e.target.checked;
+    store.set('state', state);
+    renderResults();
+    return;
+  }
   if (e.target.dataset.act !== 'check') return;
   const row = e.target.closest('[data-path]');
   const p = row.dataset.path;
@@ -1205,8 +1238,10 @@ document.addEventListener('click', async e => {
     const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
     const lines = [`${state.w}${state.d} ${state.h} ${state.type === 'drawer' ? t('drawer') : t('sustainer')} × ${state.count}`];
     for (const s of sections) {
+      const mine = s.items.filter(isOn);
+      if (!mine.length) continue;
       lines.push('', `## ${s.title}`);
-      for (const i of s.items) {
+      for (const i of mine) {
         const q = i.qty == null ? t('asNeeded') : '×' + (i.once || i.raw || s.raw ? i.qty : i.qty * state.count);
         lines.push(`[${i.f && printed.has(i.f.p) ? 'x' : ' '}] ${q}  ${i.f ? i.f.p : i.hw || i.missing}${i.f && material(i.f) ? `  (${t(material(i.f))})` : ''}`);
       }

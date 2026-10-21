@@ -36,11 +36,16 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 - **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
 - **Spec strip** – outer and inside dimensions, Gridfinity grid size, and estimated print time and filament weight (published figures, where available).
-- **Parts list** – grouped into Body, Slides / latch / lock, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
+- **Every part is in the list, each with an include switch** – the list shows all the files the unit could use (both key types, top handle, every roof, dividers, Gridfinity baseplates, manual supports, the full lock set, hinges, rods and so on). Parts your options select start switched on, the rest start off; flip any switch to leave a part out or add it. Parts that are off are greyed and skipped by the file count, tag totals, progress bar, *Copy list* and *Gather*. Your switches are remembered; changing an option (roof, handle, lock, …) resets them to that option's defaults.
+- **Parts list** – grouped into Body, Slides / latch / lock, Top of the stack, Optional, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
 - **Filament finish** – every part is tagged **Matte**, **Basic** or **TPU** (the suggested filament), and the Builder header counts how many of each you need so you can plan filament swaps. The tag is also shown in *All files* and included in *Copy list*, and the tag is filled with the color you picked for that part in the Colors tab (parts without a color role, such as runners, keep the plain tag). Every STL has a recommendation.
 - **Smart tags** – "2 pcs in file" marks files that already contain a pair (print once); "Supports" marks files that need support material.
 - **Hardware counts** – bolts and other non-printed parts, with quantities.
 - **Part names** – the official exploded diagram, one click away.
+
+![Parts with include switches: greyed rows are switched off](docs/parts-switches.png)
+
+*Switches on the right: the hidden key, roofs, handle and baseplates are listed but off until you need them.*
 
 ![Builder showing an M4 2F sustainer](docs/builder-sustainer.png)
 
