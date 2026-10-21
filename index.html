@@ -603,8 +603,8 @@ const I18N = {
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
     whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
-    secBody: 'Body', secMech: 'Slides, latch & lock', secTop: 'Top of the stack', secTopNote: 'print once per stack',
-    secHinge: 'Hinges & rods', secLock: 'Lock set', secLockNote: n => `× ${n} per unit`, secOpt: 'Optional', secHw: 'Hardware',
+    secUnit: 'Unit', secMech: 'Slides & latch', secTopNote: 'print once per stack',
+    secHinge: 'Hinges & rods', secLockNote: n => `× ${n} per unit`, secHw: 'Hardware',
     perUnit: 'per unit', bolts: 'M4 bolts, 14–20 mm', boltsNote: n => `${n} per drawer · fix the facade`, boltsSus: 'fix the facade',
     m6: 'M6 bolt, 40–60 mm', m6Note: 'for the roof handle', seeManual: 'see manual',
     specOuter: 'Outer', specInside: 'Inside', specWLH: 'W × L × H', specGrid: 'Gridfinity', specGridSub: '42 mm units',
@@ -614,7 +614,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the depth', addons: 'Add-ons', addonsNote: 'switches a group on', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', secAlt: 'Alternative versions', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
+    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', handle4F: 'Handles mount on a backbone, and there is no 4F backbone. Pick them only if this unit sits in a tower with 1F / 2F units that carry the backbone.', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the depth', addons: 'Add-ons', addonsNote: 'each one adds its own section', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, incTip: 'Include this part in the list', incNote: 'Each section matches an option on the left and lists only the parts your choices select. Use the switch on a row to leave a part out; it is greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -643,8 +643,8 @@ const I18N = {
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
     whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
-    secBody: '主体', secMech: '滑轨、卡扣与锁', secTop: '堆叠顶层', secTopNote: '每组堆叠只打印一次',
-    secHinge: '铰链与销杆', secLock: '锁具', secLockNote: n => `每个盒子 × ${n}`, secOpt: '可选', secHw: '五金件',
+    secUnit: '主体', secMech: '滑轨与卡扣', secTopNote: '每组堆叠只打印一次',
+    secHinge: '铰链与销杆', secLockNote: n => `每个盒子 × ${n}`, secHw: '五金件',
     perUnit: '每个', bolts: 'M4 螺丝，14–20 mm', boltsNote: n => `每层抽屉 ${n} 颗 · 固定面板`, boltsSus: '固定面板',
     m6: 'M6 螺丝，40–60 mm', m6Note: '用于顶部提手', seeManual: '见手册',
     specOuter: '外形', specInside: '内部', specWLH: '宽 × 长 × 高', specGrid: 'Gridfinity', specGridSub: '每格 42 mm',
@@ -654,7 +654,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是深度', addons: '附加件', addonsNote: '一键打开一组', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', secAlt: '备选版本', addFacade2: '备选面板', addBase2: '其他底板版本', secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
+    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', handle4F: '提手装在背板上,而 4F 没有背板。只有当这个盒子和带背板的 1F / 2F 盒子组成一座塔时才需要选。', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是深度', addons: '附加件', addonsNote: '每个会在右边加一节', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', addFacade2: '备选面板', addBase2: '其他底板版本', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, incTip: '把这个零件计入清单', incNote: '每一节对应左边的一个选项，只列出你选中的零件。用每行的开关去掉某个零件;去掉的零件会变灰，不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -796,29 +796,23 @@ function sustainerVariants() {
 
 /* ---------- Part lists ---------- */
 const part = (f, qty = 1, extra = {}) => f ? { f, qty, ...extra } : { missing: extra.expect || '?', qty, spec: !!extra.spec };
-// Every part of the unit is in the list; each file row has an include switch. `on` is its default (what the option pickers select);
-// a switch you flip is remembered per file in state.inc and wins over the default.
-const off = it => it && it.f ? { ...it, on: false } : it;
-const choiceParts = (files, selected, extra = {}) => files.map(f => { const it = part(f, 1, extra); return selected ? it : off(it); });
-const isOn = it => !it.f || (state.inc?.[it.f.p] ?? it.on !== false);
+// The list mirrors the options panel: one section per option, in the same order and with the same name, holding only the parts that
+// option selects. Each file row keeps an include switch for fine tuning; a switch you flip is remembered per file in state.inc.
+const isOn = it => !it.f || (state.inc?.[it.f.p] ?? true);
 const activeItems = sections => sections.flatMap(s => s.items.map(i => (s.raw ? { ...i, raw: true } : i))).filter(isOn);
+const sec = (title, items, extra = {}) => items.length ? { title, items, ...extra } : null;
 
 function drawerSections() {
   const { w, d, h, count } = state;
   const dir = `${D_FAM(w)}${w}${d}/`;
   const spec = specOnly(w, h);
   const boxes = spec ? [] : find(`${dir}Boxes/${w}${d} (Box ${h}( Part \\d)?|Back Panel)\\.stl$`);   // the XL back panel belongs to the 1F box
-  const body = [
+  const unit = [
     part(drawerModule(w, d, h), 1, { expect: `${w}${d} Module ${h}`, spec }),
     ...(boxes.length ? boxes.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Box ${h}`, spec })]),
     part(first(`${D_FAM(w)}(Facades/${w}${h} .*|${w} Facade ${h})\\.stl$`), 1, { expect: `${w}${h} Facade`, spec }),
   ];
   const run = w === 'XL' ? `XL${d}` : `x${d}`;
-  const keyOn = state.lock !== 'hidden';
-  const lockFiles = [
-    keyOn ? part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' }) : off(part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' })),
-    ...[['Hidden Key \\(', 'Hidden Key'], ['Hidden Key Part 2', 'Hidden Key Part 2']].map(([re, name]) => { const it = part(first(`${D_UNI}${re}`), 1, { expect: name }); return keyOn ? off(it) : it; }),
-  ];
   const mech = [
     part(first(`${D_UNI}Geared Rails/${w} Rails\\.stl$`), 1, { pcs: 2, expect: `${w} Rails` }),
     part(first(`${D_UNI}Runners/${run} Runner Guides\\.stl$`), 1, { pcs: 2, expect: `${run} Runner Guides` }),
@@ -826,44 +820,42 @@ function drawerSections() {
     part(first(`${D_UNI}Runners/Runner Stopper\\.stl$`), 2, { expect: 'Runner Stopper' }),
     part(first(`${D_UNI}Latch\\.stl$`), 1, { expect: 'Latch' }),
     part(first(`${D_UNI}Springs\\.stl$`), 1, { pcs: 2, expect: 'Springs' }),
-    ...lockFiles,
-    part(first(`${D_UNI}Key Cap\\.stl$`), 1, { expect: 'Key Cap' }),
     part(first(`${D_UNI}Facade Cap\\.stl$`), 1, { expect: 'Facade Cap' }),
     part(first(`${D_UNI}Label\\.stl$`), 1, { expect: 'Label' }),
   ];
-  const top = [];
-  for (const r of drawerRoofs()) {
-    const sel = r.id === state.roof;
-    top.push(...choiceParts(r.files, sel, { once: true }));
-    if (/Heawyweight/i.test(r.id)) {
-      top.push(...choiceParts([first(`${D_UNI}Heawyweight Roof Handle`), first(`${D_UNI}Heawyweight Roof Insert`)].filter(Boolean), sel, { once: true }));
-    }
-  }
-  top.push(state.handle ? part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' }) : off(part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' })));
-  const opt = [];
-  for (const b of drawerBaseplates()) opt.push(...choiceParts(b.files, b.id === state.base));
+  const lock = state.lock === 'hidden'
+    ? [part(first(`${D_UNI}Hidden Key \\(`), 1, { expect: 'Hidden Key' }), part(first(`${D_UNI}Hidden Key Part 2`), 1, { expect: 'Hidden Key Part 2' })]
+    : [part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' })];
+  lock.push(part(first(`${D_UNI}Key Cap\\.stl$`), 1, { expect: 'Key Cap' }));
+  const roof = drawerRoofs().find(r => r.id === state.roof);
+  const roofItems = roof ? roof.files.map(f => part(f, 1, { once: true })) : [];
+  if (roof && /Heawyweight/i.test(roof.id)) roofItems.push(...[first(`${D_UNI}Heawyweight Roof Handle`), first(`${D_UNI}Heawyweight Roof Insert`)].filter(Boolean).map(f => part(f, 1, { once: true })));
+  const handle = state.handle ? [part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' })] : [];
+  const plate = drawerBaseplates().find(b => b.id === state.base);
   const bolts = h === '1F' ? 4 : 6;
   return [
-    { title: t('secBody'), items: body },
-    { title: t('secMech'), items: mech },
-    top.length && { title: t('secTop'), sub: t('secTopNote'), items: top },
-    opt.length && { title: t('secOpt'), items: opt },
-    { title: t('secHw'), items: [
+    sec(t('secUnit'), unit, { sub: `${w}${d} · ${h}` }),
+    sec(t('secMech'), mech),
+    sec(t('lock'), lock),
+    sec(t('roof'), roofItems, { sub: t('secTopNote') }),
+    sec(t('handle'), handle, { sub: t('secTopNote') }),
+    sec(t('baseplate'), plate ? plate.files.map(f => part(f)) : []),
+    ...extraSections(),
+    sec(t('secHw'), [
       { hw: t('bolts'), sub: t('boltsNote', bolts), qty: bolts * count, raw: true },
       (state.handle || /Heawyweight/i.test(state.roof)) && { hw: t('m6'), sub: t('m6Note'), qty: null },
-    ].filter(Boolean) },
-    ...extraSections(),
+    ].filter(Boolean)),
   ].filter(Boolean);
 }
 
 /* ---------- Add-ons: grid dividers, supports, L² / XL² versions and Modifications ---------- */
-// Every file that is not part of the plain unit is tagged with an add-on group. The "Add-ons" options switch a whole group on;
-// the rows stay individually switchable. Groups with no file for this size are not offered.
+// Every file that is not part of the plain unit is tagged with an add-on group; each "Add-ons" chip shows its group as a section.
+// Groups with no file for this size are not offered.
 const GRID_HOLES = { S: 10, M: 18, L: 26, XL: 32 };   // holes across the drawer, by width; by depth: 10 / 14 / 18 / 22 / 26
 const ADDON_LABEL = { facade2: 'addFacade2', base2: 'addBase2', sup: 'addSup', l2: 'addL2', wall: 'addWall', pegU: 'addPegU', pegI: 'addPegI', feet: 'addFeet', wheels: 'addWheels', pull: 'addPull', stat: 'addStat', back: 'addBack', base: 'addBase' };
 function addonItems() {
   const { w, d, h, type } = state;
-  const items = [];   // { sec, grp, f }
+  const items = [];   // { grp, f, qty, gdLen?, gdKind?, pick? }
   if (type === 'drawer') {
     const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
     const lenOf = f => Number((f.name.match(/^(\d+)/) || [])[1]);
@@ -872,20 +864,20 @@ function addonItems() {
       if (!f.p.startsWith('01. DRAWERS/07. Universal/Grid Dividers/') || !/\.stl$/i.test(f.p) || lenOf(f) > reach) continue;
       // 20 mm fits every height; 34.5 mm is full height in 1F and fits lower in 2F/4F; 82.5 mm is full height in 2F/4F.
       const kind = f.p.includes('/20MM TALL') ? 'low' : f.p.includes(fullFolder) ? 'full' : (h !== '1F' && f.p.includes('/34.5MM TALL') ? 'mid' : null);
-      if (kind) items.push({ sec: 'grid', grp: null, gdLen: lenOf(f), gdKind: kind, f, qty: null });
+      if (kind) items.push({ grp: null, gdLen: lenOf(f), gdKind: kind, f, qty: null });
     }
     // Other versions of the same baseplate (the plate picker above chooses one version of each kind).
     const picked = new Set(drawerBaseplates().flatMap(b => b.files.map(f => f.p)));
-    for (const f of find(`${D_FAM(w)}${w}${d}/Gridfinity Baseplate/.*\\.stl$`)) if (!picked.has(f.p)) items.push({ sec: 'alt', grp: 'base2', f, qty: 1 });
+    for (const f of find(`${D_FAM(w)}${w}${d}/Gridfinity Baseplate/.*\\.stl$`)) if (!picked.has(f.p)) items.push({ grp: 'base2', f, qty: 1 });
     if (w === 'L' || w === 'XL') {
-      for (const f of find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
-      if (w === 'L') for (const f of find(`${D_UNI}L² Accessories/x${d} Accessory`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
+      for (const f of find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`)) items.push({ grp: 'l2', f, qty: 1 });
+      if (w === 'L') for (const f of find(`${D_UNI}L² Accessories/x${d} Accessory`)) items.push({ grp: 'l2', f, qty: 1 });
     }
   }
   // Manual supports go by depth only; the sustainer manual uses them too ("remove manual supports, before filling it with dividers").
   const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
-  if (ms) items.push({ sec: type === 'drawer' ? 'grid' : 'sup', grp: 'sup', f: ms, qty: 1 });
-  if (type === 'sustainer') for (const f of find(`${S_UNI}Facades/${w}${h}\\.stl$`)) items.push({ sec: 'alt', grp: 'facade2', f, qty: 1 });   // alternative facade, same size; replaces the standard one
+  if (ms) items.push({ grp: 'sup', f: ms, qty: 1 });
+  if (type === 'sustainer') for (const f of find(`${S_UNI}Facades/${w}${h}\\.stl$`)) items.push({ grp: 'facade2', f, qty: 1 });   // alternative facade, same size; replaces the standard one
   for (const f of FILES) {
     if (!f.p.startsWith('03. MODIFICATIONS/') || !/\.stl$/i.test(f.p)) continue;
     const n = f.name.replace(/\.stl$/i, '');
@@ -903,7 +895,7 @@ function addonItems() {
     // Either/or versions: a base is printed whole or in two parts; backbone and handle lock parts are width-sized or universal (manual p.1).
     const pick = grp === 'base' ? (/ Part \d/.test(n) ? 'split' : / Whole$/.test(n) ? 'whole' : '')
       : (grp === 'back' || grp === 'pull') && /Backbone|Handle Lock(?! Knob)/.test(n) ? (/^Universal /.test(n) ? 'universal' : 'sized') : '';
-    items.push({ sec: 'mods', grp, f, qty: 1, pick });
+    items.push({ grp, f, qty: 1, pick });
   }
   // A part with only one version for this size (e.g. XL 2F has only the universal backbone) is always the one used.
   const family = i => i.grp + (/Backbone/.test(i.f.name) ? ':bone' : /Handle Lock/.test(i.f.name) ? ':lock' : '');
@@ -917,18 +909,16 @@ const PICK_KEY = { whole: 'baseCut', split: 'baseCut', sized: 'kit', universal: 
 const picked = i => !i.pick || state[PICK_KEY[i.pick]] === i.pick;
 // The whole / split and sized / universal pickers are offered only when this size has both versions.
 const pickChoices = key => [...new Set(addonItems().filter(i => i.pick && PICK_KEY[i.pick] === key).map(i => i.pick))];
+// Grid dividers, then one section per add-on chip that is on, in the order the chips are shown.
 function extraSections() {
-  const { w, d, h, type } = state;
+  const { w, d } = state;
   const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
-  const make = sec => addonItems().filter(i => i.sec === sec).map(i => { const it = part(i.f, i.qty, { expect: '' }); const on = i.gdLen ? (state.gdLens?.[i.gdLen] && i.gdKind === (state.gdh || 'full')) : (i.grp && state.mods?.[i.grp] && picked(i)); return on ? it : off(it); });
-  const out = [];
-  const grid = make('grid'), sup = make('sup'), vari = make('var'), alt = make('alt'), mods = make('mods');
-  if (grid.length) out.push({ title: t('secGrid'), sub: t('secGridNote', reach), items: grid, raw: true });
-  if (sup.length) out.push({ title: t('addSup'), items: sup, raw: true });
-  if (alt.length) out.push({ title: t('secAlt'), items: alt, raw: true });
-  if (vari.length) out.push({ title: t('secVar'), items: vari, raw: true });
-  if (mods.length) out.push({ title: t('secMods'), items: mods, raw: true });
-  return out;
+  const items = addonItems();
+  const grid = items.filter(i => i.gdLen && state.gdLens?.[i.gdLen] && i.gdKind === (state.gdh || 'full')).map(i => part(i.f, i.qty));
+  return [
+    sec(t('gridDiv'), grid, { sub: t('secGridNote', reach), raw: true }),
+    ...addonGroups().filter(g => state.mods?.[g]).map(g => sec(t(ADDON_LABEL[g]), items.filter(i => i.grp === g && picked(i)).map(i => part(i.f, i.qty)), { raw: true })),
+  ].filter(Boolean);
 }
 
 function sustainerDividers() {
@@ -946,10 +936,9 @@ function sustainerSections() {
   const mod = variants.find(v => v.id === state.variant) || variants[0];
   const lids = sustainerLids();
   const lid = lids.find(l => l.id === state.lid) || lids[0];
-  const body = [
-    ...(variants.length ? variants.map(v => (v === mod ? part(v.file, 1, { expect: `${w}${d} ${h} Module` }) : off(part(v.file, 1)))) : [part(null, 1, { expect: `${w}${d} ${h} Module` })]),
-    (it => (state.mods?.facade2 ? off(it) : it))(part(first(`${S_FAM(w)}(Facades/)?${w}${h}'? Facade\\.stl$`), 1, { expect: `${w}${h} Facade` })),
-    ...(lids.length ? lids.flatMap(l => choiceParts(l.files, l === lid)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
+  const unit = [
+    mod ? part(mod.file, 1) : part(null, 1, { expect: `${w}${d} ${h} Module` }),
+    ...(state.mods?.facade2 && addonGroups().includes('facade2') ? [] : [part(first(`${S_FAM(w)}(Facades/)?${w}${h}'? Facade\\.stl$`), 1, { expect: `${w}${h} Facade` })]),   // the alternative facade replaces it
   ];
   const hingeSize = sm ? 'S-M' : (h === '1F' ? 'L-XL' : 'L');
   const hinge = [
@@ -958,25 +947,22 @@ function sustainerSections() {
     part(first(`${S_UNI}Rods/${sm ? 'S-M' : 'L-XL'} Rods\\.stl$`), 1, { pcs: 2, expect: 'Rods' }),
     part(first(`${S_UNI}Label for Sustainers`), 1, { expect: 'Label for Sustainers' }),
   ];
-  const nLocks = state.locks || 1;
-  const lockOn = state.locks > 0;
-  const lock = [
-    part(first(`${S_UNI}Locks/LOCK HOLDER`), nLocks),
-    part(first(`${S_UNI}Locks/LOCK INNER PART`), nLocks),
-    part(first(`${S_UNI}Locks/LOCK OUTER PART ${h === '1F' ? '1F' : '2-4F'}`), nLocks),
-    part(first(`${S_UNI}Locks/1 SET OF PINS`), nLocks, { pcs: 4 }),
-  ].map(it => (lockOn ? it : off(it)));
-  const opt = [
-    ...sustainerDividers().map(f => { const it = part(f, null); return state.dividers ? it : off(it); }),
-    ...sustainerBaseplates().map(f => { const it = part(f); return state.sbase ? it : off(it); }),
-  ];
+  const n = state.locks;
+  const lock = n > 0 ? [
+    part(first(`${S_UNI}Locks/LOCK HOLDER`), n),
+    part(first(`${S_UNI}Locks/LOCK INNER PART`), n),
+    part(first(`${S_UNI}Locks/LOCK OUTER PART ${h === '1F' ? '1F' : '2-4F'}`), n),
+    part(first(`${S_UNI}Locks/1 SET OF PINS`), n, { pcs: 4 }),
+  ] : [];
   return [
-    { title: t('secBody'), items: body },
-    { title: t('secHinge'), items: hinge },
-    lock.length && { title: t('secLock'), sub: t('secLockNote', nLocks), items: lock, raw: true },
-    opt.length && { title: t('secOpt'), items: opt },
-    { title: t('secHw'), items: [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }] },
+    sec(t('secUnit'), unit, { sub: `${w}${d} · ${h}${mod?.id ? ' · ' + mod.label : ''}` }),
+    sec(t('lid'), lid ? lid.files.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
+    sec(t('secHinge'), hinge),
+    sec(t('locks'), lock, { sub: t('secLockNote', n), raw: true }),
+    sec(t('dividers'), state.dividers ? sustainerDividers().map(f => part(f, null)) : []),
+    sec(t('baseplate'), state.sbase ? sustainerBaseplates().map(f => part(f)) : []),
     ...extraSections(),
+    sec(t('secHw'), [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }]),
   ].filter(Boolean);
 }
 

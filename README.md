@@ -18,7 +18,7 @@
 
 | | |
 |---|---|
-| 📋 **Plan** | Pick drawer or sustainer, size, options → the files to print. Switch any part on or off. |
+| 📋 **Plan** | Pick drawer or sustainer, size, options → only the files to print, one section per option. |
 | 🧊 **See it** | Live 3D preview of your exact unit. ↻ flips to the back. |
 | 🎨 **Color it** | 8 Matte + 13 Basic colors on a 3D tower. Save templates. |
 | ✅ **Print it** | Tick parts off, copy the list, gather files into one folder. |
@@ -31,11 +31,11 @@
 - Pick type, width S–XL, depth 3–7, height 1F / 2F / 4F, quantity, lock, roof, handle, dividers, baseplate.
 - **Grid dividers:** pick the height (full, mid 34.5 mm on 2F/4F, low 20 mm) and the lengths (↔ fits the width, ↕ fits the depth). Only lengths and heights that fit the drawer are offered.
 - **XL 2F / 4F:** official sizes the pack has no body files for. They can be selected so their 82.5 mm dividers, rails, runners and roofs have a unit; module, box and facade show as *not in the pack*.
-- **Add-ons:** one click switches on a whole group that fits this size: manual supports (drawers and sustainers), L² version, alternative facade, other baseplate versions, wall mount, pegboards, feet, wheels, handles, backbone, base.
+- **Add-ons:** each chip adds its own section with the parts that fit this size: manual supports (drawers and sustainers), L² version, alternative facade, other baseplate versions, wall mount, pegboards, feet, wheels, handles, backbone, base.
 - **One version, never both:** pick a base *whole* or *split*, and backbone / handle-lock parts *sized to the width* or *universal*. The handle lock and knob come with the pull-out handle. On 4F a note says handles need a 1F / 2F backbone elsewhere in the tower.
-- **Every listed part can be turned on from the options** (checked for all 110 type / size / depth / height combinations); the row switches are only for fine tuning.
-- Every part that fits the unit is listed with a switch, **including grid dividers, L² / XL² versions and Modifications** (wall mounts, feet, wheels…). All 723 STLs appear at least once; each size shows only the parts that fit it.
-- Off parts are skipped by totals, *Copy list* and *Gather*.
+- **The list mirrors the options:** one section per option, same name and order, showing only the parts you selected. Nothing unneeded is listed.
+- **Every STL is reachable from the options** (checked for all 110 type / size / depth / height combinations): all 723 appear for at least one choice, and only for sizes they fit.
+- A row's switch leaves that part out; it is greyed and skipped by totals, *Copy list* and *Gather*.
 - The preview shows the outside only (key, label, lid, latches, hinges, roofs) and follows your colors.
 
 ![Six sizes](docs/builder-preview.png)
