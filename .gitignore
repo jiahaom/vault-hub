@@ -1,0 +1,12 @@
+.DS_Store
+# Never commit the model files or generated renders
+*.stl
+*.STL
+*.3mf
+*.step
+*.stp
+*.obj
+*.pdf
+_hub/thumbs/*.webp
+_Print Jobs/
+node_modules/

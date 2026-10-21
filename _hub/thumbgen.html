@@ -1,0 +1,40 @@
+<!doctype html><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script type="module">
+// Thumbnail renderer used once by the build script; not needed by the hub itself.
+import * as THREE from 'three';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+const W = 360, H = 270;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(1);
+document.body.append(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 100000);
+scene.add(camera, new THREE.HemisphereLight(0xffffff, 0x50545c, 1.6));
+const key = new THREE.DirectionalLight(0xffffff, 2.3); key.position.set(0.5, 1, 0.9); camera.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.9); rim.position.set(-1, 0.3, -1); scene.add(rim);
+const material = new THREE.MeshStandardMaterial({ color: 0xd2d6dc, roughness: 0.55, metalness: 0.05 });
+const loader = new STLLoader();
+window.render = async url => {
+  const buf = await (await fetch(url)).arrayBuffer();
+  const g = loader.parse(buf);
+  g.rotateX(-Math.PI / 2);
+  g.computeVertexNormals();
+  g.computeBoundingSphere();
+  const s = g.boundingSphere;
+  const mesh = new THREE.Mesh(g, material);
+  scene.add(mesh);
+  const dist = s.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 0.98;
+  const dir = new THREE.Vector3(0.62, 0.52, 0.78).normalize();
+  camera.position.copy(s.center).addScaledVector(dir, dist);
+  camera.near = dist / 100; camera.far = dist * 10;
+  camera.lookAt(s.center);
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  const url2 = renderer.domElement.toDataURL('image/webp', 0.82);
+  scene.remove(mesh); g.dispose();
+  return url2;
+};
+window.ready = true;
+</script>

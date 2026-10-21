@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VAULT USSA Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff7a3d'/%3E%3Crect x='7' y='8' width='18' height='7' rx='1.5' fill='none' stroke='%231a0d06' stroke-width='2.4'/%3E%3Crect x='7' y='17' width='18' height='7' rx='1.5' fill='none' stroke='%231a0d06' stroke-width='2.4'/%3E%3C/svg%3E">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+:root {
+  --bg: #0d0e10;
+  --panel: #15171a;
+  --panel-2: #1b1e22;
+  --hover: #22262b;
+  --line: #2a2e34;
+  --line-strong: #3a3f47;
+  --text: #ecedef;
+  --muted: #a0a5ad;
+  --faint: #6c727b;
+  --accent: #ff7a3d;
+  --accent-ink: #1a0d06;
+  --accent-soft: rgba(255, 122, 61, .13);
+  --ok: #3ccf8e;
+  --ok-soft: rgba(60, 207, 142, .12);
+  --warn: #f2b84b;
+  --warn-soft: rgba(242, 184, 75, .12);
+  --model: #d9dce1;
+  --grid: #8a9099;
+  --shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  --radius: 12px;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f3f3f1;
+    --panel: #ffffff;
+    --panel-2: #f7f7f5;
+    --hover: #efefec;
+    --line: #e4e4e0;
+    --line-strong: #d0d0cb;
+    --text: #18191b;
+    --muted: #5d6168;
+    --faint: #8d9198;
+    --accent: #e8622a;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(232, 98, 42, .1);
+    --ok: #1f9d68;
+    --ok-soft: rgba(31, 157, 104, .1);
+    --warn: #b7791f;
+    --warn-soft: rgba(183, 121, 31, .1);
+    --model: #c9ccd2;
+    --grid: #9aa0a8;
+    --shadow: 0 24px 60px rgba(20, 20, 30, .18);
+    color-scheme: light;
+  }
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+svg { display: block; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- Header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1320px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 24px; height: 60px;
+}
+.brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.brand-mark {
+  width: 28px; height: 28px; border-radius: 8px; background: var(--accent);
+  display: grid; place-items: center; color: var(--accent-ink);
+}
+.brand-name { font-weight: 700; letter-spacing: .04em; }
+.brand-sub { color: var(--faint); font-size: 13px; }
+.tabs { display: flex; gap: 2px; height: 100%; }
+.tab {
+  background: none; border: 0; padding: 0 14px; height: 100%;
+  color: var(--muted); font-weight: 550; position: relative;
+}
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { color: var(--text); }
+.tab[aria-selected="true"]::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px;
+  background: var(--accent); border-radius: 2px;
+}
+.top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; color: var(--muted); padding: 5px 10px;
+  border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; background: none;
+}
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+.pill.live i { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.pill.static i { background: var(--warn); }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 7px 12px; font-size: 13px; font-weight: 550; text-decoration: none; white-space: nowrap;
+  transition: border-color .15s, background .15s;
+}
+.btn:hover { border-color: var(--line-strong); background: var(--hover); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn svg { width: 15px; height: 15px; }
+
+main { max-width: 1320px; margin: 0 auto; padding: 24px; }
+.view[hidden] { display: none !important; }
+
+/* ---------- Builder ---------- */
+.builder { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
+.config {
+  position: sticky; top: 84px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px; display: flex; flex-direction: column; gap: 18px;
+  max-height: calc(100vh - 108px); overflow: auto;
+}
+.field > .lbl {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.field > .lbl small { text-transform: none; letter-spacing: 0; font-weight: 450; color: var(--faint); }
+.seg {
+  display: flex; background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 9px; padding: 3px; gap: 3px;
+}
+.seg button {
+  flex: 1; border: 0; background: none; border-radius: 6px; padding: 7px 4px;
+  font-weight: 600; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 1px;
+  transition: background .15s, color .15s;
+}
+.seg button small { font-size: 10.5px; font-weight: 500; color: var(--faint); }
+.seg button:hover:not(:disabled) { color: var(--text); }
+.seg button[aria-pressed="true"] { background: var(--hover); color: var(--text); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.seg button[aria-pressed="true"] small { color: var(--muted); }
+.seg button:disabled { opacity: .3; cursor: not-allowed; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--line); background: none; border-radius: 999px;
+  padding: 5px 11px; font-size: 13px; color: var(--muted);
+}
+.chip:hover { color: var(--text); border-color: var(--line-strong); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 55%, transparent); color: var(--text); }
+.row-inline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.row-inline .lbl { margin: 0; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); }
+.stepper button { border: 0; background: none; width: 32px; height: 30px; font-size: 16px; color: var(--muted); }
+.stepper button:hover { color: var(--text); }
+.stepper output { min-width: 28px; text-align: center; font-weight: 650; font-variant-numeric: tabular-nums; }
+.switch { position: relative; width: 36px; height: 20px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--line-strong); transition: background .15s; pointer-events: none; }
+.switch span::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(16px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.divider { height: 1px; background: var(--line); margin: 2px 0; }
+.ref {
+  display: block; width: 100%; border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  background: #9aa0a8; padding: 0; position: relative;
+}
+.ref img { width: 100%; display: block; aspect-ratio: 2.4; object-fit: cover; }
+.ref span {
+  position: absolute; left: 8px; bottom: 8px; font-size: 11.5px; font-weight: 600;
+  background: rgba(0, 0, 0, .62); color: #fff; padding: 3px 8px; border-radius: 6px;
+}
+
+.results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.summary {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 16px 24px; align-items: center;
+}
+.summary h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; line-height: 1.15; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.summary h1 em { font-style: normal; color: var(--accent); }
+.summary h1 small { font-size: 15px; font-weight: 500; color: var(--muted); }
+.summary .facts { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.summary .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.spec { background: var(--panel-2); box-shadow: 0 0 0 .5px var(--line); padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.spec span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+.spec b { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.spec b i { font-style: normal; font-weight: 500; font-size: 12px; color: var(--muted); }
+.spec small { font-size: 11.5px; color: var(--faint); }
+.progress { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--muted); }
+.bar { flex: 1; height: 6px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 999px; transition: width .3s ease; }
+.progress b { color: var(--text); font-variant-numeric: tabular-nums; }
+
+.section { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.section-hd { display: flex; align-items: baseline; gap: 10px; padding: 13px 18px 11px; border-bottom: 1px solid var(--line); }
+.section-hd h2 { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: .02em; }
+.section-hd span { font-size: 12px; color: var(--faint); }
+.list { list-style: none; margin: 0; padding: 0; }
+
+.row {
+  display: grid; grid-template-columns: 26px 44px minmax(0, 1fr) auto 48px 64px auto;
+  align-items: center; gap: 12px; padding: 9px 12px 9px 18px; border-top: 1px solid var(--line);
+  transition: background .12s;
+}
+.list > .row:first-child { border-top: 0; }
+.row:hover { background: var(--panel-2); }
+.ck { position: relative; width: 18px; height: 18px; }
+.ck input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ck span {
+  position: absolute; inset: 0; border: 1.5px solid var(--line-strong); border-radius: 5px; pointer-events: none;
+  display: grid; place-items: center; transition: background .12s, border-color .12s;
+}
+.ck input:checked + span { background: var(--ok); border-color: var(--ok); }
+.ck input:checked + span::after { content: ""; width: 9px; height: 5px; border: 2px solid #fff; border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.ck input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.meta { min-width: 0; display: flex; flex-direction: column; gap: 1px; background: none; border: 0; padding: 0; text-align: left; }
+.meta .nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta .pt { font-family: var(--mono); font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+button.meta:hover .nm { color: var(--accent); }
+.row.done .nm { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+.badges { display: flex; gap: 5px; justify-content: flex-end; flex-wrap: wrap; }
+.badge { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+.badge.sup { background: var(--warn-soft); color: var(--warn); }
+.badge.pcs { background: var(--accent-soft); color: var(--accent); }
+.badge.muted { border-color: var(--line); color: var(--faint); }
+.qty { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.qty.na { color: var(--faint); font-weight: 500; font-size: 12px; }
+.sz { font-size: 12px; color: var(--faint); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.acts-row { display: flex; gap: 2px; min-width: 66px; justify-content: flex-end; }
+.ib {
+  width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px;
+  border: 0; background: none; color: var(--muted); text-decoration: none;
+}
+.ib:hover { background: var(--hover); color: var(--text); }
+.ib svg { width: 17px; height: 17px; }
+.row.missing .nm { color: var(--warn); }
+.thumb {
+  width: 44px; height: 44px; border-radius: 8px; overflow: hidden; flex: none;
+  background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--faint);
+  padding: 0;
+}
+.thumb img { width: 100%; height: 100%; object-fit: contain; }
+.thumb svg { width: 18px; height: 18px; }
+button.thumb:hover { border-color: var(--line-strong); }
+.opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; }
+.opt {
+  border: 1px solid var(--line); background: var(--panel-2); border-radius: 10px; padding: 6px 6px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.25; text-align: center;
+  transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: var(--line-strong); color: var(--text); }
+.opt .pic { width: 100%; aspect-ratio: 4 / 3; display: grid; place-items: center; }
+.opt .pic img { width: 100%; height: 100%; object-fit: contain; }
+.opt .pic .none { width: 42%; aspect-ratio: 1; border: 1.5px dashed var(--line-strong); border-radius: 8px; }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.note { font-size: 12.5px; color: var(--faint); padding: 2px 4px; line-height: 1.55; }
+
+/* ---------- Browse ---------- */
+.browse-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+.search {
+  flex: 1 1 320px; display: flex; align-items: center; gap: 10px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; height: 42px;
+}
+.search:focus-within { border-color: var(--line-strong); box-shadow: 0 0 0 3px var(--accent-soft); }
+.search svg { width: 17px; height: 17px; color: var(--faint); flex: none; }
+.search input { flex: 1; border: 0; background: none; outline: none; height: 100%; min-width: 0; }
+.search kbd { font-family: var(--mono); font-size: 11px; color: var(--faint); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+.count { color: var(--faint); font-size: 13px; white-space: nowrap; }
+.groups { display: flex; flex-direction: column; gap: 14px; }
+.grp .section-hd h2 { font-family: var(--mono); font-weight: 550; font-size: 12px; color: var(--muted); letter-spacing: 0; }
+.grp .row { grid-template-columns: 26px 44px minmax(0, 1fr) auto 64px auto; }
+.empty { text-align: center; padding: 60px 20px; color: var(--faint); }
+
+/* ---------- Manuals ---------- */
+.manuals { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start; }
+.doclist { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 84px; }
+.doc {
+  display: flex; align-items: center; gap: 12px; text-align: left; width: 100%;
+  background: none; border: 1px solid transparent; border-radius: 10px; padding: 10px 12px;
+}
+.doc:hover { background: var(--panel); border-color: var(--line); }
+.doc[aria-pressed="true"] { background: var(--panel); border-color: var(--line-strong); }
+.doc .num {
+  width: 30px; height: 30px; border-radius: 8px; flex: none; display: grid; place-items: center;
+  background: var(--panel-2); border: 1px solid var(--line); font-weight: 700; font-size: 12px; color: var(--muted);
+}
+.doc[aria-pressed="true"] .num { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.doc b { display: block; font-weight: 600; }
+.doc small { color: var(--faint); font-size: 12px; }
+.doclist h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 4px 6px; }
+.thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.thumbs button { padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #9aa0a8; aspect-ratio: 1.6; }
+.thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pdfwrap { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.pdfbar { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 18px; border-bottom: 1px solid var(--line); }
+.pdfbar b { font-weight: 600; }
+.pdfbar .btn { margin-left: auto; }
+.pdfwrap iframe { display: block; width: 100%; height: calc(100vh - 170px); min-height: 520px; border: 0; background: #525659; }
+
+/* ---------- Preview panel ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.scrim.open { opacity: 1; pointer-events: auto; }
+.pv {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 50; width: min(760px, 100vw);
+  background: var(--panel); border-left: 1px solid var(--line); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; transform: translateX(102%); transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+.pv.open { transform: none; }
+.pv-hd { display: flex; align-items: center; gap: 8px; padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--line); }
+.pv-hd .meta { flex: 1; }
+.pv-hd .nm { font-size: 15px; }
+.pv-stage { position: relative; flex: 1; min-height: 0; background: radial-gradient(ellipse at 50% 40%, var(--panel-2), var(--bg)); overflow: hidden; }
+.pv-stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; touch-action: none; }
+.pv-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 16px; }
+.pv-stage.drag { box-shadow: inset 0 0 0 2px var(--accent); }
+.pv-msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 32px; text-align: center; color: var(--muted); }
+.pv-msg[hidden] { display: none; }
+.pv-msg .box { max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pv-msg h3 { margin: 0; color: var(--text); font-size: 16px; }
+.pv-msg p { margin: 0; line-height: 1.6; font-size: 13.5px; }
+.pv-msg code { font-family: var(--mono); font-size: 12.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; border-radius: 5px; color: var(--text); }
+.spinner { width: 28px; height: 28px; border-radius: 50%; border: 2.5px solid var(--line-strong); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pv-ft { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 20px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.pv-stats { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; flex: 1 1 200px; }
+.pv-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+.pv-btns .btn[hidden] { display: none; }
+.pv-stats b { color: var(--text); font-weight: 600; }
+.pv-hint { position: absolute; right: 12px; bottom: 10px; font-size: 11.5px; color: var(--faint); pointer-events: none; }
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; z-index: 60;
+  background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 9px; font-weight: 600; font-size: 13px;
+  transition: opacity .2s, transform .2s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 960px) {
+  .builder, .manuals { grid-template-columns: 1fr; }
+  .config, .doclist { position: static; max-height: none; }
+  .brand-sub { display: none; }
+}
+@media (max-width: 640px) {
+  .top-inner { padding: 0 16px; gap: 12px; height: auto; flex-wrap: wrap; padding-top: 10px; }
+  .tabs { order: 3; width: 100%; height: 44px; overflow-x: auto; }
+  .top-actions .pill span { display: none; }
+  main { padding: 16px; }
+  .summary { grid-template-columns: 1fr; }
+  .summary .acts { justify-content: flex-start; }
+  .row, .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) 36px auto; padding-left: 12px; gap: 8px; }
+  .thumb { width: 40px; height: 40px; }
+  .row .badges, .row .sz { display: none; }
+  .specs { grid-template-columns: 1fr 1fr; }
+  .spec b { font-size: 14px; white-space: normal; }
+  .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) auto; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M10 7.5h4M10 16.5h4"/></svg></div>
+      <span class="brand-name">VAULT · USSA</span>
+      <span class="brand-sub" data-t="subtitle"></span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="build" data-t="tabBuild"></button>
+      <button class="tab" role="tab" data-tab="files" data-t="tabFiles"></button>
+      <button class="tab" role="tab" data-tab="manuals" data-t="tabManuals"></button>
+    </nav>
+    <div class="top-actions">
+      <button class="pill" id="mode-pill" type="button"><i></i><span></span></button>
+      <button class="btn" id="lang-btn" type="button"></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Builder -->
+  <section class="view" id="view-build">
+    <div class="builder">
+      <aside class="config" id="config"></aside>
+      <div class="results" id="results"></div>
+    </div>
+  </section>
+
+  <!-- All files -->
+  <section class="view" id="view-files" hidden>
+    <div class="browse-bar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" spellcheck="false">
+        <kbd>/</kbd>
+      </label>
+      <div class="chips" id="scope"></div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="groups" id="groups" data-list></div>
+  </section>
+
+  <!-- Manuals -->
+  <section class="view" id="view-manuals" hidden>
+    <div class="manuals">
+      <div class="doclist" id="doclist"></div>
+      <div class="pdfwrap">
+        <div class="pdfbar"><b id="pdf-title"></b><a class="btn" id="pdf-open" target="_blank" rel="noopener"></a></div>
+        <iframe id="pdf-frame" title="PDF"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="pv" id="pv" aria-hidden="true">
+  <div class="pv-hd">
+    <div class="meta"><span class="nm" id="pv-name"></span><span class="pt" id="pv-path"></span></div>
+    <button class="ib" id="pv-prev" data-t-title="prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+    <button class="ib" id="pv-next" data-t-title="next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+    <button class="ib" id="pv-close" data-t-title="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="pv-stage" id="pv-stage">
+    <img id="pv-img" alt="" hidden>
+    <div class="pv-msg" id="pv-msg" hidden></div>
+    <span class="pv-hint" id="pv-hint" data-t="orbitHint" hidden></span>
+  </div>
+  <div class="pv-ft">
+    <span class="pv-stats" id="pv-stats"></span>
+    <div class="pv-btns">
+      <button class="btn" id="pv-reset" data-t="resetView"></button>
+      <button class="btn" id="pv-wire" data-t="wireframe"></button>
+      <button class="btn" id="pv-app" data-t="openApp"></button>
+      <button class="btn primary" id="pv-reveal"></button>
+    </div>
+  </div>
+</aside>
+<input type="file" id="pv-file" accept=".stl" hidden>
+<div class="toast" id="toast"></div>
+
+<script id="manifest" type="application/json">[]</script>
+
+<script type="module">
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+/* ---------- File index ---------- */
+const FILES = JSON.parse($('#manifest').textContent).map(([p, s, th = '']) => ({
+  p, s, th, name: p.slice(p.lastIndexOf('/') + 1), dir: p.includes('/') ? p.slice(0, p.lastIndexOf('/')) : '',
+}));
+const BY_PATH = new Map(FILES.map(f => [f.p, f]));
+const rx = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const find = pattern => { const re = new RegExp(pattern, 'i'); return FILES.filter(f => re.test(f.p)); };
+const first = pattern => find(pattern)[0];
+const fileUrl = p => p.split('/').map(encodeURIComponent).join('/');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtSize = b => b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
+const ext = f => f.name.slice(f.name.lastIndexOf('.') + 1).toLowerCase();
+const isModel = f => ext(f) === 'stl';
+const isImage = f => ['png', 'jpg', 'jpeg'].includes(ext(f));
+const LOCAL = location.protocol === 'file:';
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('vault:' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('vault:' + k, JSON.stringify(v)); } catch {} },
+};
+
+/* ---------- Text ---------- */
+const I18N = {
+  en: {
+    langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals',
+    live: '3D preview on', static: 'Static mode',
+    hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
+    liveTip: 'Served locally — 3D preview works. Start from the launcher to also get Show in folder.',
+    staticTip: 'Opened by double-clicking index.html, so the browser can’t read STL files or open folders. Use “Open VAULT Hub (Mac).command” or “Open VAULT Hub (Windows).bat” in this folder instead.',
+    type: 'Unit', drawer: 'Drawer', sustainer: 'Sustainer', width: 'Width', depth: 'Depth', outer: 'outer, mm',
+    height: 'Height', count: 'How many', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
+    roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
+    plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
+    whole: 'One piece', split: 'Split · 2 parts', locks: 'Locks per unit', dividers: 'Dividers', include: 'Include', twoParts: 'Include · 2 parts', exploded: 'Part names',
+    secBody: 'Body', secMech: 'Slides, latch & lock', secTop: 'Top of the stack', secTopNote: 'print once per stack',
+    secHinge: 'Hinges & rods', secLock: 'Lock set', secLockNote: n => `× ${n} per unit`, secOpt: 'Optional', secHw: 'Hardware',
+    perUnit: 'per unit', bolts: 'M4 bolts, 14–20 mm', boltsNote: n => `${n} per drawer · fix the facade`, boltsSus: 'fix the facade',
+    m6: 'M6 bolt, 40–60 mm', m6Note: 'for the roof handle', seeManual: 'see manual',
+    specOuter: 'Outer', specInside: 'Inside', specWLH: 'W × L × H', specGrid: 'Gridfinity', specGridSub: '42 mm units',
+    specPrint: h => `${h} module`, specRoof: 'Roof + extras', specPerUnit: 'per unit · published', specOnce: 'once per stack · published', specX3: 'published for the x3 size',
+    printed: 'printed', files: n => `${n} files`,
+    gather: 'Gather into folder', gathered: f => `Copied to ${f}`, copyList: 'Copy list', copied: 'List copied', clear: 'Clear checks',
+    preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
+    pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
+    needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
+    supports: 'Supports', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
+    search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
+    results: n => `${n} files`, noResults: 'No files match that search.',
+    openTab: 'Open in new tab', reference: 'Reference images',
+    m02: 'Drawer assembly', m03: 'Sustainer assembly', m04: 'Modifications', m05: 'Mounting', m01: 'Full manual',
+    prev: 'Previous (←)', next: 'Next (→)', close: 'Close (Esc)', resetView: 'Reset view', wireframe: 'Wireframe',
+    loading: 'Loading model…', triangles: 'triangles', orbitHint: 'Drag to rotate · scroll to zoom · right-drag to pan',
+    blockedTitle: 'The browser blocked this file',
+    blockedBody: 'Pages opened by double-click can’t read local files. Start the hub with <code>Open VAULT Hub (Mac).command</code> or <code>Open VAULT Hub (Windows).bat</code>, or drop the STL here.',
+    pick: 'Choose file…', offlineTitle: '3D viewer couldn’t start', offlineBody: 'It needs WebGL and an internet connection (the viewer library loads from a CDN). Check both and try again.',
+    failTitle: 'Couldn’t read this STL',
+  },
+  zh: {
+    langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书',
+    live: '3D 预览可用', static: '静态模式',
+    hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
+    liveTip: '已通过本地服务打开，可 3D 预览。用启动器打开还可以“在文件夹中显示”。',
+    staticTip: '当前是双击 index.html 打开的，浏览器无法读取 STL 或打开文件夹。请改用本文件夹中的“Open VAULT Hub (Mac).command”或“Open VAULT Hub (Windows).bat”。',
+    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', width: '宽度', depth: '深度', outer: '外形 mm',
+    height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
+    roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
+    plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
+    whole: '整体', split: '分体 · 2 件', locks: '每个盒子的锁', dividers: '隔板', include: '包含', twoParts: '包含 · 2 件', exploded: '零件命名图',
+    secBody: '主体', secMech: '滑轨、卡扣与锁', secTop: '堆叠顶层', secTopNote: '每组堆叠只打印一次',
+    secHinge: '铰链与销杆', secLock: '锁具', secLockNote: n => `每个盒子 × ${n}`, secOpt: '可选', secHw: '五金件',
+    perUnit: '每个', bolts: 'M4 螺丝，14–20 mm', boltsNote: n => `每层抽屉 ${n} 颗 · 固定面板`, boltsSus: '固定面板',
+    m6: 'M6 螺丝，40–60 mm', m6Note: '用于顶部提手', seeManual: '见手册',
+    specOuter: '外形', specInside: '内部', specWLH: '宽 × 长 × 高', specGrid: 'Gridfinity', specGridSub: '每格 42 mm',
+    specPrint: h => `${h} 盒体打印`, specRoof: '顶盖 + 配件', specPerUnit: '每个 · 官方数据', specOnce: '每组堆叠一次 · 官方数据', specX3: '官方数据为 x3 尺寸',
+    printed: '已打印', files: n => `${n} 个文件`,
+    gather: '汇总到文件夹', gathered: f => `已复制到 ${f}`, copyList: '复制清单', copied: '清单已复制', clear: '清除勾选',
+    preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
+    pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
+    needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
+    supports: '需支撑', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
+    search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
+    results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
+    openTab: '新标签页打开', reference: '参考图',
+    m02: '抽屉组装', m03: '翻盖盒组装', m04: '改装部件', m05: '安装固定', m01: '完整手册',
+    prev: '上一个 (←)', next: '下一个 (→)', close: '关闭 (Esc)', resetView: '重置视角', wireframe: '线框',
+    loading: '正在加载模型…', triangles: '三角面', orbitHint: '拖动旋转 · 滚轮缩放 · 右键平移',
+    blockedTitle: '浏览器阻止了读取文件',
+    blockedBody: '双击打开的网页无法读取本地文件。请用 <code>Open VAULT Hub (Mac).command</code> 或 <code>Open VAULT Hub (Windows).bat</code> 打开，或把 STL 拖到这里。',
+    pick: '选择文件…', offlineTitle: '3D 预览器无法启动', offlineBody: '需要浏览器支持 WebGL 并能联网（预览库从 CDN 加载）。请检查后重试——下载功能不受影响。',
+    failTitle: '无法读取该 STL',
+  },
+};
+let lang = store.get('lang', navigator.language?.startsWith('zh') ? 'zh' : 'en');
+const t = (k, ...a) => { const v = I18N[lang][k] ?? I18N.en[k] ?? k; return typeof v === 'function' ? v(...a) : v; };
+
+const ICON = {
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  cube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5v10l-9 5-9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>',
+  folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v5m0 0-2-2m2 2 2-2" opacity="0"/></svg>',
+  gather: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10v6m-3-3h6"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l2 4H5z"/><path d="M10 7v13m4-13v13M10 11h4m-4 4h4"/></svg>',
+  ext: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+};
+
+/* ---------- Printed checklist ---------- */
+const printed = new Set(store.get('printed', []));
+const savePrinted = () => store.set('printed', [...printed]);
+
+/* ---------- Builder state ---------- */
+const WIDTHS = ['S', 'M', 'L', 'XL'];
+const DEPTHS = [3, 4, 5, 6, 7];
+const HEIGHTS = ['1F', '2F', '4F'];
+// Published USSA specs (mm). Inside length is given for x3; every depth step adds one 42 mm Gridfinity unit.
+const SPEC = {
+  width: { S: 164.8, M: 254, L: 329.6, XL: 418.8 },
+  gridWidth: { S: 3, M: 5, L: 6, XL: 9 },
+  length: d => 146 + 42 * (d - 3),
+  height: { drawer: { '1F': 47, '2F': 95, '4F': 191 }, sustainer: { '1F': 61, '2F': 95, '4F': 191 } },
+  inside: {
+    drawer: { width: { S: 125, M: 215, L: 290, XL: 380 }, length: d => 134 + 42 * (d - 3), height: { '1F': 35, '2F': 83, '4F': 179 } },
+    sustainer: { width: { S: 150 }, length: d => 140 + 42 * (d - 3), height: { '1F': 48, '2F': 83, '4F': 179 } },
+  },
+  // [time, grams] per module height, plus roof + extras; published for the x3 depth only.
+  print: {
+    drawer: {
+      S: { '1F': ['7:20', 300], '2F': ['10:22', 448], '4F': ['16:11', 775], roof: ['5:17', 188] },
+      M: { '1F': ['9:51', 427], '2F': ['13:21', 613], '4F': ['19:45', 929], roof: ['6:09', 243] },
+      L: { '1F': ['12:30', 550], '2F': ['16:23', 759], '4F': ['23:27', 1088], roof: ['7:42', 290] },
+      XL: { '1F': ['16:27', 677], roof: ['8:35', 348] },
+    },
+    sustainer: {
+      S: { '1F': ['6:37', 254], '2F': ['7:48', 354], '4F': ['10:45', 545], roof: ['13:24', 384] },
+      M: { '1F': ['8:56', 410], '2F': ['10:17', 503], '4F': ['13:55', 739], roof: ['14:12', 469] },
+      L: { '1F': ['11:34', 534], '2F': ['13:19', 639], '4F': ['17:48', 927], roof: ['16:31', 525] },
+      XL: { '1F': ['13:41', 669], roof: ['10:46', 411] },
+    },
+  },
+};
+const mm = v => (Math.round(v * 10) / 10).toString();
+const state = Object.assign(
+  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false },
+  store.get('state', {}),
+);
+
+const D_FAM = w => `^01\\. DRAWERS/\\d\\d\\. ${w} Families/`;
+const S_FAM = w => `^02\\. SUSTAINERS/\\d\\d\\. ${w} Families/`;
+const D_UNI = '^01\\. DRAWERS/07\\. Universal/';
+const S_UNI = '^02\\. SUSTAINERS/05\\. Universal/';
+
+const drawerModule = (w, d, h) => first(`${D_FAM(w)}${w}${d}/Modules/${w}${d} Module ${h}\\.stl$`);
+const sustainerModules = (w, d, h) => find(`${S_FAM(w)}${w}${d}/Modules/${w}${d} ${h} (\\w+ )?Module ?\\.stl$`);
+const available = (w, d, h) => state.type === 'drawer' ? !!drawerModule(w, d, h) : sustainerModules(w, d, h).length > 0;
+
+function normalizeState() {
+  if (!WIDTHS.includes(state.w)) state.w = 'S';
+  state.d = Number(state.d);
+  if (!HEIGHTS.some(h => available(state.w, state.d, h))) state.d = DEPTHS.find(d => HEIGHTS.some(h => available(state.w, d, h))) ?? 3;
+  if (!available(state.w, state.d, state.h)) state.h = HEIGHTS.find(h => available(state.w, state.d, h)) ?? '1F';
+  state.count = Math.min(99, Math.max(1, state.count | 0));
+  state.locks = Math.min(4, Math.max(0, state.locks | 0));
+  if (state.type === 'drawer') {
+    if (!drawerRoofs().some(r => r.id === state.roof)) state.roof = '';
+    if (!drawerBaseplates().some(b => b.id === state.base)) state.base = '';
+  } else {
+    const variants = sustainerVariants();
+    if (!variants.some(v => v.id === state.variant)) state.variant = variants[0]?.id ?? '';
+    const lids = sustainerLids();
+    if (!lids.some(l => l.id === state.lid)) state.lid = lids[0]?.id ?? 'whole';
+  }
+}
+
+// "Part 1 / Part 2" files belong to one choice; duplicates of a single-piece choice keep the first file.
+function choice(id, label, files) {
+  const parts = files.filter(f => /Part \d/i.test(f.name));
+  return { id, label, files: parts.length ? parts : files.slice(0, 1) };
+}
+function groupChoices(files, keyOf, labelOf) {
+  const m = new Map();
+  for (const f of files) { const k = keyOf(f); if (!m.has(k)) m.set(k, []); m.get(k).push(f); }
+  return [...m].map(([k, fs]) => choice(k, labelOf(k), fs));
+}
+function drawerRoofs() {
+  const { w, d } = state;
+  return groupChoices(find(`${D_FAM(w)}${w}${d}/Roofs?/.*\\.stl$`),
+    f => f.name.replace(new RegExp(`^${w}${d} `, 'i'), '').replace(/\.stl$/i, ''),
+    k => k.replace('Heawyweight', 'Heavyweight').replace(/ Roof$/, ''));
+}
+function baseplates(files) {
+  const order = ['plain', 'oneHandle', 'twoHandles'];
+  return groupChoices(files, f => /2.?Handles/i.test(f.name) ? 'twoHandles' : /1 Handle/i.test(f.name) ? 'oneHandle' : 'plain', k => t(k))
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+}
+const drawerBaseplates = () => baseplates(find(`${D_FAM(state.w)}${state.w}${state.d}/Gridfinity Baseplate/.*\\.stl$`));
+function sustainerLids() {
+  const files = find(`${S_FAM(state.w)}${state.w}${state.d}/Roofs?/.*\\.stl$`);
+  const split = files.filter(f => /Part \d|Connector/i.test(f.name));
+  const whole = files.filter(f => !/Part \d|Connector/i.test(f.name));
+  const out = [];
+  if (whole.length) out.push({ id: 'whole', label: t('whole'), files: whole.slice(0, 1) });
+  if (split.length) out.push({ id: 'split', label: t('split'), files: split });
+  return out;
+}
+function sustainerVariants() {
+  return sustainerModules(state.w, state.d, state.h).map(f => {
+    const m = f.name.match(/ (\w+) Module/);
+    const id = m && m[1] !== state.h ? m[1] : '';
+    return { id, label: id || '—', file: f };
+  });
+}
+
+/* ---------- Part lists ---------- */
+const part = (f, qty = 1, extra = {}) => f ? { f, qty, ...extra } : { missing: extra.expect || '?', qty };
+
+function drawerSections() {
+  const { w, d, h, count } = state;
+  const dir = `${D_FAM(w)}${w}${d}/`;
+  const boxes = find(`${dir}Boxes/${w}${d} (Box ${h}( Part \\d)?|Back Panel)\\.stl$`);
+  const body = [
+    part(drawerModule(w, d, h), 1, { expect: `${w}${d} Module ${h}` }),
+    ...(boxes.length ? boxes.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Box ${h}` })]),
+    part(first(`${D_FAM(w)}(Facades/${w}${h} .*|${w} Facade ${h})\\.stl$`), 1, { expect: `${w}${h} Facade` }),
+  ];
+  const run = w === 'XL' ? `XL${d}` : `x${d}`;
+  const lockFiles = state.lock === 'hidden'
+    ? [part(first(`${D_UNI}Hidden Key \\(`), 1, { expect: 'Hidden Key' }), part(first(`${D_UNI}Hidden Key Part 2`), 1, { expect: 'Hidden Key Part 2' })]
+    : [part(first(`${D_UNI}Key \\(`), 1, { expect: 'Key' })];
+  const mech = [
+    part(first(`${D_UNI}Geared Rails/${w} Rails\\.stl$`), 1, { pcs: 2, expect: `${w} Rails` }),
+    part(first(`${D_UNI}Runners/${run} Runner Guides\\.stl$`), 1, { pcs: 2, expect: `${run} Runner Guides` }),
+    part(first(`${D_UNI}Runners/${run} Runner Slides\\.stl$`), 1, { pcs: 2, expect: `${run} Runner Slides` }),
+    part(first(`${D_UNI}Runners/Runner Stopper\\.stl$`), 2, { expect: 'Runner Stopper' }),
+    part(first(`${D_UNI}Latch\\.stl$`), 1, { expect: 'Latch' }),
+    part(first(`${D_UNI}Springs\\.stl$`), 1, { pcs: 2, expect: 'Springs' }),
+    ...lockFiles,
+    part(first(`${D_UNI}Key Cap\\.stl$`), 1, { expect: 'Key Cap' }),
+    part(first(`${D_UNI}Facade Cap\\.stl$`), 1, { expect: 'Facade Cap' }),
+    part(first(`${D_UNI}Label\\.stl$`), 1, { expect: 'Label' }),
+  ];
+  const top = [];
+  const roof = drawerRoofs().find(r => r.id === state.roof);
+  if (roof) {
+    top.push(...roof.files.map(f => part(f, 1, { once: true })));
+    if (/Heawyweight/i.test(roof.id)) {
+      top.push(part(first(`${D_UNI}Heawyweight Roof Handle`), 1, { once: true }), part(first(`${D_UNI}Heawyweight Roof Insert`), 1, { once: true }));
+    }
+  }
+  if (state.handle) top.push(part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' }));
+  const opt = [];
+  const base = drawerBaseplates().find(b => b.id === state.base);
+  if (base) opt.push(...base.files.map(f => part(f)));
+  const bolts = h === '1F' ? 4 : 6;
+  return [
+    { title: t('secBody'), items: body },
+    { title: t('secMech'), items: mech },
+    top.length && { title: t('secTop'), sub: t('secTopNote'), items: top },
+    opt.length && { title: t('secOpt'), items: opt },
+    { title: t('secHw'), items: [
+      { hw: t('bolts'), sub: t('boltsNote', bolts), qty: bolts * count, raw: true },
+      (state.handle || /Heawyweight/i.test(state.roof)) && { hw: t('m6'), sub: t('m6Note'), qty: null },
+    ].filter(Boolean) },
+  ].filter(Boolean);
+}
+
+function sustainerDividers() {
+  const { w, d, h } = state, dv = `${S_UNI}Dividers/`;
+  if (w === 'S' || w === 'M') return find(`${dv}${w} Dividers/${w}${h} Divider\\.stl$`);
+  if (w === 'L') return find(`${dv}L (Depth Dividers/L${d}-${h} Depth|Width Dividers/L-${h} Width|Seal Dividers/L-${h} Seal) Divider\\.stl$`);
+  return find(`${dv}(XL Depth Dividers/XL${d} Depth Divider|XL Width Divider|XL Seal Divider \\(\\w+\\))\\.stl$`);
+}
+const sustainerBaseplates = () => find(`${S_UNI}Baseplates/[^/]+/${state.w}${state.d}( Part \\d)? +(Gridfinity )?Baseplate\\.stl$`);
+
+function sustainerSections() {
+  const { w, d, h } = state;
+  const sm = w === 'S' || w === 'M';
+  const variants = sustainerVariants();
+  const mod = variants.find(v => v.id === state.variant) || variants[0];
+  const lids = sustainerLids();
+  const lid = lids.find(l => l.id === state.lid) || lids[0];
+  const body = [
+    part(mod?.file, 1, { expect: `${w}${d} ${h} Module` }),
+    part(first(`${S_FAM(w)}(Facades/)?${w}${h}'? Facade\\.stl$`), 1, { expect: `${w}${h} Facade` }),
+    ...(lid ? lid.files.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
+  ];
+  const hingeSize = sm ? 'S-M' : (h === '1F' ? 'L-XL' : 'L');
+  const hinge = [
+    part(first(`${S_UNI}Hinges/${hingeSize} ${h === '1F' ? '1F' : '2-4F'} Hinge\\.stl$`), 1, { pcs: 2, expect: `${hingeSize} Hinge` }),
+    part(first(`${S_UNI}Hinges/${sm ? w : 'L-XL'} Hinge Top\\.stl$`), 1, { pcs: sm ? 0 : 2, expect: 'Hinge Top' }),
+    part(first(`${S_UNI}Rods/${sm ? 'S-M' : 'L-XL'} Rods\\.stl$`), 1, { pcs: 2, expect: 'Rods' }),
+    part(first(`${S_UNI}Label for Sustainers`), 1, { expect: 'Label for Sustainers' }),
+  ];
+  const lock = state.locks ? [
+    part(first(`${S_UNI}Locks/LOCK HOLDER`), state.locks),
+    part(first(`${S_UNI}Locks/LOCK INNER PART`), state.locks),
+    part(first(`${S_UNI}Locks/LOCK OUTER PART ${h === '1F' ? '1F' : '2-4F'}`), state.locks),
+    part(first(`${S_UNI}Locks/1 SET OF PINS`), state.locks, { pcs: 4 }),
+  ] : [];
+  const opt = [];
+  if (state.dividers) opt.push(...sustainerDividers().map(f => part(f, null)));
+  if (state.sbase) opt.push(...sustainerBaseplates().map(f => part(f)));
+  return [
+    { title: t('secBody'), items: body },
+    { title: t('secHinge'), items: hinge },
+    lock.length && { title: t('secLock'), sub: t('secLockNote', state.locks), items: lock, raw: true },
+    opt.length && { title: t('secOpt'), items: opt },
+    { title: t('secHw'), items: [{ hw: t('bolts'), sub: t('boltsSus'), qty: null }] },
+  ].filter(Boolean);
+}
+
+/* ---------- Rendering helpers ---------- */
+const thumbSrc = f => isImage(f) ? fileUrl(f.p) : f.th ? `_hub/thumbs/${f.th}.webp` : '';
+const thumb = (f, icon = ICON.cube) => {
+  const src = f && thumbSrc(f);
+  const inner = src ? `<img src="${esc(src)}" alt="" loading="lazy">` : icon;
+  return f ? `<button class="thumb" data-act="open" tabindex="-1" aria-hidden="true">${inner}</button>` : `<span class="thumb">${inner}</span>`;
+};
+const prettyName = n => n.replace(/\.stl$/i, '').replace(/\s*\(turn on supports\)/i, '').replace(/\s+/g, ' ').trim();
+
+function badges(f, item = {}) {
+  const b = [];
+  if (/turn on supports/i.test(f.name)) b.push(`<span class="badge sup">${t('supports')}</span>`);
+  if (item.pcs) b.push(`<span class="badge pcs">${t('pcs', item.pcs)}</span>`);
+  if (!isModel(f)) b.push(`<span class="badge muted">${ext(f).toUpperCase()}</span>`);
+  return b.join('');
+}
+
+function fileRow(f, item = null) {
+  const done = printed.has(f.p);
+  let qty = '';
+  if (item) {
+    if (item.qty == null) qty = `<span class="qty na">${t('asNeeded')}</span>`;
+    else qty = `<span class="qty">×${item.once || item.raw ? item.qty : item.qty * state.count}</span>`;
+  }
+  const canCheck = isModel(f);
+  return `<li class="row${done ? ' done' : ''}" data-path="${esc(f.p)}">
+    ${canCheck ? `<label class="ck"><input type="checkbox" data-act="check"${done ? ' checked' : ''} aria-label="${esc(t('markPrinted'))}"><span></span></label>` : '<span></span>'}
+    ${thumb(f, isModel(f) ? ICON.cube : ICON.eye)}
+    <button class="meta" data-act="open" title="${esc(f.p)}"><span class="nm">${esc(prettyName(f.name))}</span><span class="pt">${esc(f.dir)}</span></button>
+    <span class="badges">${badges(f, item || {})}</span>
+    ${item ? qty : ''}
+    <span class="sz">${fmtSize(f.s)}</span>
+    <span class="acts-row">
+      <button class="ib" data-act="open" title="${esc(t('preview'))}">${isModel(f) ? ICON.cube : ICON.eye}</button>
+      <button class="ib" data-act="reveal" title="${esc(t('reveal'))}" aria-label="${esc(t('reveal'))}">${ICON.folder}</button>
+    </span>
+  </li>`;
+}
+
+function itemRow(item) {
+  if (item.f) return fileRow(item.f, item);
+  if (item.hw) return `<li class="row hw"><span></span>${thumb(null, ICON.bolt)}
+    <div class="meta"><span class="nm">${esc(item.hw)}</span><span class="pt">${esc(item.sub)}</span></div>
+    <span class="badges"></span>${item.qty == null ? `<span class="qty na">${esc(t('seeManual'))}</span>` : `<span class="qty">×${item.qty}</span>`}<span class="sz"></span><span class="acts-row"></span></li>`;
+  return `<li class="row missing"><span></span>${thumb(null, ICON.cube)}
+    <div class="meta"><span class="nm">${esc(item.missing)}</span><span class="pt">${esc(t('missing'))}</span></div>
+    <span class="badges"></span><span class="qty">×${item.qty ?? '–'}</span><span class="sz"></span><span class="acts-row"></span></li>`;
+}
+
+/* ---------- Builder UI ---------- */
+const seg = (key, options) => `<div class="seg" role="group">${options.map(o =>
+  `<button type="button" data-set="${key}" data-val="${esc(o.val)}" aria-pressed="${String(state[key]) === String(o.val)}"${o.disabled ? ' disabled' : ''}>${esc(o.label)}${o.small ? `<small>${esc(o.small)}</small>` : ''}</button>`).join('')}</div>`;
+const opts = (key, options) => `<div class="opts">${options.map(o =>
+  `<button type="button" class="opt" data-set="${key}" data-val="${esc(o.val)}" aria-pressed="${String(state[key]) === String(o.val)}"${o.file ? ` title="${esc(o.file.name)}"` : ''}>
+    <span class="pic">${o.file && thumbSrc(o.file) ? `<img src="${esc(thumbSrc(o.file))}" alt="" loading="lazy">` : '<span class="none"></span>'}</span>${esc(o.label)}</button>`).join('')}</div>`;
+const chips = (key, options) => `<div class="chips">${options.map(o =>
+  `<button type="button" class="chip" data-set="${key}" data-val="${esc(o.val)}" aria-pressed="${String(state[key]) === String(o.val)}">${esc(o.label)}</button>`).join('')}</div>`;
+const field = (label, body, small = '') => `<div class="field"><div class="lbl">${esc(label)}${small ? `<small>${esc(small)}</small>` : ''}</div>${body}</div>`;
+const stepper = (key, label) => `<div class="row-inline field"><div class="lbl">${esc(label)}</div>
+  <div class="stepper"><button type="button" data-step="${key}" data-val="-1" aria-label="−">−</button><output>${state[key]}</output><button type="button" data-step="${key}" data-val="1" aria-label="+">+</button></div></div>`;
+const toggle = (key, label) => `<label class="row-inline field"><div class="lbl">${esc(label)}</div>
+  <span class="switch"><input type="checkbox" data-toggle="${key}"${state[key] ? ' checked' : ''}><span></span></span></label>`;
+
+function renderConfig() {
+  const { w, d } = state;
+  const drawer = state.type === 'drawer';
+  let html = field(t('type'), seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }]));
+  html += field(t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: `${mm(SPEC.width[v])}mm` }))), t('outer'));
+  html += field(t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: v, small: `${SPEC.length(v)}mm`, disabled: !HEIGHTS.some(h => available(w, v, h)) }))), t('outer'));
+  html += field(t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: `${SPEC.height[state.type][v]}mm`, disabled: !available(w, d, v) }))), t('outer'));
+  html += stepper('count', t('count'));
+  html += '<div class="divider"></div>';
+  if (drawer) {
+    html += field(t('lock'), seg('lock', [{ val: 'key', label: t('lockKey') }, { val: 'hidden', label: t('lockHidden') }]));
+    html += field(t('roof'), opts('roof', [{ val: '', label: t('none') }, ...drawerRoofs().map(r => ({ val: r.id, label: r.label, file: r.files[0] }))]));
+    html += toggle('handle', t('handle'));
+    const bases = drawerBaseplates();
+    if (bases.length) html += field(t('baseplate'), opts('base', [{ val: '', label: t('none') }, ...bases.map(b => ({ val: b.id, label: b.label, file: b.files[0] }))]));
+  } else {
+    const variants = sustainerVariants();
+    if (variants.length > 1) html += field(t('modStyle'), opts('variant', variants.map(v => ({ val: v.id, label: v.label, file: v.file }))));
+    const lids = sustainerLids();
+    if (lids.length > 1) html += field(t('lid'), opts('lid', lids.map(l => ({ val: l.id, label: l.label, file: l.files.find(f => !/Connector/i.test(f.name)) }))));
+    html += stepper('locks', t('locks'));
+    const dividers = sustainerDividers(), sbases = sustainerBaseplates();
+    if (dividers.length) html += field(t('dividers'), opts('dividers', [{ val: false, label: t('none') }, { val: true, label: t('include'), file: dividers[0] }]));
+    if (sbases.length) html += field(t('baseplate'), opts('sbase', [{ val: false, label: t('none') }, { val: true, label: sbases.length > 1 ? t('twoParts') : t('include'), file: sbases[0] }]));
+  }
+  const ref = BY_PATH.get(drawer ? '01. DRAWERS/Drawers Naming.png' : '02. SUSTAINERS/Sustainer Naming.png');
+  if (ref) html += `<div data-list><div class="row" data-path="${esc(ref.p)}" style="display:block;padding:0;border:0;background:none">
+    <button class="ref" data-act="open"><img src="${esc(fileUrl(ref.p))}" alt="" loading="lazy"><span>${esc(t('exploded'))}</span></button></div></div>`;
+  $('#config').innerHTML = html;
+}
+
+function specGrid() {
+  const { type, w, d, h } = state;
+  const ins = SPEC.inside[type];
+  const outer = `${mm(SPEC.width[w])} × ${SPEC.length(d)} × ${SPEC.height[type][h]}`;
+  const inside = ins.width[w] ? `${ins.width[w]} × ${ins.length(d)} × ${ins.height[h]}` : '—';
+  const pr = SPEC.print[type][w];
+  const est = pr?.[h];
+  const cell = (label, value, sub = '') => `<div class="spec"><span>${esc(label)}</span><b>${value}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+  return `<div class="specs">
+    ${cell(t('specOuter'), `${outer} <i>mm</i>`, t('specWLH'))}
+    ${cell(t('specInside'), inside === '—' ? '—' : `${inside} <i>mm</i>`, t('specWLH'))}
+    ${cell(t('specGrid'), `${SPEC.gridWidth[w]} × ${d}`, t('specGridSub'))}
+    ${est ? cell(t('specPrint', h), `${est[0]} <i>h</i> · ${est[1]} <i>g</i>`, d === 3 ? t('specPerUnit') : t('specX3')) : ''}
+    ${pr?.roof ? cell(t('specRoof'), `${pr.roof[0]} <i>h</i> · ${pr.roof[1]} <i>g</i>`, d === 3 ? t('specOnce') : t('specX3')) : ''}
+  </div>`;
+}
+
+function renderResults() {
+  const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
+  const files = sections.flatMap(s => s.items).filter(i => i.f);
+  const unique = [...new Map(files.map(i => [i.f.p, i.f])).values()];
+  const done = unique.filter(f => printed.has(f.p)).length;
+  const bytes = unique.reduce((a, f) => a + f.s, 0);
+  const label = state.type === 'drawer' ? t('drawer') : t('sustainer');
+  $('#results').innerHTML = `
+    <div class="summary">
+      <div>
+        <h1><span>${esc(state.w + state.d)} <em>·</em> ${esc(state.h)}</span><small>${esc(label)} × ${state.count}</small></h1>
+        <div class="facts">${esc(t('files', unique.length))} · ${fmtSize(bytes)}</div>
+      </div>
+      <div class="acts">
+        <button class="btn" data-act="copy">${ICON.copy}<span>${esc(t('copyList'))}</span></button>
+        <button class="btn primary" data-act="gather" title="_Print Jobs/…">${ICON.gather}<span>${esc(t('gather'))}</span></button>
+      </div>
+      ${specGrid()}
+      <div class="progress"><span><b>${done}</b> / ${unique.length} ${esc(t('printed'))}</span><div class="bar"><i style="width:${unique.length ? done / unique.length * 100 : 0}%"></i></div>
+        ${done ? `<button class="btn" data-act="clear" style="padding:4px 10px;font-size:12px">${esc(t('clear'))}</button>` : ''}</div>
+    </div>
+    <div data-list style="display:contents">
+    ${sections.map(s => `<section class="section">
+      <div class="section-hd"><h2>${esc(s.title)}</h2>${s.sub ? `<span>${esc(s.sub)}</span>` : ''}</div>
+      <ul class="list">${s.items.map(i => itemRow(s.raw ? { ...i, raw: true } : i)).join('')}</ul>
+    </section>`).join('')}
+    </div>
+    <p class="note">${esc(t('note'))}</p>`;
+  $('#results').dataset.files = JSON.stringify(unique.map(f => f.p));
+}
+
+function renderBuilder() {
+  normalizeState();
+  store.set('state', state);
+  renderConfig();
+  renderResults();
+}
+
+$('#config').addEventListener('click', e => {
+  const b = e.target.closest('[data-set], [data-step]');
+  if (!b || b.disabled) return;
+  if (b.dataset.set) {
+    const k = b.dataset.set, v = b.dataset.val;
+    state[k] = k === 'd' ? Number(v) : v === 'true' ? true : v === 'false' ? false : v;
+  } else {
+    state[b.dataset.step] += Number(b.dataset.val);
+  }
+  renderBuilder();
+});
+$('#config').addEventListener('change', e => {
+  const k = e.target.dataset.toggle;
+  if (k) { state[k] = e.target.checked; renderBuilder(); }
+});
+
+/* ---------- All files ---------- */
+const SCOPES = [
+  { id: 'all', test: () => true },
+  { id: 'drawers', test: f => f.p.startsWith('01.') && isModel(f) },
+  { id: 'sustainers', test: f => f.p.startsWith('02.') && isModel(f) },
+  { id: 'mods', test: f => f.p.startsWith('03.') && isModel(f) },
+  { id: 'docs', test: f => !isModel(f) },
+];
+let scope = 'all';
+function renderScope() {
+  $('#scope').innerHTML = SCOPES.map(s => `<button class="chip" data-scope="${s.id}" aria-pressed="${s.id === scope}">${esc(t(s.id))}</button>`).join('');
+}
+function renderFiles() {
+  const terms = $('#q').value.toLowerCase().split(/\s+/).filter(Boolean);
+  const sc = SCOPES.find(s => s.id === scope);
+  const list = FILES.filter(f => sc.test(f) && terms.every(q => f.p.toLowerCase().includes(q)));
+  $('#count').textContent = t('results', list.length);
+  if (!list.length) { $('#groups').innerHTML = `<div class="empty">${esc(t('noResults'))}</div>`; return; }
+  const groups = new Map();
+  for (const f of list) { const k = f.dir || '/'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(f); }
+  $('#groups').innerHTML = [...groups].map(([dir, fs]) => `<section class="section grp">
+    <div class="section-hd"><h2>${esc(dir)}</h2><span>${fs.length}</span></div>
+    <ul class="list">${fs.map(f => fileRow(f)).join('')}</ul></section>`).join('');
+}
+let searchTimer;
+$('#q').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(renderFiles, 80); });
+$('#scope').addEventListener('click', e => {
+  const b = e.target.closest('[data-scope]');
+  if (b) { scope = b.dataset.scope; renderScope(); renderFiles(); }
+});
+
+/* ---------- Manuals ---------- */
+const MANUALS = [
+  { k: 'm01', n: '01', p: '01_Instructions Manual.pdf' },
+  { k: 'm02', n: '02', p: '02_Drawer Assembly.pdf' },
+  { k: 'm03', n: '03', p: '03_Sustainers Assembly.pdf' },
+  { k: 'm04', n: '04', p: '04_Modifications.pdf' },
+  { k: 'm05', n: '05', p: '05_Mounting Instructions.pdf' },
+].filter(m => BY_PATH.has(m.p));
+let manual = store.get('manual', MANUALS[0]?.p);
+function renderManuals() {
+  const refs = FILES.filter(isImage);
+  $('#doclist').innerHTML = MANUALS.map(m => `<button class="doc" data-pdf="${esc(m.p)}" aria-pressed="${m.p === manual}">
+      <span class="num">${m.n}</span><span><b>${esc(t(m.k))}</b><small>PDF · ${fmtSize(BY_PATH.get(m.p).s)}</small></span></button>`).join('')
+    + (refs.length ? `<h3>${esc(t('reference'))}</h3><div class="thumbs" data-list>${refs.map(f =>
+      `<div class="row" data-path="${esc(f.p)}" style="display:block;padding:0;border:0;background:none"><button data-act="open" title="${esc(f.name)}"><img src="${esc(fileUrl(f.p))}" alt="${esc(f.name)}" loading="lazy"></button></div>`).join('')}</div>` : '');
+  const m = MANUALS.find(x => x.p === manual) || MANUALS[0];
+  if (!m) return;
+  $('#pdf-title').textContent = t(m.k);
+  $('#pdf-open').innerHTML = `${ICON.ext}<span>${esc(t('openTab'))}</span>`;
+  $('#pdf-open').href = fileUrl(m.p);
+  const src = fileUrl(m.p) + '#view=FitH';
+  if ($('#pdf-frame').dataset.src !== src && !$('#view-manuals').hidden) { $('#pdf-frame').src = src; $('#pdf-frame').dataset.src = src; }
+}
+$('#doclist').addEventListener('click', e => {
+  const b = e.target.closest('[data-pdf]');
+  if (b) { manual = b.dataset.pdf; store.set('manual', manual); renderManuals(); }
+});
+
+/* ---------- Tabs ---------- */
+let tab = ['build', 'files', 'manuals'].includes(location.hash.slice(1)) ? location.hash.slice(1) : store.get('tab', 'build');
+function showTab(name) {
+  tab = name;
+  store.set('tab', name);
+  history.replaceState(null, '', '#' + name);
+  $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + name; });
+  if (name === 'manuals') renderManuals();
+  if (name === 'files') renderFiles();
+}
+$$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+/* ---------- Shared row actions ---------- */
+function toast(msg) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove();
+  }
+}
+document.addEventListener('change', e => {
+  if (e.target.dataset.act !== 'check') return;
+  const row = e.target.closest('[data-path]');
+  const p = row.dataset.path;
+  e.target.checked ? printed.add(p) : printed.delete(p);
+  savePrinted();
+  $$(`[data-path="${CSS.escape(p)}"]`).forEach(r => {
+    r.classList.toggle('done', e.target.checked);
+    const cb = r.querySelector('input[data-act="check"]');
+    if (cb) cb.checked = e.target.checked;
+  });
+  if (row.closest('#results')) renderResults();
+});
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]');
+  if (!el || el.tagName === 'INPUT') return;
+  const act = el.dataset.act;
+  if (act === 'open') {
+    const row = el.closest('[data-path]');
+    const container = row.closest('[data-list]') || row.parentElement;
+    const paths = [...new Set($$('[data-path]', container).map(r => r.dataset.path))];
+    const f = BY_PATH.get(row.dataset.path);
+    if (f.name.toLowerCase().endsWith('.pdf')) { manual = f.p; store.set('manual', f.p); showTab('manuals'); return; }
+    openPreview(paths.map(p => BY_PATH.get(p)).filter(x => isModel(x) || isImage(x)), f);
+  } else if (act === 'copy') {
+    const sections = state.type === 'drawer' ? drawerSections() : sustainerSections();
+    const lines = [`${state.w}${state.d} ${state.h} ${state.type === 'drawer' ? t('drawer') : t('sustainer')} × ${state.count}`];
+    for (const s of sections) {
+      lines.push('', `## ${s.title}`);
+      for (const i of s.items) {
+        const q = i.qty == null ? t('asNeeded') : '×' + (i.once || i.raw || s.raw ? i.qty : i.qty * state.count);
+        lines.push(`[${i.f && printed.has(i.f.p) ? 'x' : ' '}] ${q}  ${i.f ? i.f.p : i.hw || i.missing}`);
+      }
+    }
+    await copyText(lines.join('\n'));
+    toast(t('copied'));
+  } else if (act === 'reveal') {
+    reveal(el.closest('[data-path]').dataset.path);
+  } else if (act === 'gather') {
+    if (!HUB) { toast(t('needsHub')); return; }
+    const name = `${state.w}${state.d} ${state.h} ${state.type === 'drawer' ? 'Drawer' : 'Sustainer'}`;
+    try {
+      const res = await hubCall('/api/gather', { name, paths: JSON.parse($('#results').dataset.files || '[]') });
+      toast(t('gathered', res.folder));
+    } catch (err) { toast(err.message); }
+  } else if (act === 'clear') {
+    JSON.parse($('#results').dataset.files || '[]').forEach(p => printed.delete(p));
+    savePrinted();
+    renderResults();
+  }
+});
+
+/* ---------- Local hub actions ---------- */
+// The launcher's server can reveal files in Finder/Explorer; a plain page can only copy the path.
+let HUB = false;
+async function hubCall(route, body) {
+  const res = await fetch(route, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Vault-Hub': '1' }, body: JSON.stringify(body) });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || res.statusText);
+  return json;
+}
+function absolutePath(p) {
+  if (!LOCAL) return p;
+  const dir = decodeURIComponent(location.pathname).replace(/[^/]*$/, '');
+  const full = dir + p;
+  return /^\/[A-Za-z]:/.test(full) ? full.slice(1).replace(/\//g, '\\') : full;
+}
+async function reveal(p) {
+  if (HUB) { try { await hubCall('/api/reveal', { path: p }); } catch (err) { toast(err.message); } return; }
+  await copyText(absolutePath(p));
+  toast(t('pathCopied'));
+}
+if (!LOCAL) {
+  fetch('api/ping').then(r => r.ok ? r.json() : null).then(j => { HUB = !!j?.ok; renderChrome(); }).catch(() => {});
+}
+
+/* ---------- Preview ---------- */
+const pv = { list: [], index: 0, token: 0, viewer: null, wire: false };
+
+async function loadViewer() {
+  if (pv.viewer) return pv.viewer;
+  const THREE = await import('three');
+  const { STLLoader } = await import('three/addons/loaders/STLLoader.js');
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+  const stage = $('#pv-stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 10000);
+  scene.add(camera, new THREE.HemisphereLight(0xffffff, 0x50545c, 1.5));
+  const key = new THREE.DirectionalLight(0xffffff, 2.4);
+  key.position.set(0.6, 1, 0.8);
+  camera.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.8);
+  rim.position.set(-1, 0.4, -1);
+  scene.add(rim);
+  const css = getComputedStyle(document.documentElement);
+  const material = new THREE.MeshStandardMaterial({ color: new THREE.Color(css.getPropertyValue('--model').trim()), roughness: 0.55, metalness: 0.05 });
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  let mesh = null, grid = null, home = null;
+  const resize = () => {
+    const { clientWidth: w, clientHeight: h } = stage;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(stage);
+  renderer.setAnimationLoop(() => { if (pv.open) { controls.update(); renderer.render(scene, camera); } });
+  const viewer = {
+    show(buffer) {
+      if (mesh) { scene.remove(mesh); mesh.geometry.dispose(); }
+      if (grid) { scene.remove(grid); grid.geometry.dispose(); }
+      const g = new STLLoader().parse(buffer);
+      g.rotateX(-Math.PI / 2);
+      g.computeVertexNormals();
+      g.computeBoundingBox();
+      const c = g.boundingBox.getCenter(new THREE.Vector3());
+      g.translate(-c.x, -g.boundingBox.min.y, -c.z);
+      g.computeBoundingBox();
+      const size = g.boundingBox.getSize(new THREE.Vector3());
+      mesh = new THREE.Mesh(g, material);
+      scene.add(mesh);
+      const span = Math.ceil(Math.max(size.x, size.z) * 1.6 / 10) * 10;
+      grid = new THREE.GridHelper(span, span / 10, css.getPropertyValue('--grid').trim(), css.getPropertyValue('--grid').trim());
+      grid.material.transparent = true;
+      grid.material.opacity = 0.22;
+      scene.add(grid);
+      const radius = size.length() / 2;
+      const dist = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.05;
+      controls.target.set(0, size.y / 2, 0);
+      camera.position.set(dist * 0.62, size.y / 2 + dist * 0.48, dist * 0.62);
+      camera.near = dist / 100;
+      camera.far = dist * 20;
+      camera.updateProjectionMatrix();
+      home = camera.position.clone();
+      controls.update();
+      resize();
+      return { x: size.x, y: size.z, z: size.y, tris: g.attributes.position.count / 3 };
+    },
+    reset() { if (home) { camera.position.copy(home); controls.update(); } },
+    wire(on) { material.wireframe = on; },
+  };
+  pv.viewer = viewer;
+  return viewer;
+}
+
+function message(html) { const m = $('#pv-msg'); m.innerHTML = html ? `<div class="box">${html}</div>` : ''; m.hidden = !html; }
+function setStats(s) {
+  $('#pv-stats').innerHTML = s ? `<b>${s.x.toFixed(1)}</b> × <b>${s.y.toFixed(1)}</b> × <b>${s.z.toFixed(1)}</b> mm · ${Math.round(s.tris).toLocaleString()} ${esc(t('triangles'))}` : '';
+}
+function showStl(buffer) {
+  try { setStats(pv.viewer.show(buffer)); message(''); $('#pv-hint').hidden = false; $('#pv-reset').hidden = $('#pv-wire').hidden = false; }
+  catch { message(`<h3>${esc(t('failTitle'))}</h3>`); }
+}
+
+async function openPreview(list, f) {
+  pv.list = list.length ? list : [f];
+  pv.index = Math.max(0, pv.list.findIndex(x => x.p === f.p));
+  pv.open = true;
+  $('#pv').classList.add('open');
+  $('#pv').setAttribute('aria-hidden', 'false');
+  $('#scrim').classList.add('open');
+  await showCurrent();
+}
+function closePreview() {
+  pv.open = false;
+  pv.token++;
+  $('#pv').classList.remove('open');
+  $('#pv').setAttribute('aria-hidden', 'true');
+  $('#scrim').classList.remove('open');
+}
+function step(n) {
+  if (!pv.open || pv.list.length < 2) return;
+  pv.index = (pv.index + n + pv.list.length) % pv.list.length;
+  showCurrent();
+}
+async function showCurrent() {
+  const f = pv.list[pv.index];
+  const token = ++pv.token;
+  $('#pv-name').textContent = prettyName(f.name);
+  $('#pv-path').textContent = f.p;
+  pv.path = f.p;
+  $('#pv-reveal').innerHTML = `${ICON.folder}<span>${esc(t('reveal'))}</span>`;
+  $('#pv-app').hidden = !HUB || !isModel(f);
+  $('#pv-prev').hidden = $('#pv-next').hidden = pv.list.length < 2;
+  $('#pv-hint').hidden = true;
+  setStats(null);
+  const canvas = $('#pv-stage canvas');
+  const img = $('#pv-img');
+  if (isImage(f)) {
+    if (canvas) canvas.style.visibility = 'hidden';
+    img.hidden = false;
+    img.src = fileUrl(f.p);
+    message('');
+    $('#pv-reset').hidden = $('#pv-wire').hidden = true;
+    return;
+  }
+  img.hidden = true;
+  img.removeAttribute('src');
+  $('#pv-reset').hidden = $('#pv-wire').hidden = true;
+  message(`<div class="spinner"></div><p>${esc(t('loading'))}</p>`);
+  let viewer;
+  try { viewer = await loadViewer(); }
+  catch { if (token === pv.token) message(`<h3>${esc(t('offlineTitle'))}</h3><p>${esc(t('offlineBody'))}</p>`); return; }
+  if (token !== pv.token) return;
+  const c = $('#pv-stage canvas');
+  c.style.visibility = 'hidden';
+  let buffer;
+  try {
+    const res = await fetch(fileUrl(f.p));
+    if (!res.ok) throw new Error(res.status);
+    buffer = await res.arrayBuffer();
+  } catch {
+    if (token !== pv.token) return;
+    message(`<h3>${esc(t('blockedTitle'))}</h3><p>${t('blockedBody')}</p><button class="btn" data-pick>${esc(t('pick'))}</button>`);
+    return;
+  }
+  if (token !== pv.token) return;
+  c.style.visibility = 'visible';
+  showStl(buffer);
+}
+
+async function showLocalFile(file) {
+  if (!file || !/\.stl$/i.test(file.name)) return;
+  const token = ++pv.token;
+  message(`<div class="spinner"></div><p>${esc(t('loading'))}</p>`);
+  try { await loadViewer(); } catch { message(`<h3>${esc(t('offlineTitle'))}</h3><p>${esc(t('offlineBody'))}</p>`); return; }
+  const buffer = await file.arrayBuffer();
+  if (token !== pv.token) return;
+  $('#pv-img').hidden = true;
+  $('#pv-stage canvas').style.visibility = 'visible';
+  $('#pv-name').textContent = prettyName(file.name);
+  showStl(buffer);
+}
+
+$('#pv-close').addEventListener('click', closePreview);
+$('#pv-reveal').addEventListener('click', () => pv.path && reveal(pv.path));
+$('#pv-app').addEventListener('click', () => pv.path && hubCall('/api/open', { path: pv.path }).catch(err => toast(err.message)));
+$('#scrim').addEventListener('click', closePreview);
+$('#pv-prev').addEventListener('click', () => step(-1));
+$('#pv-next').addEventListener('click', () => step(1));
+$('#pv-reset').addEventListener('click', () => pv.viewer?.reset());
+$('#pv-wire').addEventListener('click', () => { pv.wire = !pv.wire; pv.viewer?.wire(pv.wire); $('#pv-wire').classList.toggle('primary', pv.wire); });
+$('#pv-msg').addEventListener('click', e => { if (e.target.closest('[data-pick]')) $('#pv-file').click(); });
+$('#pv-file').addEventListener('change', e => { showLocalFile(e.target.files[0]); e.target.value = ''; });
+const stage = $('#pv-stage');
+stage.addEventListener('dragover', e => { e.preventDefault(); stage.classList.add('drag'); });
+stage.addEventListener('dragleave', () => stage.classList.remove('drag'));
+stage.addEventListener('drop', e => { e.preventDefault(); stage.classList.remove('drag'); showLocalFile(e.dataTransfer.files[0]); });
+
+document.addEventListener('keydown', e => {
+  if (pv.open) {
+    if (e.key === 'Escape') closePreview();
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(1);
+    return;
+  }
+  if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+    e.preventDefault();
+    if (tab !== 'files') showTab('files');
+    $('#q').focus();
+  }
+});
+
+/* ---------- Language & chrome ---------- */
+function renderChrome() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  $$('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+  $$('[data-t-title]').forEach(el => { el.title = t(el.dataset.tTitle); el.setAttribute('aria-label', el.title); });
+  $('#lang-btn').textContent = t('langBtn');
+  $('#q').placeholder = t('search');
+  const pill = $('#mode-pill');
+  const mode = LOCAL ? 'static' : HUB ? 'hub' : 'live';
+  pill.className = 'pill ' + (mode === 'static' ? 'static' : 'live');
+  pill.querySelector('span').textContent = t(mode);
+  pill.title = t(mode + 'Tip');
+}
+$('#mode-pill').addEventListener('click', () => toast(t(LOCAL ? 'staticTip' : HUB ? 'hubTip' : 'liveTip')));
+$('#lang-btn').addEventListener('click', () => {
+  lang = lang === 'en' ? 'zh' : 'en';
+  store.set('lang', lang);
+  renderAll();
+});
+
+function renderAll() {
+  renderChrome();
+  renderBuilder();
+  renderScope();
+  if (tab === 'files') renderFiles();
+  if (tab === 'manuals') renderManuals();
+}
+renderAll();
+showTab(tab);
+</script>
+</body>
+</html>
