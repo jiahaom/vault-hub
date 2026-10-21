@@ -614,7 +614,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    gridDiv: 'Grid dividers', gdFull: 'Full height', gdTall: 'Tall', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the depth', addons: 'Add-ons', addonsNote: 'switches a group on', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', secAlt: 'Alternative versions', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    gridDiv: 'Grid dividers', gdFull: 'Full height', gdMid: 'Mid', kitLbl: 'Backbone and handle lock', kitSized: w => `${w} width`, kitUni: 'Universal', gdLow: 'Low', gdHoles: 'holes', gdNote: 'length in holes · ↔ fits the width · ↕ fits the depth', addons: 'Add-ons', addonsNote: 'switches a group on', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', secAlt: 'Alternative versions', addFacade2: 'Alternative facade', addBase2: 'Other baseplate versions', secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder', notInPack: 'Official size, no file in the VAULT pack',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -654,7 +654,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    gridDiv: '网格隔板', gdFull: '满高', gdTall: '加高', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是深度', addons: '附加件', addonsNote: '一键打开一组', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', secAlt: '备选版本', addFacade2: '备选面板', addBase2: '其他底板版本', secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    gridDiv: '网格隔板', gdFull: '满高', gdMid: '中高', kitLbl: '背板与提手锁', kitSized: w => `${w} 宽度专用`, kitUni: '通用', gdLow: '矮款', gdHoles: '孔', gdNote: '长度(孔数)· ↔ 正好是宽度 · ↕ 正好是深度', addons: '附加件', addonsNote: '一键打开一组', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', secAlt: '备选版本', addFacade2: '备选面板', addBase2: '其他底板版本', secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到', notInPack: '官方尺寸,VAULT 文件包中没有此文件',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -718,7 +718,7 @@ const SPEC = {
 };
 const mm = v => (Math.round(v * 10) / 10).toString();
 const state = Object.assign(
-  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, mods: {}, gdh: 'full', gdLens: {}, inc: {} },
+  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, mods: {}, gdh: 'full', gdLens: {}, baseCut: 'whole', kit: 'sized', inc: {} },
   store.get('state', {}),
 );
 
@@ -729,14 +729,19 @@ const S_UNI = '^02\\. SUSTAINERS/05\\. Universal/';
 
 const drawerModule = (w, d, h) => first(`${D_FAM(w)}${w}${d}/Modules/${w}${d} Module ${h}\\.stl$`);
 const sustainerModules = (w, d, h) => find(`${S_FAM(w)}${w}${d}/Modules/${w}${d} ${h} (\\w+ )?Module ?\\.stl$`);
-const available = (w, d, h) => state.type === 'drawer' ? !!drawerModule(w, d, h) : sustainerModules(w, d, h).length > 0;
+// XL drawers are published in 1F, 2F and 4F, but the pack only has XL 1F bodies. 2F/4F stay selectable so the parts that do fit
+// (82.5 mm XL-length grid dividers, rails, runners, roofs, baseplates) have a unit; the missing bodies are listed as "not in the pack".
+const specOnly = (w, h) => state.type === 'drawer' && w === 'XL' && h !== '1F';
+const available = (w, d, h) => state.type === 'drawer' ? !!drawerModule(w, d, h) || (specOnly(w, h) && !!drawerModule(w, d, '1F')) : sustainerModules(w, d, h).length > 0;
 
 function normalizeState() {
   if (!WIDTHS.includes(state.w)) state.w = 'S';
   state.d = Number(state.d);
   if (!HEIGHTS.some(h => available(state.w, state.d, h))) state.d = DEPTHS.find(d => HEIGHTS.some(h => available(state.w, d, h))) ?? 3;
   if (!available(state.w, state.d, state.h)) state.h = HEIGHTS.find(h => available(state.w, state.d, h)) ?? '1F';
-  if (!['full', 'low', 'tall'].includes(state.gdh) || (state.gdh === 'tall' && state.w !== 'XL')) state.gdh = 'full';
+  if (!['full', 'low', 'mid'].includes(state.gdh) || (state.gdh === 'mid' && state.h === '1F')) state.gdh = 'full';
+  if (!['whole', 'split'].includes(state.baseCut)) state.baseCut = 'whole';
+  if (!['sized', 'universal'].includes(state.kit)) state.kit = 'sized';
   state.count = Math.min(99, Math.max(1, state.count | 0));
   state.locks = Math.min(4, Math.max(0, state.locks | 0));
   if (state.type === 'drawer') {
@@ -790,7 +795,7 @@ function sustainerVariants() {
 }
 
 /* ---------- Part lists ---------- */
-const part = (f, qty = 1, extra = {}) => f ? { f, qty, ...extra } : { missing: extra.expect || '?', qty };
+const part = (f, qty = 1, extra = {}) => f ? { f, qty, ...extra } : { missing: extra.expect || '?', qty, spec: !!extra.spec };
 // Every part of the unit is in the list; each file row has an include switch. `on` is its default (what the option pickers select);
 // a switch you flip is remembered per file in state.inc and wins over the default.
 const off = it => it && it.f ? { ...it, on: false } : it;
@@ -801,11 +806,12 @@ const activeItems = sections => sections.flatMap(s => s.items.map(i => (s.raw ? 
 function drawerSections() {
   const { w, d, h, count } = state;
   const dir = `${D_FAM(w)}${w}${d}/`;
-  const boxes = find(`${dir}Boxes/${w}${d} (Box ${h}( Part \\d)?|Back Panel)\\.stl$`);
+  const spec = specOnly(w, h);
+  const boxes = spec ? [] : find(`${dir}Boxes/${w}${d} (Box ${h}( Part \\d)?|Back Panel)\\.stl$`);   // the XL back panel belongs to the 1F box
   const body = [
-    part(drawerModule(w, d, h), 1, { expect: `${w}${d} Module ${h}` }),
-    ...(boxes.length ? boxes.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Box ${h}` })]),
-    part(first(`${D_FAM(w)}(Facades/${w}${h} .*|${w} Facade ${h})\\.stl$`), 1, { expect: `${w}${h} Facade` }),
+    part(drawerModule(w, d, h), 1, { expect: `${w}${d} Module ${h}`, spec }),
+    ...(boxes.length ? boxes.map(f => part(f)) : [part(null, 1, { expect: `${w}${d} Box ${h}`, spec })]),
+    part(first(`${D_FAM(w)}(Facades/${w}${h} .*|${w} Facade ${h})\\.stl$`), 1, { expect: `${w}${h} Facade`, spec }),
   ];
   const run = w === 'XL' ? `XL${d}` : `x${d}`;
   const keyOn = state.lock !== 'hidden';
@@ -861,23 +867,24 @@ function addonItems() {
   if (type === 'drawer') {
     const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
     const lenOf = f => Number((f.name.match(/^(\d+)/) || [])[1]);
-    const fullFolder = h === '1F' ? '34.5MM TALL' : '82.5MM TALL';
+    const fullFolder = h === '1F' ? '/34.5MM TALL' : '/82.5MM TALL';
     for (const f of FILES) {
       if (!f.p.startsWith('01. DRAWERS/07. Universal/Grid Dividers/') || !/\.stl$/i.test(f.p) || lenOf(f) > reach) continue;
-      // XL boxes only come in 1F, but the 82.5 mm tall pieces of XL length (27 to 32 holes) exist, so XL lists those too.
-      const kind = f.p.includes('/20MM TALL') ? 'low' : f.p.includes('/' + fullFolder) ? 'full' : (w === 'XL' && lenOf(f) > 26 ? 'tall' : null);
+      // 20 mm fits every height; 34.5 mm is full height in 1F and fits lower in 2F/4F; 82.5 mm is full height in 2F/4F.
+      const kind = f.p.includes('/20MM TALL') ? 'low' : f.p.includes(fullFolder) ? 'full' : (h !== '1F' && f.p.includes('/34.5MM TALL') ? 'mid' : null);
       if (kind) items.push({ sec: 'grid', grp: null, gdLen: lenOf(f), gdKind: kind, f, qty: null });
     }
     // Other versions of the same baseplate (the plate picker above chooses one version of each kind).
     const picked = new Set(drawerBaseplates().flatMap(b => b.files.map(f => f.p)));
     for (const f of find(`${D_FAM(w)}${w}${d}/Gridfinity Baseplate/.*\\.stl$`)) if (!picked.has(f.p)) items.push({ sec: 'alt', grp: 'base2', f, qty: 1 });
-    const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
-    if (ms) items.push({ sec: 'grid', grp: 'sup', f: ms, qty: 1 });
     if (w === 'L' || w === 'XL') {
       for (const f of find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
       if (w === 'L') for (const f of find(`${D_UNI}L² Accessories/x${d} Accessory`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
     }
   }
+  // Manual supports go by depth only; the sustainer manual uses them too ("remove manual supports, before filling it with dividers").
+  const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
+  if (ms) items.push({ sec: type === 'drawer' ? 'grid' : 'sup', grp: 'sup', f: ms, qty: 1 });
   if (type === 'sustainer') for (const f of find(`${S_UNI}Facades/${w}${h}\\.stl$`)) items.push({ sec: 'alt', grp: 'facade2', f, qty: 1 });   // alternative facade, same size; replaces the standard one
   for (const f of FILES) {
     if (!f.p.startsWith('03. MODIFICATIONS/') || !/\.stl$/i.test(f.p)) continue;
@@ -889,21 +896,37 @@ function addonItems() {
     else if ((m = n.match(/^Universal (\dF)?/))) fit = !m[1] || m[1] === h;
     else { m = n.match(/(\dF)$/); fit = !m || m[1] === h; }   // "Connector for Modules 1F" only for 1F; wheels, knobs, connectors for every size
     if (!fit) continue;
+    // The pull-out handle lock and its knob sit in the Backbone folder but belong to the pull-out handle (Modifications manual, steps 16-17).
     const grp = /\/Wall Mounts\//.test(f.p) ? 'wall' : /USSA Pegboard/.test(f.p) ? 'pegU' : /IKEA/.test(f.p) ? 'pegI' : /\/Feet\//.test(f.p) ? 'feet'
-      : /\/Wheels\//.test(f.p) ? 'wheels' : /\/Pull-out Handle\//.test(f.p) ? 'pull' : /\/Stationary Handle\//.test(f.p) ? 'stat'
+      : /\/Wheels\//.test(f.p) ? 'wheels' : /\/Pull-out Handle\//.test(f.p) || /Handle Lock/.test(n) ? 'pull' : /\/Stationary Handle\//.test(f.p) ? 'stat'
       : /\/Backbone\//.test(f.p) ? 'back' : /\/Base\//.test(f.p) ? 'base' : null;
-    items.push({ sec: 'mods', grp, f, qty: 1 });
+    // Handles mount on a backbone, and backbones only exist for 1F and 2F.
+    if ((grp === 'pull' || grp === 'stat') && h === '4F') continue;
+    // Either/or versions: a base is printed whole or in two parts; backbone and handle lock parts are width-sized or universal (manual p.1).
+    const pick = grp === 'base' ? (/ Part \d/.test(n) ? 'split' : / Whole$/.test(n) ? 'whole' : '')
+      : (grp === 'back' || grp === 'pull') && /Backbone|Handle Lock(?! Knob)/.test(n) ? (/^Universal /.test(n) ? 'universal' : 'sized') : '';
+    items.push({ sec: 'mods', grp, f, qty: 1, pick });
   }
+  // A part with only one version for this size (e.g. XL 2F has only the universal backbone) is always the one used.
+  const family = i => i.grp + (/Backbone/.test(i.f.name) ? ':bone' : /Handle Lock/.test(i.f.name) ? ':lock' : '');
+  const versions = new Map();
+  for (const i of items) if (i.pick) versions.set(family(i), (versions.get(family(i)) || new Set()).add(i.pick));
+  for (const i of items) if (i.pick && versions.get(family(i)).size < 2) i.pick = '';
   return items;
 }
 const addonGroups = () => [...new Set(addonItems().map(i => i.grp).filter(Boolean))];
+const PICK_KEY = { whole: 'baseCut', split: 'baseCut', sized: 'kit', universal: 'kit' };
+const picked = i => !i.pick || state[PICK_KEY[i.pick]] === i.pick;
+// The whole / split and sized / universal pickers are offered only when this size has both versions.
+const pickChoices = key => [...new Set(addonItems().filter(i => i.pick && PICK_KEY[i.pick] === key).map(i => i.pick))];
 function extraSections() {
   const { w, d, h, type } = state;
   const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
-  const make = sec => addonItems().filter(i => i.sec === sec).map(i => { const it = part(i.f, i.qty, { expect: '' }); const on = i.gdLen ? (state.gdLens?.[i.gdLen] && i.gdKind === (state.gdh || 'full')) : (i.grp && state.mods?.[i.grp]); return on ? it : off(it); });
+  const make = sec => addonItems().filter(i => i.sec === sec).map(i => { const it = part(i.f, i.qty, { expect: '' }); const on = i.gdLen ? (state.gdLens?.[i.gdLen] && i.gdKind === (state.gdh || 'full')) : (i.grp && state.mods?.[i.grp] && picked(i)); return on ? it : off(it); });
   const out = [];
-  const grid = make('grid'), vari = make('var'), alt = make('alt'), mods = make('mods');
+  const grid = make('grid'), sup = make('sup'), vari = make('var'), alt = make('alt'), mods = make('mods');
   if (grid.length) out.push({ title: t('secGrid'), sub: t('secGridNote', reach), items: grid, raw: true });
+  if (sup.length) out.push({ title: t('addSup'), items: sup, raw: true });
   if (alt.length) out.push({ title: t('secAlt'), items: alt, raw: true });
   if (vari.length) out.push({ title: t('secVar'), items: vari, raw: true });
   if (mods.length) out.push({ title: t('secMods'), items: mods, raw: true });
@@ -1048,7 +1071,7 @@ function itemRow(item) {
     <div class="meta"><span class="nm">${esc(item.hw)}</span><span class="pt">${esc(item.sub)}</span></div>
     <span class="badges"></span>${item.qty == null ? `<span class="qty na">${esc(t('seeManual'))}</span>` : `<span class="qty">×${item.qty}</span>`}<span class="sz"></span><span class="acts-row"></span></li>`;
   return `<li class="row missing"><span></span>${thumb(null, ICON.cube)}
-    <div class="meta"><span class="nm">${esc(item.missing)}</span><span class="pt">${esc(t('missing'))}</span></div>
+    <div class="meta"><span class="nm">${esc(item.missing)}</span><span class="pt">${esc(t(item.spec ? 'notInPack' : 'missing'))}</span></div>
     <span class="badges"></span><span class="qty">×${item.qty ?? '–'}</span><span class="sz"></span><span class="acts-row"></span></li>`;
 }
 
@@ -1095,11 +1118,13 @@ function renderConfig() {
     const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
     const wide = GRID_HOLES[w], deep = 10 + 4 * (d - 3);
     const lens = [...new Set(addonItems().filter(i => i.gdLen && i.gdKind === (state.gdh || 'full')).map(i => i.gdLen))].sort((a, b) => a - b);
-    html += field(t('gridDiv'), seg('gdh', [{ val: 'full', label: t('gdFull'), small: state.h === '1F' ? '34.5mm' : '82.5mm' }, { val: 'low', label: t('gdLow'), small: '20mm' }, ...(addonItems().some(i => i.gdKind === 'tall') ? [{ val: 'tall', label: t('gdTall'), small: '82.5mm' }] : [])]) +
+    html += field(t('gridDiv'), seg('gdh', [{ val: 'full', label: t('gdFull'), small: state.h === '1F' ? '34.5mm' : '82.5mm' }, ...(state.h === '1F' ? [] : [{ val: 'mid', label: t('gdMid'), small: '34.5mm' }]), { val: 'low', label: t('gdLow'), small: '20mm' }]) +
       `<div class="chips" style="margin-top:8px">${lens.map(n => `<button type="button" class="chip" data-gd="${n}" aria-pressed="${!!state.gdLens?.[n]}" title="${n} ${esc(t('gdHoles'))}">${n}${n === wide ? ' ↔' : ''}${n === deep ? ' ↕' : ''}</button>`).join('')}</div>`, t('gdNote'));
   }
   const groups = addonGroups();
   if (groups.length) html += field(t('addons'), `<div class="chips">${groups.map(g => `<button type="button" class="chip" data-mod="${g}" aria-pressed="${!!state.mods?.[g]}">${esc(t(ADDON_LABEL[g]))}</button>`).join('')}</div>`, t('addonsNote'));
+  if (state.mods?.base && pickChoices('baseCut').length > 1) html += field(t('addBase'), seg('baseCut', [{ val: 'whole', label: t('whole') }, { val: 'split', label: t('split') }]));
+  if ((state.mods?.back || state.mods?.pull) && pickChoices('kit').length > 1) html += field(t('kitLbl'), seg('kit', [{ val: 'sized', label: t('kitSized', w) }, { val: 'universal', label: t('kitUni') }]));
   const ref = BY_PATH.get(drawer ? '01. DRAWERS/Drawers Naming.png' : '02. SUSTAINERS/Sustainer Naming.png');
   if (ref) html += `<div data-list><div class="row" data-path="${esc(ref.p)}" style="display:block;padding:0;border:0;background:none">
     <button class="ref" data-act="open"><img src="${esc(fileUrl(ref.p))}" alt="" loading="lazy"><span>${esc(t('exploded'))}</span></button></div></div>`;
@@ -1172,7 +1197,7 @@ $('#config').addEventListener('click', e => {
   if (!b || b.disabled) return;
   if (b.dataset.set) {
     const k = b.dataset.set, v = b.dataset.val;
-    if (['lock', 'roof', 'base', 'variant', 'lid', 'dividers', 'sbase', 'gdh'].includes(k)) state.inc = {};
+    if (['lock', 'roof', 'base', 'variant', 'lid', 'dividers', 'sbase', 'gdh', 'baseCut', 'kit'].includes(k)) state.inc = {};
     if (k === 'w' || (k === 'type' && v === 'sustainer')) state.locks = ((k === 'w' ? v : state.w) === 'L' || (k === 'w' ? v : state.w) === 'XL') ? 2 : 1;   // L and XL sustainers have two latches, S and M one   // the defaults follow the option you just picked
     state[k] = k === 'd' ? Number(v) : v === 'true' ? true : v === 'false' ? false : v;
   } else {
