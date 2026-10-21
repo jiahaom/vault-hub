@@ -1802,6 +1802,10 @@ function addRoof(k, style, w, depth, y) {
     add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, -depth - 0.5, 'roof');
     add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 11, 1.5, 'roof');
     for (const sx of [-1, 1]) add(new THREE.BoxGeometry(3, 7, depth + 4), mat('roof'), sx * (rw / 2 - 1.5), y + 11, -depth / 2, 'roof');
+  } else if (style === 'heavy') {   // heavyweight cover: a thick lid with a bar handle (about 156 x 30 mm) on two posts
+    add(rb(rw, 12, depth + 4, 5), mat('roof'), 0, y + 14, -depth / 2, 'roof');
+    for (const sx of [-1, 1]) add(rb(26, 18, 26, 4), mat('roof'), sx * 56, y + 29, -depth / 2, 'roof');
+    add(rb(156, 22, 30, 11), mat('handle'), 0, y + 46, -depth / 2, 'handle');
   } else if (style === 'mount') {   // under-table mount: four flanges to screw the unit to a desk
     for (const sx of [-1, 1]) for (const sz of [-1, 1]) add(rb(24, 4, 26, 2), mat('roof'), sx * (rw / 2 + 10), y + 2, -depth / 2 + sz * (depth / 2 - 4), 'roof');
   }
@@ -1851,9 +1855,9 @@ function buildPreviewUnit(e, st) {
   }
   let base = n * pitch;
   if (drawer) {
-    const style = /Under/i.test(st.roof) ? 'mount' : /Grid/i.test(st.roof) ? 'grid' : /Bowl/i.test(st.roof) ? 'bowl' : /Table/i.test(st.roof) ? 'table' : '';
+    const style = /Heawy|Heavy/i.test(st.roof) ? 'heavy' : /Under/i.test(st.roof) ? 'mount' : /Grid/i.test(st.roof) ? 'grid' : /Bowl/i.test(st.roof) ? 'bowl' : /Table/i.test(st.roof) ? 'table' : '';
     if (style) { addRoof(k, style, w, depth, base); base += 8; }
-    if (st.handle) addHandle(k, base, depth, w);
+    if (st.handle && style !== 'heavy') addHandle(k, base, depth, w);   // the heavyweight cover has its own handle
   }
   addFeet(k, w, depth);
   return k;
