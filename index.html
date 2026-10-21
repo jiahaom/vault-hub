@@ -359,7 +359,74 @@ button.thumb:hover { border-color: var(--line-strong); }
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* ---------- Colors ---------- */
+.colors { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
+.col-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.col-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.col-bar .seg { min-width: 300px; }
+.col-hint { flex: 1; color: var(--faint); font-size: 12.5px; text-align: right; }
+.col-stage {
+  position: relative; height: min(78vh, 820px); min-height: 420px; overflow: hidden;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: radial-gradient(ellipse at 50% 25%, #eceded, #bfc2c7);
+}
+.col-stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; touch-action: none; }
+.col-labels { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.col-lbl {
+  position: absolute; left: 0; top: 0; pointer-events: auto; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 6px;
+  background: rgba(255, 255, 255, .92); color: #18191b; border: 1px solid rgba(0, 0, 0, .08); border-radius: 999px;
+  font-size: 12px; font-weight: 600; box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+}
+.col-lbl small { font-weight: 500; color: #5d6168; }
+.col-lbl.hd { padding: 6px 14px 6px 8px; gap: 10px; font-size: 14px; background: rgba(255, 255, 255, .95); }
+.col-lbl.hd span { display: flex; flex-direction: column; line-height: 1.2; }
+.col-lbl.hd small { font-family: var(--mono); font-size: 11px; }
+.sw.lg { width: 30px; height: 30px; border-radius: 7px; }
+.col-lbl[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft), 0 1px 4px rgba(0, 0, 0, .18); }
+.col-msg { position: absolute; inset: 0; display: grid; place-items: center; z-index: 3; padding: 24px; text-align: center; color: #2a2d31; font-weight: 600; }
+.col-msg .box { background: rgba(255, 255, 255, .92); border-radius: 12px; padding: 16px 20px; max-width: 420px; font-weight: 500; }
+.col-msg h3 { margin: 0 0 6px; font-size: 15px; }
+.col-sum { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; align-items: center; }
+.col-sum .acts { display: flex; gap: 8px; }
+.col-sum .picks { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--muted); min-width: 0; }
+.col-sum .pk { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+.col-sum .pk > em { font-style: normal; font-weight: 650; color: var(--text); min-width: 78px; }
+.col-sum .picks span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.col-sum .picks b { color: var(--text); font-weight: 600; }
+.col-tip { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; background: rgba(24, 25, 27, .9); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 7px; white-space: nowrap; }
+.col-hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.tpl { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.tplchip { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.tplchip button { border: 0; background: none; padding: 5px 10px; font-size: 13px; color: var(--muted); }
+.tplchip button:hover { color: var(--text); }
+.tplchip button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); }
+.tplchip .x { padding: 5px 9px 5px 2px; color: var(--faint); }
+.col-note { color: var(--faint); font-size: 12px; margin: 0; }
+.sw { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(128, 128, 128, .55); flex: none; display: inline-block; }
+.plist { display: flex; flex-direction: column; gap: 4px; }
+.prow {
+  display: grid; grid-template-columns: 14px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; text-align: left;
+  border: 1px solid var(--line); background: none; border-radius: 9px; padding: 8px 10px; color: var(--text);
+}
+.prow:hover { border-color: var(--line-strong); }
+.prow[aria-pressed="true"] { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.prow .nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prow .cn { color: var(--muted); font-size: 12px; min-width: 64px; text-align: right; }
+.palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.palette button {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 9px 4px 7px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); color: var(--muted); font-size: 11.5px; line-height: 1.2; text-align: center;
+}
+.palette button:hover { border-color: var(--line-strong); color: var(--text); }
+.palette button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); color: var(--text); }
+.palette .sw { width: 30px; height: 30px; }
+.palette small { color: var(--faint); font-family: var(--mono); font-size: 10px; }
+
 @media (max-width: 960px) {
+  .colors { grid-template-columns: 1fr; }
+  .col-main { order: -1; }
+  .col-sum { grid-template-columns: 1fr; }
   .builder, .manuals { grid-template-columns: 1fr; }
   .config, .doclist { position: static; max-height: none; }
   .brand-sub { display: none; }
@@ -376,6 +443,11 @@ button.thumb:hover { border-color: var(--line-strong); }
   .row .badges, .row .sz { display: none; }
   .mat-sm { display: inline-block; }
   .specs { grid-template-columns: 1fr 1fr; }
+  .col-hint { display: none; }
+  .col-bar .seg { min-width: 0; flex: 1 1 100%; }
+  .col-bar .btn { flex: 1; justify-content: center; }
+  .col-stage { height: 64vh; min-height: 380px; }
+  .palette { grid-template-columns: repeat(3, 1fr); }
   .spec b { font-size: 14px; white-space: normal; }
   .grp .row { grid-template-columns: 22px 40px minmax(0, 1fr) auto; }
 }
@@ -393,6 +465,7 @@ button.thumb:hover { border-color: var(--line-strong); }
     </div>
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="build" data-t="tabBuild"></button>
+      <button class="tab" role="tab" data-tab="colors" data-t="tabColors"></button>
       <button class="tab" role="tab" data-tab="files" data-t="tabFiles"></button>
       <button class="tab" role="tab" data-tab="manuals" data-t="tabManuals"></button>
     </nav>
@@ -409,6 +482,28 @@ button.thumb:hover { border-color: var(--line-strong); }
     <div class="builder">
       <aside class="config" id="config"></aside>
       <div class="results" id="results"></div>
+    </div>
+  </section>
+
+  <!-- Colors -->
+  <section class="view" id="view-colors" hidden>
+    <div class="colors">
+      <aside class="config" id="col-config"></aside>
+      <input type="file" id="col-file" accept=".json,application/json" hidden>
+      <div class="col-main">
+        <div class="col-bar">
+          <div class="seg" id="col-mode" role="group"></div>
+          <span class="col-hint" data-t="orbitHint"></span>
+          <button class="btn" id="col-shuffle" type="button">🎲 <span data-t="colShuffle"></span></button>
+          <button class="btn" id="col-clear" type="button">↺ <span data-t="colReset"></span></button>
+          <button class="btn" id="col-reset" type="button" data-t="resetView"></button>
+        </div>
+        <div class="col-stage" id="col-stage">
+          <div class="col-labels" id="col-labels"></div>
+          <div class="col-msg" id="col-msg" hidden></div>
+        </div>
+        <div class="col-sum" id="col-sum"></div>
+      </div>
     </div>
   </section>
 
@@ -494,7 +589,12 @@ const store = {
 /* ---------- Text ---------- */
 const I18N = {
   en: {
-    langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals',
+    langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals', tabColors: 'Colors',
+    colSet: 'Set', colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current', colTplName: 'Template name', colTplSaved: n => `Saved “${n}”`, colTplLoaded: n => `Loaded “${n}”`, colTplDel: 'Delete template', colTplDelAsk: n => `Delete the template “${n}”?`, colTplOverwrite: n => `Replace the existing template “${n}”?`, colStack: 'Stack', colParts: 'Parts', colCompareWith: 'Compare colors', colCompareHint: 'Pick up to 3 colors. Every Matte part switches to each color, side by side.', colNoFiles: 'Real parts need the VAULT STL files in this folder', colCompare: 'Compare', colAll: n => `Use for all Matte parts`,
+    colLoading: 'Loading models…', colCopy: 'Copy JSON', colDownload: 'Download', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file', colCopied: 'Color choices copied',
+    colNote: 'On-screen colors are approximate. Check against a physical swatch before printing.',
+    role_body: 'Body', role_box: 'Box', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
+    c_white: 'White', c_black: 'Black', c_lime: 'Lime', c_grey: 'Grey', c_pink: 'Pink', c_lightblue: 'Light blue', c_violet: 'Violet', c_avocado: 'Avocado', c_orange: 'Orange', c_red: 'Red', c_yellow: 'Yellow', c_green: 'Green', c_blue: 'Blue', c_darkblue: 'Dark Blue', c_beige: 'Beige', c_brown: 'Brown', c_bluegrey: 'Blue Grey', c_darkgreen: 'Dark Green',
     live: '3D preview on', static: 'Static mode',
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
     liveTip: 'Served locally — 3D preview works. Start from the launcher to also get Show in folder.',
@@ -529,7 +629,12 @@ const I18N = {
     failTitle: 'Couldn’t read this STL',
   },
   zh: {
-    langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书',
+    langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书', tabColors: '配色',
+    colSet: '类型', colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplName: '模板名称', colTplSaved: n => `已保存“${n}”`, colTplLoaded: n => `已载入“${n}”`, colTplDel: '删除模板', colTplDelAsk: n => `删除模板“${n}”?`, colTplOverwrite: n => `替换已有的模板“${n}”?`, colStack: '整机堆叠', colParts: '零件', colCompareWith: '对比颜色', colCompareHint: '最多选 3 种颜色,所有哑光零件会并排显示为各个颜色。', colNoFiles: '需要把 VAULT 的 STL 文件放在本文件夹中才能显示真实零件', colCompare: '对比', colAll: n => `所有哑光零件用同一颜色`,
+    colLoading: '正在加载模型…', colCopy: '复制 JSON', colDownload: '下载', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色', colCopied: '配色已复制',
+    colNote: '屏幕上的颜色仅供参考,打印前请对照实物色卡确认。',
+    role_body: '主体', role_box: '箱体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
+    c_white: '白色', c_black: '黑色', c_lime: '黄绿色', c_grey: '灰色', c_pink: '粉色', c_lightblue: '浅蓝色', c_violet: '紫罗兰', c_avocado: '牛油果绿', c_orange: '橙色', c_red: '红色', c_yellow: '黄色', c_green: '绿色', c_blue: '蓝色', c_darkblue: '深蓝色', c_beige: '米色', c_brown: '棕色', c_bluegrey: '蓝灰色', c_darkgreen: '深绿色',
     live: '3D 预览可用', static: '静态模式',
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
     liveTip: '已通过本地服务打开，可 3D 预览。用启动器打开还可以“在文件夹中显示”。',
@@ -1027,7 +1132,7 @@ $('#doclist').addEventListener('click', e => {
 });
 
 /* ---------- Tabs ---------- */
-let tab = ['build', 'files', 'manuals'].includes(location.hash.slice(1)) ? location.hash.slice(1) : store.get('tab', 'build');
+let tab = ['build', 'colors', 'files', 'manuals'].includes(location.hash.slice(1)) ? location.hash.slice(1) : store.get('tab', 'build');
 function showTab(name) {
   tab = name;
   store.set('tab', name);
@@ -1036,6 +1141,7 @@ function showTab(name) {
   $$('.view').forEach(v => { v.hidden = v.id !== 'view-' + name; });
   if (name === 'manuals') renderManuals();
   if (name === 'files') renderFiles();
+  if (name === 'colors') renderColors();
 }
 $$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
@@ -1341,12 +1447,504 @@ $('#lang-btn').addEventListener('click', () => {
   renderAll();
 });
 
+/* ---------- Colors ---------- */
+// Display colors for choosing filament.
+const PALETTE = {
+  matte: [
+    { id: 'white', hex: '#FFFFFF' }, { id: 'black', hex: '#000000' }, { id: 'lime', hex: '#C0DF16' },
+    { id: 'grey', hex: '#7F7E83' }, { id: 'pink', hex: '#FABBCB' }, { id: 'lightblue', hex: '#B9D9EB' },
+    { id: 'violet', hex: '#A7A4E0' }, { id: 'avocado', hex: '#BCE194' },
+  ],
+  basic: [
+    { id: 'orange', hex: '#FF671D' }, { id: 'red', hex: '#D6001C' }, { id: 'yellow', hex: '#FCE400' }, { id: 'green', hex: '#00963A' },
+    { id: 'blue', hex: '#0285D7' }, { id: 'darkblue', hex: '#001489' }, { id: 'white', hex: '#FFFFFF' }, { id: 'beige', hex: '#DBC8B7' },
+    { id: 'black', hex: '#000000' }, { id: 'brown', hex: '#502C1E' }, { id: 'grey', hex: '#7F7E83' }, { id: 'bluegrey', hex: '#688197' },
+    { id: 'darkgreen', hex: '#044537' },
+  ],
+};
+// What gets a color: the finish of each role follows the Matte / Basic tags above.
+const ROLE_FINISH = { body: 'matte', box: 'matte', facade: 'matte', roof: 'matte', handle: 'basic', key: 'basic', keycap: 'basic', lock: 'basic', label: 'basic', stopper: 'basic' };
+const ROLE_DEFAULT = { body: 'white', box: 'white', facade: 'white', roof: 'white', handle: 'black', key: 'black', keycap: 'white', lock: 'black', label: 'white', stopper: 'orange' };
+const STACK_ROLES = ['body', 'facade', 'roof', 'handle', 'key', 'keycap', 'lock', 'label', 'stopper'];
+const isDarkHex = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) < 120; };
+// "Parts" mode: one real drawer and one real sustainer assembled from the print files (M4 · 2F).
+// Each matrix (row-major) moves a part from its print position into the assembled box:
+// X = width, Y = up, Z = toward the front. Calibrated to the official STL pack; the drawer is shown half open.
+const PART_SETS = {
+  drawer: [
+    ['body', `${D_FAM('M')}M4/Modules/M4 Module 2F\\.stl$`, [1,0,0,-5501.4688,0,1,0,-726.8888,0,0,1,-583.001,0,0,0,1]],
+    ['box', `${D_FAM('M')}M4/Boxes/M4 Box 2F\\.stl$`, [1,0,0,-5501.5544,0,0,1,-47.7503,0,-1,0,1431.8832,0,0,0,1]],
+    ['facade', `${D_FAM('M')}Facades/M2F\\b.*\\.stl$`, [1,0,0,-5501.575,0,1,0,-1907.6023,0,0,1,126.03,0,0,0,1]],
+    ['roof', `${D_FAM('M')}M4/Roofs?/M4 Grid Roof\\.stl$`, [-0.7092,-0.705,0,4914.1601,0.705,-0.7092,0,-3133.6433,0,0,1,-709.8674,0,0,0,1]],
+    ['handle', `${D_UNI}Top Handle.*\\.stl$`, [0,0,1,-84.0689,-1,0,0,-5902.5163,0,-1,0,1875.4659,0,0,0,1]],
+    ['key', `${D_UNI}Key \\(Turn On Supports\\)\\.stl$`, [1,0,0,-9001.6558,0,1,0,-1862.8227,0,0,1,252.4406,0,0,0,1]],
+    ['keycap', `${D_UNI}Key Cap\\.stl$`, [1,0,0,-9001.5576,0,1,0,-1875.7033,0,0,1,266.9695,0,0,0,1]],
+  ],
+  sustainer: [
+    ['body', `${S_FAM('M')}M4/Modules/M4 2F Module ?\\.stl$`, [1,0,0,-4001.5546,0,-1,0,-1628.7346,0,0,-1,730.658,0,0,0,1]],
+    ['facade', `${S_FAM('M')}(Facades/)?M2F'? Facade\\.stl$`, [1,0,0,-4001.5543,0,1,0,-1907.5918,0,0,1,105.3492,0,0,0,1]],
+    ['roof', `${S_FAM('M')}M4/Roofs?/M4 Roof\\.stl$`, [0.736,0.6769,0,-1139.5953,0.6769,-0.736,0,-3761.0765,0,0,-1,769.8591,0,0,0,1]],
+    ['lock', `${S_UNI}Locks/LOCK OUTER PART 2-4F\\.stl$`, [-1,0,0,6501.2212,0,0,1,-163.4249,0,1,0,-1654.0425,0,0,0,1]],
+  ],
+};
+const colorUI = Object.assign({ mode: 'stack', set: 'drawer', role: 'body', choice: {}, compare: ['white', 'grey'] }, store.get('colors', {}));
+if (!['stack', 'compare', 'parts'].includes(colorUI.mode)) colorUI.mode = 'stack';
+if (!ROLE_FINISH[colorUI.role]) colorUI.role = 'body';
+if (colorUI.choice.drawer || colorUI.choice.sustainer) colorUI.choice = {};
+const saveColors = () => store.set('colors', colorUI);
+const colorOf = role => PALETTE[ROLE_FINISH[role]].find(c => c.id === colorUI.choice[role]) ?? PALETTE[ROLE_FINISH[role]].find(c => c.id === ROLE_DEFAULT[role]);
+const colorName = c => t('c_' + c.id);
+const rolesShown = () => colorUI.mode === 'parts' ? PART_SETS[colorUI.set].map(r => r[0]) : STACK_ROLES;
+const realParts = () => PART_SETS[colorUI.set]
+  .map(([id, pattern, m]) => { const f = first(pattern); return f ? { id, f, m, finish: ROLE_FINISH[id] } : null; })
+  .filter(Boolean);
+const col = { engine: null, cache: new Map(), key: '', token: 0, tiles: [], home: null, group: null };
+
+// Templates: named sets of color picks kept in this browser, loaded with one click.
+const templates = () => store.get('colorTemplates', []);
+const saveTemplates = list => store.set('colorTemplates', list);
+const roleIds = () => Object.keys(ROLE_FINISH);
+const snapshot = () => ({ choice: Object.fromEntries(roleIds().map(r => [r, colorOf(r).id])), compare: [...colorUI.compare] });
+const matchesTemplate = tpl => roleIds().every(r => (tpl.choice?.[r] ?? ROLE_DEFAULT[r]) === colorOf(r).id);
+function loadTemplate(tpl) {
+  colorUI.choice = { ...(tpl.choice ?? {}) };
+  if (tpl.compare?.length) colorUI.compare = [...tpl.compare];
+}
+
+// Accepts a colors.json from Download (role -> {color, hex}) or a template ({choice, compare}); unknown roles and colors are skipped.
+function importColors(text) {
+  let data;
+  try { data = JSON.parse(text); } catch { return 0; }
+  const src = data?.choice ?? data;
+  let n = 0;
+  for (const r of roleIds()) {
+    const v = src?.[r];
+    if (!v) continue;
+    const id = typeof v === 'string' ? v : v.color, hex = typeof v === 'object' ? String(v.hex ?? '').toLowerCase() : '';
+    const pal = PALETTE[ROLE_FINISH[r]];
+    const c = pal.find(x => x.id === id) ?? (hex && pal.find(x => x.hex.toLowerCase() === hex));
+    if (c) { colorUI.choice[r] = c.id; n++; }
+  }
+  if (Array.isArray(data?.compare)) {
+    const ids = data.compare.filter(id => PALETTE.matte.some(c => c.id === id)).slice(0, 3);
+    if (ids.length) colorUI.compare = ids;
+  }
+  return n;
+}
+$('#col-file').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  const n = importColors(await file.text());
+  if (n) { saveColors(); renderColors(); toast(t('colImportDone', n)); } else toast(t('colImportFail'));
+});
+
+function colorsExport() {
+  return Object.fromEntries(Object.keys(ROLE_FINISH).map(role => { const c = colorOf(role); return [role, { finish: ROLE_FINISH[role], color: c.id, hex: c.hex }]; }));
+}
+
+function renderColors() {
+  if (!rolesShown().includes(colorUI.role)) colorUI.role = rolesShown()[0];
+  const role = colorUI.role, finish = ROLE_FINISH[role], compare = colorUI.mode === 'compare';
+  const segBtn = (attr, val, label, on) => `<button type="button" ${attr}="${val}" aria-pressed="${on}">${esc(label)}</button>`;
+  const picking = compare && finish === 'matte';
+  const isOn = c => picking ? colorUI.compare.includes(c.id) : c.id === colorOf(role).id;
+  $('#col-config').innerHTML =
+    (colorUI.mode === 'parts' ? field(t('colSet'), `<div class="seg" role="group">${segBtn('data-cset', 'drawer', t('drawer'), colorUI.set === 'drawer')}${segBtn('data-cset', 'sustainer', t('sustainer'), colorUI.set === 'sustainer')}</div>`, 'M4 · 2F') : '') +
+    field(t('colTpl'), `<div class="tpl"><span class="tplchip"><button type="button" data-ctpl="default" aria-pressed="${matchesTemplate({ choice: {} })}">${esc(t('colTplDefault'))}</button></span>${templates().map((x, i) =>
+      `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${esc(x.name)}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><button type="button" class="btn" data-cact="save">${esc(t('colTplSave'))}</button>`) +
+    field(t('colPart'), `<div class="plist">${rolesShown().map(r => {
+      const c = colorOf(r);
+      return `<button type="button" class="prow" data-crole="${r}" aria-pressed="${r === role}"><i class="sw" style="background:${c.hex}"></i><span class="nm">${esc(t('role_' + r))}</span><span class="badge mat ${ROLE_FINISH[r]}">${esc(t(ROLE_FINISH[r]))}</span><span class="cn">${esc(colorName(c))}</span></button>`;
+    }).join('')}</div>`) +
+    field(t(picking ? 'colCompareWith' : 'colColor'), `<div class="palette">${PALETTE[finish].map(c =>
+      `<button type="button" data-ccolor="${c.id}" aria-pressed="${isOn(c)}"><i class="sw" style="background:${c.hex}"></i>${esc(colorName(c))}<small>${c.hex}</small></button>`).join('')}</div>`, t(finish)) +
+    (picking ? `<p class="col-note">${esc(t('colCompareHint'))}</p>` : '') +
+    (finish === 'matte' && !compare ? `<button type="button" class="btn" data-cact="all">${esc(t('colAll'))}</button>` : '') +
+    `<p class="col-note">${esc(t('colNote'))}</p>`;
+  $('#col-mode').innerHTML = segBtn('data-cmode', 'stack', t('colStack'), colorUI.mode === 'stack') + segBtn('data-cmode', 'compare', t('colCompare'), compare) + segBtn('data-cmode', 'parts', t('colParts'), colorUI.mode === 'parts');
+  $('#col-sum').innerHTML = `<div class="picks"><div class="pk">${Object.keys(ROLE_FINISH).filter(r => r !== 'box').map(r => {
+    const c = colorOf(r);
+    return `<span><i class="sw" style="background:${c.hex}"></i><b>${esc(t('role_' + r))}</b> ${esc(colorName(c))}</span>`;
+  }).join('')}</div></div><div class="acts"><button class="btn" data-cact="import"><span>↥ ${esc(t('colImport'))}</span></button> <button class="btn primary" data-cact="download"><span>${esc(t('colDownload'))}</span></button></div>`;
+  rebuildColors();
+}
+
+function colorMessage(html) { const m = $('#col-msg'); m.innerHTML = html ? `<div class="box">${html}</div>` : ''; m.hidden = !html; }
+
+const colorEngine = () => (col.enginePromise ??= makeColorEngine());
+async function makeColorEngine() {
+  const THREE = await import('three');
+  const { STLLoader } = await import('three/addons/loaders/STLLoader.js');
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+  const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
+  const { RoundedBoxGeometry } = await import('three/addons/geometries/RoundedBoxGeometry.js');
+  const stage = $('#col-stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene();
+  scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+  const camera = new THREE.PerspectiveCamera(22, 1, 1, 20000);
+  scene.add(camera);
+  const sun = new THREE.DirectionalLight(0xffffff, 1.25);
+  sun.position.set(40, 1200, 560);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -700, right: 700, top: 700, bottom: -300, near: 100, far: 2200 });
+  sun.shadow.bias = -0.0006;
+  sun.shadow.radius = 3;
+  scene.add(sun);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000), new THREE.ShadowMaterial({ opacity: 0.14 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.5;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  const group = new THREE.Group();
+  scene.add(group);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  const resize = () => {
+    const { clientWidth: w, clientHeight: h } = stage;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(stage);
+  const v = new THREE.Vector3();
+  renderer.setAnimationLoop(() => {
+    if (tab !== 'colors') return;
+    controls.update();
+    renderer.render(scene, camera);
+    const w = stage.clientWidth, h = stage.clientHeight;
+    for (const tile of col.tiles) {
+      if (!tile.el) continue;
+      v.copy(tile.anchor).project(camera);
+      tile.el.style.transform = `translate(${(v.x * .5 + .5) * w}px, ${(-v.y * .5 + .5) * h}px) translate(-50%, -100%)`;
+      tile.el.style.opacity = v.z < 1 ? 1 : 0;
+    }
+  });
+  col.engine = { THREE, loader: new STLLoader(), RoundedBoxGeometry, scene, camera, controls, group, resize, renderer };
+  attachColorPicking(col.engine);
+  return col.engine;
+}
+
+const colorMaterial = (THREE, finish, hex) => finish === 'basic'
+  ? new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.38, clearcoat: 0.3, clearcoatRoughness: 0.35, envMapIntensity: 0.8 })
+  : new THREE.MeshStandardMaterial({ color: hex, roughness: 0.95, metalness: 0, envMapIntensity: 0.85 });
+
+/* --- Stack: a simplified tower of drawers and a sustainer, built from plain shapes (no STL files needed). --- */
+// Same size and combination as the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
+const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, SPINE: 36.7, LID: 22 };
+function stackUnits() {
+  const { S, L, F1, F2 } = STACK;
+  return [
+    { kind: 'drawer', cx: -S / 2, w: S, y: 0, h: F1 }, { kind: 'drawer', cx: -S / 2, w: S, y: F1, h: F1 }, { kind: 'drawer', cx: S / 2, w: S, y: 0, h: F2 },
+    { kind: 'sustainer', cx: 0, w: L, y: F2, h: F2 },
+    { kind: 'drawer', cx: 0, w: L, y: 2 * F2, h: F2 },
+    { kind: 'drawer', cx: 0, w: L, y: 3 * F2, h: F1 },
+    { kind: 'drawer', cx: -S / 2, w: S, y: 3 * F2 + F1, h: F1 }, { kind: 'drawer', cx: S / 2, w: S, y: 3 * F2 + F1, h: F1 },
+  ];
+}
+const STACK_TOP = 3 * STACK.F2 + 2 * STACK.F1;
+
+function labelTexture(THREE, dark) {
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  const x = c.getContext('2d');
+  x.fillStyle = dark ? '#e2e2e2' : '#4b4b4b';
+  x.font = '700 50px -apple-system, Helvetica, Arial, sans-serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText('M6 PH 70', 128, 50);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+function buildTower(e, hexOf) {
+  const { THREE, RoundedBoxGeometry: RBG } = e;
+  const { L, DEPTH, SPINE, LID } = STACK;
+  const g = new THREE.Group();
+  const mats = {};
+  const mat = role => mats[role] ??= colorMaterial(THREE, ROLE_FINISH[role], hexOf(role));
+  const fixed = (hex, rough = 0.7) => new THREE.MeshStandardMaterial({ color: hex, roughness: rough, envMapIntensity: 0.5 });
+  const bolt = fixed('#1b1b1d', 0.5), slot = fixed('#e8e8e8', 0.6);
+  const rb = (w, h, d, r = 3) => new RBG(w, h, d, 3, Math.min(r, w / 2 - 0.05, h / 2 - 0.05, d / 2 - 0.05));
+  const add = (geo, material, x, y, z, role) => {
+    const m = new THREE.Mesh(geo, material);
+    m.position.set(x, y, z);
+    m.castShadow = m.receiveShadow = true;
+    if (role) m.userData.role = role;
+    g.add(m);
+    return m;
+  };
+  const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(THREE, isDarkHex(hexOf('label'))), transparent: true, depthWrite: false });
+  const label = (cx, w, y, h, ly) => {
+    add(rb(54, 23, 1.6, 3), mat('label'), cx - w / 2 + 40, y + h / 2 + ly, 8.3, 'label');
+    const text = new THREE.Mesh(new THREE.PlaneGeometry(46, 17), labelMat);
+    text.position.set(cx - w / 2 + 40, y + h / 2 + ly, 9.3);
+    g.add(text);
+  };
+  for (const u of stackUnits()) {
+    const { cx, w, y, h } = u;
+    if (cx - w / 2 === -L / 2) {   // left spine with the little orange clips
+      add(rb(SPINE, h - 1.5, DEPTH * 0.8, 3), mat('body'), -L / 2 - SPINE / 2, y + h / 2, -DEPTH * 0.4, 'body');
+      // Runner stoppers show through the module's side flange: one per 1F tier, two per 2F tier (heights measured from the reference photo).
+      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.81, 0.3] : [0.74, 0.3]) add(rb(7.5, 11, 2.4, 1.5), mat('stopper'), -L / 2 - 0.36 * SPINE, y + h * f, 0.9, 'stopper');
+    }
+    if (u.kind === 'drawer') {
+      add(rb(w - 1.5, h - 1.5, DEPTH, 3), mat('body'), cx, y + h / 2, -DEPTH / 2, 'body');
+      add(rb(w - 3, h - 3.5, 8, 4), mat('facade'), cx, y + h / 2, 3.5, 'facade');
+      const ky = y + h / 2 + (h > 60 ? -0.17 * h : 0), kx = cx + 0.07 * w;
+      const base = add(new THREE.CylinderGeometry(17, 17, 6, 40), mat('key'), kx, ky, 10.5, 'key');
+      base.rotation.x = Math.PI / 2;
+      add(rb(13, 38, 9, 3), mat('keycap'), kx, ky, 17.5, 'keycap');
+      label(cx, w, y, h, h > 60 ? -0.2 * h : -0.06 * h);
+    } else {
+      add(rb(w - 1.5, h - LID - 1, DEPTH, 3), mat('body'), cx, y + (h - LID - 1) / 2, -DEPTH / 2, 'body');
+      add(rb(w, LID, DEPTH + 2, 5), mat('roof'), cx, y + h - LID / 2, -DEPTH / 2 + 1, 'roof');
+      add(rb(w - 3, h - LID - 3.5, 8, 4), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
+      for (const s of [-1, 1]) {
+        add(rb(54, 62, 10, 4), mat('lock'), cx + s * 0.235 * w, y + h - 34, 9, 'lock');
+        add(rb(26, 5, 3, 2), slot, cx + s * 0.235 * w, y + h - 34, 14.5);
+      }
+      for (const sx of [-1, 1]) for (const yy of [10, h - LID - 8]) {
+        const b = add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 10), y + yy, 8);
+        b.rotation.x = Math.PI / 2;
+      }
+      label(cx, w, y, h, -h * 0.2);
+    }
+  }
+  // Grid roof and top handle.
+  const rw = L + SPINE + 2, rx = -SPINE / 2, ry = STACK_TOP + 5;
+  add(rb(rw, 10, DEPTH + 4, 3), mat('roof'), rx, ry, -DEPTH / 2, 'roof');
+  for (let i = 0; i <= 8; i++) add(new THREE.BoxGeometry(2.6, 5, DEPTH + 2), mat('roof'), rx - rw / 2 + 4 + i * ((rw - 8) / 8), ry + 6, -DEPTH / 2, 'roof');
+  for (let i = 0; i <= 4; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), rx, ry + 6, -DEPTH + 4 + i * ((DEPTH - 8) / 4), 'roof');
+  const rr = (w, h, r) => { const s = new THREE.Shape(); s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.absarc(w / 2 - r, -h / 2 + r, r, -Math.PI / 2, 0); s.lineTo(w / 2, h / 2 - r); s.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI / 2); s.lineTo(-w / 2 + r, h / 2); s.absarc(-w / 2 + r, h / 2 - r, r, Math.PI / 2, Math.PI); s.lineTo(-w / 2, -h / 2 + r); s.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5); return s; };
+  const shape = rr(158, 54, 16);
+  const hole = rr(112, 24, 12);
+  shape.holes.push(new THREE.Path(hole.getPoints(24)));
+  const hg = new THREE.ExtrudeGeometry(shape, { depth: 36, bevelEnabled: true, bevelSize: 2.5, bevelThickness: 2.5, bevelSegments: 3, curveSegments: 16 });
+  hg.translate(0, 0, -18);
+  add(hg, mat('handle'), 0, ry + 5 + 27, -DEPTH * 0.45, 'handle');
+  return { group: g, mats, labelMat, height: STACK_TOP + 90, width: L + SPINE };
+}
+
+/* --- Parts: one real drawer / sustainer assembled from the STL files. --- */
+async function colorGeometry(e, f) {
+  if (col.cache.has(f.p)) return col.cache.get(f.p);
+  const res = await fetch(fileUrl(f.p));
+  if (!res.ok) throw new Error(res.status);
+  const g = e.loader.parse(await res.arrayBuffer());
+  g.computeVertexNormals();
+  g.computeBoundingBox();
+  col.cache.set(f.p, g);
+  return g;
+}
+
+async function rebuildColors() {
+  const token = ++col.token;
+  const mode = colorUI.mode;
+  const key = [mode, mode === 'parts' ? colorUI.set : '', mode === 'compare' ? colorUI.compare.join() : ''].join('|');
+  if (key === col.key && col.tiles.length) { colorApply(); return; }
+  let e, parts = [];
+  if (mode === 'parts') {
+    if (LOCAL) { colorMessage(`<h3>${esc(t('blockedTitle'))}</h3>${t('blockedBody')}`); return; }
+    parts = realParts();
+    if (!parts.length) { colorMessage(`<h3>${esc(t('colNoFiles'))}</h3>`); return; }
+    colorMessage(esc(t('colLoading')));
+  }
+  try {
+    e = await colorEngine();
+    await Promise.all(parts.map(p => colorGeometry(e, p.f)));
+  } catch { if (token === col.token) colorMessage(`<h3>${esc(t('failTitle'))}</h3>`); return; }
+  if (token !== col.token) return;
+  const { THREE } = e;
+  for (const g of [...e.group.children]) { g.traverse(o => { if (o.material) [].concat(o.material).forEach(m => { m.map?.dispose(); m.dispose(); }); }); e.group.remove(g); }
+  for (const tile of col.tiles) tile.el?.remove();
+  e.helper = null;
+  col.tiles = [];
+  if (mode === 'parts') {
+    const box = new THREE.Box3();
+    const placed = parts.map(p => { const m = new THREE.Matrix4().set(...p.m); return { p, m, box: col.cache.get(p.f.p).boundingBox.clone().applyMatrix4(m) }; });
+    placed.forEach(x => box.union(x.box));
+    const mid = box.getCenter(new THREE.Vector3());
+    const tileGroup = new THREE.Group();
+    tileGroup.position.set(-mid.x, 0, -mid.z);
+    const meshes = placed.map(x => {
+      const mesh = new THREE.Mesh(col.cache.get(x.p.f.p), colorMaterial(THREE, x.p.finish, '#ffffff'));
+      mesh.matrixAutoUpdate = false;
+      mesh.matrix.copy(x.m);
+      mesh.castShadow = mesh.receiveShadow = true;
+      tileGroup.add(mesh);
+      return { mesh, part: x.p, box: x.box };
+    });
+    e.group.add(tileGroup);
+    col.tiles = [{ group: tileGroup, meshes, parts: true }];
+  } else {
+    const colors = mode === 'compare' ? colorUI.compare.map(id => PALETTE.matte.find(c => c.id === id)).filter(Boolean) : [null];
+    const gap = (STACK.L + STACK.SPINE) * 1.3;
+    col.tiles = colors.map((c, i) => {
+      const tower = buildTower(e, role => (c && ROLE_FINISH[role] === 'matte' ? c.hex : colorOf(role).hex));
+      tower.group.position.set((i - (colors.length - 1) / 2) * gap, 0, 0);
+      e.group.add(tower.group);
+      const tile = { ...tower, color: c };
+      if (c) {
+        tile.el = document.createElement('div');
+        tile.el.className = 'col-lbl hd';
+        $('#col-labels').append(tile.el);
+        tile.anchor = new THREE.Vector3(tower.group.position.x, tower.height + 12, 0);
+        tile.el.innerHTML = `<i class="sw lg" style="background:${c.hex}"></i><span>${esc(colorName(c))}<small>${c.hex}</small></span>`;
+      }
+      return tile;
+    });
+  }
+  colorApply();
+  e.resize();
+  const total = new THREE.Box3().setFromObject(e.group);
+  const size = total.getSize(new THREE.Vector3()), center = total.getCenter(new THREE.Vector3());
+  e.camera.fov = mode === 'parts' ? 32 : 12;
+  e.camera.updateProjectionMatrix();
+  const vfov = THREE.MathUtils.degToRad(e.camera.fov), hfov = 2 * Math.atan(Math.tan(vfov / 2) * e.camera.aspect);
+  const front = mode !== 'parts';
+  const dir = front ? new THREE.Vector3(0, 0.2, 1) : new THREE.Vector3(0.55, 0.55, 1);
+  const dist = Math.max((size.y / 2) / Math.tan(vfov / 2), (size.x / 2) / Math.tan(hfov / 2)) * (front ? 1.12 : 1.05) + size.z / 2;
+  e.controls.target.copy(center).add(front ? new THREE.Vector3(0, 6, 0) : new THREE.Vector3());
+  e.camera.position.copy(e.controls.target).add(dir.normalize().multiplyScalar(dist));
+  e.camera.near = dist / 100; e.camera.far = dist * 20; e.camera.updateProjectionMatrix();
+  col.home = e.camera.position.clone();
+  e.controls.update();
+  col.key = key;
+  colorMessage('');
+}
+
+// Cheap update when only the picks change: recolor materials and move the selection outline.
+function colorApply() {
+  const e = col.engine;
+  if (!e) return;
+  for (const tile of col.tiles) {
+    if (tile.parts) for (const { mesh, part } of tile.meshes) mesh.material.color.set(colorOf(part.id).hex);
+    else {
+      for (const [role, m] of Object.entries(tile.mats)) m.color.set(tile.color && ROLE_FINISH[role] === 'matte' ? tile.color.hex : colorOf(role).hex);
+      const dark = isDarkHex(colorOf('label').hex);
+      if (tile.dark !== dark) { tile.labelMat.map.dispose(); tile.labelMat.map = labelTexture(e.THREE, dark); tile.labelMat.needsUpdate = true; tile.dark = dark; }
+    }
+  }
+  e.helper?.removeFromParent();
+  e.helper = null;
+  if (colorUI.mode === 'parts' && col.tiles[0]) {
+    const target = col.tiles[0].meshes.find(m => m.part.id === colorUI.role);
+    if (target) {
+      e.helper = new e.THREE.Box3Helper(target.box, new e.THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e8622a'));
+      col.tiles[0].group.add(e.helper);
+    }
+  }
+}
+
+// Click a part to select its role; hover shows the name. The stack uses real ray hits, the real parts use their placed bounding boxes.
+function attachColorPicking(e) {
+  const { THREE } = e, canvas = e.renderer.domElement, ray = new THREE.Raycaster(), pt = new THREE.Vector2(), hit = new THREE.Vector3();
+  const tip = Object.assign(document.createElement('div'), { className: 'col-tip', hidden: true });
+  $('#col-stage').append(tip);
+  const pick = ev => {
+    const r = canvas.getBoundingClientRect();
+    pt.set((ev.clientX - r.left) / r.width * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(pt, e.camera);
+    if (colorUI.mode === 'parts') {
+      let best = null, bestD = Infinity;
+      for (const m of col.tiles[0]?.meshes ?? []) {
+        const b = m.box.clone().applyMatrix4(col.tiles[0].group.matrixWorld);
+        if (ray.ray.intersectBox(b, hit)) { const d = hit.distanceTo(ray.ray.origin); if (d < bestD) { bestD = d; best = m.part.id; } }
+      }
+      return best;
+    }
+    return ray.intersectObjects(e.group.children, true).find(h => h.object.userData.role)?.object.userData.role ?? null;
+  };
+  let down = null;
+  canvas.addEventListener('pointerdown', ev => { down = [ev.clientX, ev.clientY]; });
+  canvas.addEventListener('pointerup', ev => {
+    if (!down || Math.hypot(ev.clientX - down[0], ev.clientY - down[1]) > 5) return;
+    const role = pick(ev);
+    if (role && colorUI.role !== role) { colorUI.role = role; saveColors(); renderColors(); }
+  });
+  canvas.addEventListener('pointermove', ev => {
+    const role = ev.buttons ? null : pick(ev);
+    tip.hidden = !role;
+    canvas.style.cursor = role ? 'pointer' : '';
+    if (role) {
+      const r = canvas.getBoundingClientRect(), c = colorOf(role);
+      tip.textContent = `${t('role_' + role)} · ${t(ROLE_FINISH[role])} · ${colorName(c)}`;
+      tip.style.transform = `translate(${ev.clientX - r.left + 14}px, ${ev.clientY - r.top + 14}px)`;
+    }
+  });
+  canvas.addEventListener('pointerleave', () => { tip.hidden = true; });
+}
+
+$('#view-colors').addEventListener('click', async e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const role = colorUI.role, finish = ROLE_FINISH[role];
+  if (b.dataset.cset) colorUI.set = b.dataset.cset;
+  else if (b.dataset.cmode) colorUI.mode = b.dataset.cmode;
+  else if (b.dataset.crole) colorUI.role = b.dataset.crole;
+  else if (b.dataset.ccolor) {
+    const id = b.dataset.ccolor;
+    if (colorUI.mode === 'compare' && finish === 'matte') {
+      const i = colorUI.compare.indexOf(id);
+      if (i >= 0) { if (colorUI.compare.length > 1) colorUI.compare.splice(i, 1); }
+      else colorUI.compare = [...colorUI.compare, id].slice(-3);
+    } else colorUI.choice[role] = id;
+  }
+  else if (b.dataset.ctpl) {
+    const tpl = b.dataset.ctpl === 'default' ? { name: t('colTplDefault'), choice: {} } : templates()[Number(b.dataset.ctpl)];
+    if (!tpl) return;
+    loadTemplate(tpl);
+    toast(t('colTplLoaded', tpl.name));
+  }
+  else if (b.dataset.ctplDel) {
+    const list = templates(), tpl = list[Number(b.dataset.ctplDel)];
+    if (!tpl || !confirm(t('colTplDelAsk', tpl.name))) return;
+    list.splice(Number(b.dataset.ctplDel), 1);
+    saveTemplates(list);
+  }
+  else if (b.dataset.cact === 'save') {
+    const name = (prompt(t('colTplName')) ?? '').trim().slice(0, 28);
+    if (!name) return;
+    const list = templates(), at = list.findIndex(x => x.name === name);
+    if (at >= 0 && !confirm(t('colTplOverwrite', name))) return;
+    if (at >= 0) list[at] = { name, ...snapshot() }; else list.push({ name, ...snapshot() });
+    saveTemplates(list);
+    toast(t('colTplSaved', name));
+  }
+  else if (b.id === 'col-clear') { colorUI.choice = {}; colorUI.compare = ['white', 'grey']; }
+  else if (b.dataset.cact === 'all') { const c = colorOf(role).id; Object.keys(ROLE_FINISH).filter(r => ROLE_FINISH[r] === 'matte').forEach(r => { colorUI.choice[r] = c; }); }
+  else if (b.dataset.cact === 'import') { $('#col-file').click(); return; }
+  else if (b.dataset.cact === 'download') {
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([JSON.stringify(colorsExport(), null, 2)], { type: 'application/json' })), download: 'colors.json' });
+    a.click(); URL.revokeObjectURL(a.href); return;
+  }
+  else if (b.id === 'col-shuffle') {
+    const pick = list => list[Math.floor(Math.random() * list.length)].id;
+    for (const r of Object.keys(ROLE_FINISH)) colorUI.choice[r] = pick(PALETTE[ROLE_FINISH[r]]);
+    if (colorUI.mode === 'compare') colorUI.compare = PALETTE.matte.map(c => c.id).sort(() => Math.random() - 0.5).slice(0, colorUI.compare.length);
+  }
+  else if (b.id === 'col-reset') { if (col.engine && col.home) { col.engine.camera.position.copy(col.home); col.engine.controls.update(); } return; }
+  else return;
+  saveColors();
+  renderColors();
+});
+
 function renderAll() {
   renderChrome();
   renderBuilder();
   renderScope();
   if (tab === 'files') renderFiles();
   if (tab === 'manuals') renderManuals();
+  if (tab === 'colors') renderColors();
 }
 renderAll();
 showTab(tab);
