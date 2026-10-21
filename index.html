@@ -1105,7 +1105,8 @@ $('#config').addEventListener('click', e => {
   if (!b || b.disabled) return;
   if (b.dataset.set) {
     const k = b.dataset.set, v = b.dataset.val;
-    if (['lock', 'roof', 'base', 'variant', 'lid', 'dividers', 'sbase'].includes(k)) state.inc = {};   // the defaults follow the option you just picked
+    if (['lock', 'roof', 'base', 'variant', 'lid', 'dividers', 'sbase'].includes(k)) state.inc = {};
+    if (k === 'w' || (k === 'type' && v === 'sustainer')) state.locks = ((k === 'w' ? v : state.w) === 'L' || (k === 'w' ? v : state.w) === 'XL') ? 2 : 1;   // L and XL sustainers have two latches, S and M one   // the defaults follow the option you just picked
     state[k] = k === 'd' ? Number(v) : v === 'true' ? true : v === 'false' ? false : v;
   } else {
     state[b.dataset.step] += Number(b.dataset.val);
@@ -1758,20 +1759,25 @@ function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
   add(rb(w - 1.5, h - LID - 1, depth, 12), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
   add(rb(w, LID, depth + 2, 8), mat('roof'), cx, y + h - LID / 2, -depth / 2 + 1, 'roof');
   add(rb(w - 3, h - LID - 3.5, 8, 10), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
+  // Lock latches: a holder plate on the body, and the latch (the clip) hooking over the lid edge, with a pull slot.
   const n = Math.max(0, Math.min(locks, Math.floor(w / 70))), lh = h < 80 ? h - 8 : h > 150 ? 88 : 62;
   for (let i = 0; i < n; i++) {
     const lx = cx + ((i + 0.5) / n - 0.5) * w, ly = y + h - lh / 2 - 2;
     decal(new THREE.PlaneGeometry(58, 20), lx, ly - lh / 2 - 7, 7.7, soft);   // the recess under the latch
-    add(rb(54, lh, 10, 5), mat('lock'), lx, ly, 9, 'lock');
-    add(rb(26, 5, 3, 2), slot, lx, ly, 14.5);
+    add(rb(46, Math.max(16, lh * 0.5), 4, 3), mat('lock'), lx, ly - lh * 0.22, 8.4, 'lock');   // lock holder
+    add(rb(40, lh, 10, 7), mat('lock'), lx, ly, 11, 'lock');                                    // latch body
+    add(rb(34, 12, 12, 5), mat('lock'), lx, y + h - LID / 2 + 4, 14.5, 'lock');                  // hook over the lid edge
+    add(rb(24, 4.5, 3, 2), slot, lx, ly - 4, 16.4);                                            // pull slot
   }
-  // Hinges at the back, across the lid seam, with the rod ends showing at both sides.
+  // Hinges at the back (as in the official diagram): a hinge top plate with four screws on the lid, the hinge barrel on the body,
+  // and the orange rod ends showing at both sides of the barrel.
   for (const hx of [-0.3, 0.3]) {
-    const x = cx + hx * w;
-    add(rb(38, 40, 3, 1.5), mat('hinge'), x, y + h - LID - 2, -depth - 1.5, 'hinge');
-    add(rb(36, 8, 8, 2), mat('hinge'), x, y + h - LID, -depth - 6.5, 'hinge');
-    add(new THREE.CylinderGeometry(7, 7, 38, 28), mat('hinge'), x, y + h - LID, -depth - 10, 'hinge').rotation.z = Math.PI / 2;
-    for (const sx of [-1, 1]) add(new THREE.CylinderGeometry(3.4, 3.4, 5, 20), mat('rod'), x + sx * 21, y + h - LID, -depth - 10, 'rod').rotation.z = Math.PI / 2;
+    const x = cx + hx * w, z = -depth - 1.5;
+    add(rb(36, 34, 3, 1.5), mat('hinge'), x, y + h - LID / 2 + 2, z, 'hinge');
+    for (const dx of [-11, 11]) for (const dy of [-9, 9]) add(new THREE.CylinderGeometry(2.4, 2.4, 1.2, 14), bolt, x + dx, y + h - LID / 2 + 2 + dy, z - 2).rotation.x = Math.PI / 2;
+    add(rb(34, 28, 6, 2), mat('hinge'), x, y + h - LID - 12, z - 1.5, 'hinge');
+    add(new THREE.CylinderGeometry(7, 7, 34, 28), mat('hinge'), x, y + h - LID - 1, z - 7.5, 'hinge').rotation.z = Math.PI / 2;
+    for (const sx of [-1, 1]) add(new THREE.CylinderGeometry(3.4, 3.4, 5, 20), mat('rod'), x + sx * 19.5, y + h - LID - 1, z - 7.5, 'rod').rotation.z = Math.PI / 2;
   }
   const rows = h > 150 ? [10, (h - LID) / 2, h - LID - 8] : [10, h - LID - 8];
   for (const sx of [-1, 1]) for (const yy of rows) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 9), y + yy, 8).rotation.x = Math.PI / 2;
