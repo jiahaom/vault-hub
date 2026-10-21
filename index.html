@@ -834,7 +834,9 @@ function drawerSections() {
   }
   top.push(state.handle ? part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' }) : off(part(first(`${D_UNI}Top Handle`), 1, { once: true, expect: 'Top Handle' })));
   const opt = [];
-  for (const b of drawerBaseplates()) opt.push(...choiceParts(b.files, b.id === state.base));
+  const shown = new Set();
+  for (const b of drawerBaseplates()) { opt.push(...choiceParts(b.files, b.id === state.base)); b.files.forEach(f => shown.add(f.p)); }
+  for (const f of find(`${D_FAM(w)}${w}${d}/Gridfinity Baseplate/.*\\.stl$`)) if (!shown.has(f.p)) opt.push(off(part(f, 1)));   // other versions of the same plate
   // Grid divider that spans the full width of this box (named 10-S, 18-M, 26-L, 32-XL); the loose border parts are in the pack folder.
   const gdH = { '1F': '34.5MM TALL', '2F': '82.5MM TALL' }[h];
   const gdName = { S: '10-S', M: '18-M', L: '26-L', XL: '32-XL' }[w];
@@ -872,6 +874,7 @@ function sustainerSections() {
   const body = [
     ...(variants.length ? variants.map(v => (v === mod ? part(v.file, 1, { expect: `${w}${d} ${h} Module` }) : off(part(v.file, 1)))) : [part(null, 1, { expect: `${w}${d} ${h} Module` })]),
     part(first(`${S_FAM(w)}(Facades/)?${w}${h}'? Facade\\.stl$`), 1, { expect: `${w}${h} Facade` }),
+    ...[first(`${S_UNI}Facades/${w}${h}\\.stl$`)].filter(Boolean).map(f => off(part(f, 1))),   // alternative facade, same size
     ...(lids.length ? lids.flatMap(l => choiceParts(l.files, l === lid)) : [part(null, 1, { expect: `${w}${d} Roof` })]),
   ];
   const hingeSize = sm ? 'S-M' : (h === '1F' ? 'L-XL' : 'L');
