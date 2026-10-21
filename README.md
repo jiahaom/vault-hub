@@ -29,6 +29,7 @@
 ### 📋 Plan + 🧊 See it
 
 - Pick type, width S–XL, depth 3–7, height 1F / 2F / 4F, quantity, lock, roof, handle, dividers, baseplate.
+- **Add-ons:** one click switches on a whole group that fits this size: full-width grid divider, manual supports, L² version, wall mount, pegboards, feet, wheels, handles, backbone, base.
 - Every part that fits the unit is listed with a switch, **including grid dividers, L² / XL² versions and Modifications** (wall mounts, feet, wheels…). All 723 STLs appear at least once; each size shows only the parts that fit it.
 - Off parts are skipped by totals, *Copy list* and *Gather*.
 - The preview shows the outside only (key, label, lid, latches, hinges, roofs) and follows your colors.

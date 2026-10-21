@@ -614,7 +614,7 @@ const I18N = {
     preview: 'Preview', reveal: 'Show in folder', openApp: 'Open in slicer', markPrinted: 'Mark as printed',
     pathCopied: 'File path copied. Start the hub from the launcher to jump straight to the folder.',
     needsHub: 'This needs the hub launcher: “Open VAULT Hub (Mac).command” or “(Windows).bat”.',
-    secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
+    addons: 'Add-ons', addonsNote: 'switches a group on', addGd: 'Full-width grid divider', addSup: 'Manual supports', addL2: 'L² version', addWall: 'Wall mount', addPegU: 'USSA pegboard', addPegI: 'IKEA Skadis pegboard', addFeet: 'Feet', addWheels: 'Wheels', addPull: 'Pull-out handle', addStat: 'Stationary handle', addBack: 'Backbone', addBase: 'Base', secGrid: 'Grid dividers', secGridNote: n => `up to ${n} holes · snap into the drawer's hole grid`, secVar: 'L² / XL² versions', secMods: 'Modifications for this size', incTip: 'Include this part in the list', incNote: 'Every part of this unit is listed. Use the switch on each row to leave a part out; parts you leave out are greyed and skipped by the totals, Copy list and Gather.', supports: 'Supports', matte: 'Matte', basic: 'Basic', tpu: 'TPU', matteTip: 'Print in matte filament', basicTip: 'Print in basic filament', tpuTip: 'Print in TPU', pcs: n => `${n} pcs in file`, asNeeded: 'as needed', missing: 'Not found in folder',
     note: 'Quantities are per unit. Files tagged “2 pcs in file” already contain the pair, so print them once. Tick parts off as they come off the printer — progress is saved in this browser.',
     search: 'Search by name or folder…', all: 'All', drawers: 'Drawers', sustainers: 'Sustainers', mods: 'Modifications', docs: 'Images & PDFs',
     results: n => `${n} files`, noResults: 'No files match that search.',
@@ -654,7 +654,7 @@ const I18N = {
     preview: '预览', reveal: '在文件夹中显示', openApp: '用切片软件打开', markPrinted: '标记为已打印',
     pathCopied: '已复制文件路径。用启动器打开控制台即可直接跳转到文件夹。',
     needsHub: '此功能需要通过启动器打开：“Open VAULT Hub (Mac).command”或“(Windows).bat”。',
-    secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
+    addons: '附加件', addonsNote: '一键打开一组', addGd: '整宽网格隔板', addSup: '手动支撑件', addL2: 'L² 版本', addWall: '壁挂件', addPegU: 'USSA 挂板', addPegI: 'IKEA Skadis 挂板', addFeet: '脚垫', addWheels: '轮子', addPull: '拉出式提手', addStat: '固定提手', addBack: '背板(Backbone)', addBase: '底座(Base)', secGrid: '网格隔板', secGridNote: n => `最长 ${n} 孔 · 卡进抽屉底部的孔位`, secVar: 'L² / XL² 版本', secMods: '适用于这个尺寸的改装件', incTip: '把这个零件计入清单', incNote: '这个型号的所有零件都列在这里。用每行的开关决定要不要;关掉的零件会变灰,不计入统计、"复制清单"和"汇总到文件夹"。', supports: '需支撑', matte: '哑光', basic: '普通', tpu: 'TPU', matteTip: '建议使用哑光耗材', basicTip: '建议使用普通耗材', tpuTip: '建议使用 TPU 耗材', pcs: n => `文件含 ${n} 件`, asNeeded: '按需', missing: '文件夹中未找到',
     note: '数量按单个计算。标有“文件含 2 件”的文件已包含一对零件，打印一次即可。打印完成后勾选——进度会保存在本浏览器中。',
     search: '按文件名或文件夹搜索…', all: '全部', drawers: '抽屉', sustainers: '翻盖盒', mods: '改装件', docs: '图片与文档',
     results: n => `${n} 个文件`, noResults: '没有匹配的文件。',
@@ -718,7 +718,7 @@ const SPEC = {
 };
 const mm = v => (Math.round(v * 10) / 10).toString();
 const state = Object.assign(
-  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, inc: {} },
+  { type: 'drawer', w: 'S', d: 3, h: '1F', count: 1, lock: 'key', roof: '', handle: false, base: '', variant: '', lid: 'whole', locks: 1, dividers: false, sbase: false, mods: {}, inc: {} },
   store.get('state', {}),
 );
 
@@ -837,12 +837,6 @@ function drawerSections() {
   const shown = new Set();
   for (const b of drawerBaseplates()) { opt.push(...choiceParts(b.files, b.id === state.base)); b.files.forEach(f => shown.add(f.p)); }
   for (const f of find(`${D_FAM(w)}${w}${d}/Gridfinity Baseplate/.*\\.stl$`)) if (!shown.has(f.p)) opt.push(off(part(f, 1)));   // other versions of the same plate
-  // Grid divider that spans the full width of this box (named 10-S, 18-M, 26-L, 32-XL); the loose border parts are in the pack folder.
-  const gdH = { '1F': '34.5MM TALL', '2F': '82.5MM TALL' }[h];
-  const gdName = { S: '10-S', M: '18-M', L: '26-L', XL: '32-XL' }[w];
-  if (gdH) { const gd = first(`${D_UNI}Grid Dividers/${gdH}[^/]*/${gdName}[^/]*\\.stl$`); if (gd) opt.push(off(part(gd, 1, { expect: `${gdName} grid divider` }))); }
-  const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
-  if (ms) opt.push(off(part(ms, 1, { expect: `x${d} manual supports` })));
   const bolts = h === '1F' ? 4 : 6;
   return [
     { title: t('secBody'), items: body },
@@ -857,42 +851,60 @@ function drawerSections() {
   ].filter(Boolean);
 }
 
-/* ---------- Extra sections: grid dividers, L² / XL² variants and Modifications (all off by default) ---------- */
-const GRID_HOLES = { S: 10, M: 18, L: 26, XL: 32 };   // holes across the drawer, by width; across by depth: 10 / 14 / 18 / 22 / 26
-function extraSections() {
+/* ---------- Add-ons: grid dividers, supports, L² / XL² versions and Modifications ---------- */
+// Every file that is not part of the plain unit is tagged with an add-on group. The "Add-ons" options switch a whole group on;
+// the rows stay individually switchable. Groups with no file for this size are not offered.
+const GRID_HOLES = { S: 10, M: 18, L: 26, XL: 32 };   // holes across the drawer, by width; by depth: 10 / 14 / 18 / 22 / 26
+const ADDON_LABEL = { gd: 'addGd', sup: 'addSup', l2: 'addL2', wall: 'addWall', pegU: 'addPegU', pegI: 'addPegI', feet: 'addFeet', wheels: 'addWheels', pull: 'addPull', stat: 'addStat', back: 'addBack', base: 'addBase' };
+function addonItems() {
   const { w, d, h, type } = state;
-  const out = [];
-  const offs = (files, extra = {}) => files.map(f => off(part(f, 1, extra)));
-  // Grid dividers (drawers): numbered by length in holes; show the ones that fit this box, in the heights that fit its drawers.
+  const items = [];   // { sec, grp, f }
   if (type === 'drawer') {
     const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
     const folders = ['20MM TALL', h === '1F' ? '34.5MM TALL' : '82.5MM TALL'];
-    // XL boxes only come in 1F, but the 82.5 mm tall pieces of XL length (27 to 32 holes) exist, so XL lists those too.
     const lenOf = f => Number((f.name.match(/^(\d+)/) || [])[1]);
-    const gd = FILES.filter(f => f.p.startsWith('01. DRAWERS/07. Universal/Grid Dividers/') && /\.stl$/i.test(f.p)
-      && lenOf(f) <= reach && (folders.some(x => f.p.includes('/' + x)) || (w === 'XL' && f.p.includes('/82.5MM TALL') && lenOf(f) > 26)));
-    if (gd.length) out.push({ title: t('secGrid'), sub: t('secGridNote', reach), items: gd.map(f => off(part(f, null))), raw: true });
-    // L² / XL² family: same outer size as L / XL, plus the accessories that belong to it.
-    const v2 = [];
-    if (w === 'L' || w === 'XL') {
-      v2.push(...find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`));
-      if (w === 'L') v2.push(...find(`${D_UNI}L² Accessories/x${d} Accessory`));
+    const fullName = { S: '10-S', M: '18-M', L: '26-L', XL: '32-XL' }[w];
+    const fullFolder = h === '1F' ? '34.5MM TALL' : '82.5MM TALL';
+    for (const f of FILES) {
+      if (!f.p.startsWith('01. DRAWERS/07. Universal/Grid Dividers/') || !/\.stl$/i.test(f.p) || lenOf(f) > reach) continue;
+      const ok = folders.some(x => f.p.includes('/' + x)) || (w === 'XL' && f.p.includes('/82.5MM TALL') && lenOf(f) > 26);
+      // XL boxes only come in 1F, but the 82.5 mm tall pieces of XL length (27 to 32 holes) exist, so XL lists those too.
+      if (ok) items.push({ sec: 'grid', grp: f.name.startsWith(fullName) && f.p.includes('/' + fullFolder) ? 'gd' : null, f, qty: null });
     }
-    if (v2.length) out.push({ title: t('secVar'), items: offs(v2), raw: true });
+    const ms = first(`${D_UNI}Manual Supports/x${d}\\.stl$`);
+    if (ms) items.push({ sec: 'grid', grp: 'sup', f: ms, qty: 1 });
+    if (w === 'L' || w === 'XL') {
+      for (const f of find(`${w === 'L' ? '04' : '06'}\\. ${w}² Families/${w}${d}²/${w}${d}² Module ${h}\\.stl$`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
+      if (w === 'L') for (const f of find(`${D_UNI}L² Accessories/x${d} Accessory`)) items.push({ sec: 'var', grp: 'l2', f, qty: 1 });
+    }
   }
-  // Modifications for this size, height and depth.
-  const mods = FILES.filter(f => f.p.startsWith('03. MODIFICATIONS/') && /\.stl$/i.test(f.p)).filter(f => {
+  for (const f of FILES) {
+    if (!f.p.startsWith('03. MODIFICATIONS/') || !/\.stl$/i.test(f.p)) continue;
     const n = f.name.replace(/\.stl$/i, '');
+    let fit;
     let m = f.p.match(/\/Base\/(XL|[SML])\/(?:XL|[SML])(\d) Base/);
-    if (m) return m[1] === w && Number(m[2]) === d;
-    m = n.match(/^(XL|S|M|L)(1F|2F|4F)?(?= |$)/);
-    if (m) return m[1] === w && (!m[2] || m[2] === h);
-    m = n.match(/^Universal (\dF)?/);
-    if (m) return !m[1] || m[1] === h;
-    m = n.match(/(\dF)$/);
-    return !m || m[1] === h;   // "Connector for Modules 1F" only for 1F; other loose parts (wheels, knobs, connectors) for every size
-  });
-  if (mods.length) out.push({ title: t('secMods'), items: offs(mods), raw: true });
+    if (m) fit = m[1] === w && Number(m[2]) === d;
+    else if ((m = n.match(/^(XL|S|M|L)(1F|2F|4F)?(?= |$)/))) fit = m[1] === w && (!m[2] || m[2] === h);
+    else if ((m = n.match(/^Universal (\dF)?/))) fit = !m[1] || m[1] === h;
+    else { m = n.match(/(\dF)$/); fit = !m || m[1] === h; }   // "Connector for Modules 1F" only for 1F; wheels, knobs, connectors for every size
+    if (!fit) continue;
+    const grp = /\/Wall Mounts\//.test(f.p) ? 'wall' : /USSA Pegboard/.test(f.p) ? 'pegU' : /IKEA/.test(f.p) ? 'pegI' : /\/Feet\//.test(f.p) ? 'feet'
+      : /\/Wheels\//.test(f.p) ? 'wheels' : /\/Pull-out Handle\//.test(f.p) ? 'pull' : /\/Stationary Handle\//.test(f.p) ? 'stat'
+      : /\/Backbone\//.test(f.p) ? 'back' : /\/Base\//.test(f.p) ? 'base' : null;
+    items.push({ sec: 'mods', grp, f, qty: 1 });
+  }
+  return items;
+}
+const addonGroups = () => [...new Set(addonItems().map(i => i.grp).filter(Boolean))];
+function extraSections() {
+  const { w, d, h, type } = state;
+  const reach = Math.max(GRID_HOLES[w], 10 + 4 * (d - 3));
+  const make = sec => addonItems().filter(i => i.sec === sec).map(i => { const it = part(i.f, i.qty, { expect: '' }); return i.grp && state.mods?.[i.grp] ? it : off(it); });
+  const out = [];
+  const grid = make('grid'), vari = make('var'), mods = make('mods');
+  if (grid.length) out.push({ title: t('secGrid'), sub: t('secGridNote', reach), items: grid, raw: true });
+  if (vari.length) out.push({ title: t('secVar'), items: vari, raw: true });
+  if (mods.length) out.push({ title: t('secMods'), items: mods, raw: true });
   return out;
 }
 
@@ -1078,6 +1090,8 @@ function renderConfig() {
     if (dividers.length) html += field(t('dividers'), opts('dividers', [{ val: false, label: t('none') }, { val: true, label: t('include'), file: dividers[0] }]));
     if (sbases.length) html += field(t('baseplate'), opts('sbase', [{ val: false, label: t('none') }, { val: true, label: sbases.length > 1 ? t('twoParts') : t('include'), file: sbases[0] }]));
   }
+  const groups = addonGroups();
+  if (groups.length) html += field(t('addons'), `<div class="chips">${groups.map(g => `<button type="button" class="chip" data-mod="${g}" aria-pressed="${!!state.mods?.[g]}">${esc(t(ADDON_LABEL[g]))}</button>`).join('')}</div>`, t('addonsNote'));
   const ref = BY_PATH.get(drawer ? '01. DRAWERS/Drawers Naming.png' : '02. SUSTAINERS/Sustainer Naming.png');
   if (ref) html += `<div data-list><div class="row" data-path="${esc(ref.p)}" style="display:block;padding:0;border:0;background:none">
     <button class="ref" data-act="open"><img src="${esc(fileUrl(ref.p))}" alt="" loading="lazy"><span>${esc(t('exploded'))}</span></button></div></div>`;
@@ -1142,6 +1156,8 @@ function renderBuilder() {
 }
 
 $('#config').addEventListener('click', e => {
+  const mod = e.target.closest('[data-mod]');
+  if (mod) { (state.mods ||= {})[mod.dataset.mod] = !state.mods[mod.dataset.mod]; state.inc = {}; renderBuilder(); return; }
   const b = e.target.closest('[data-set], [data-step]');
   if (!b || b.disabled) return;
   if (b.dataset.set) {
@@ -1790,7 +1806,7 @@ function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
     add(rb(41, 13, 14, 5), mat('keycap'), kx, ky, 24, 'keycap');           // the lever lies across the knob
     const dot = add(new THREE.CylinderGeometry(2.2, 2.2, 1, 20), bolt, kx + 14, ky, 31.1); dot.rotation.x = Math.PI / 2;
   }
-  label(cx, w, y, h, ky - (y + h / 2));
+  label(cx, w, y, h, tall ? ky - (y + h / 2) : -0.12 * h);   // on a 1F box the label sits a little below the middle, not on the upper edge
 }
 
 // A sustainer: body, lid, facade, latches (in a recessed pocket) and columns of bolts at both ends.
@@ -1832,7 +1848,7 @@ function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
   }
   const rows = h > 150 ? [10, (h - LID) / 2, h - LID - 8] : [10, h - LID - 8];
   for (const sx of [-1, 1]) for (const yy of rows) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 9), y + yy, 8).rotation.x = Math.PI / 2;
-  label(cx, w, y, h, h < 80 ? 0.1 * h : h > 150 ? -0.3 * h : -0.2 * h, 36);
+  label(cx, w, y, h, h < 80 ? -LID / 2 - 2 : h > 150 ? -0.3 * h : -0.2 * h, 36);   // 1F: in the middle of the body below the lid
 }
 
 // Runner stoppers lock the drawer on its rail: flat pill-shaped plates flush with the box's left side wall, about a third of the way
