@@ -1,194 +1,160 @@
-# VAULT Hub
+# VAULT Hub 🧰
+
+## ▶ Start here (about 2 minutes)
+
+1. 📁 Copy this repo's files into your **VAULT folder root** (the folder that contains `01. DRAWERS`).
+2. 🔧 Run once: `python3 _hub/update_index.py`
+3. 🚀 Double-click **`Open VAULT Hub (Mac).command`** or **`Open VAULT Hub (Windows).bat`**.
+
+✅ **Done when** your browser opens `http://127.0.0.1:8765` and shows the Builder. Keep the terminal window open.
+
+❓ No VAULT folder yet? Download the files from your own Kickstarter / USSA account first. This repo contains none.
+
+![Builder: pick a unit, get the parts list, see it in 3D](docs/builder-drawer.png)
 
 **English** | [简体中文](README.zh-CN.md)
 
-A local browser hub for finding your way around the VAULT modular stacking toolbox print files. It turns hundreds of loose STL files and nested folders into a searchable library with 3D previews, a "what do I need to print?" builder with a live preview of the unit you configured, and a color picker for trying filament colors before you print.
+> 🔍 Search, preview and plan prints for the **VAULT** modular toolbox STL pack (700+ files), on your own computer.
+> ⚠️ Unofficial fan tool. Not affiliated with or endorsed by USSA.
 
-> **Unofficial fan tool.** Not affiliated with or endorsed by USSA. This repository contains **no** STL, PDF or image files from the VAULT project. You supply your own copy of the files you received as a backer / customer (see [Setup](#setup)).
-
-## The problem
-
-The VAULT file pack has 700+ STL files spread over dozens of nested folders (Drawers, Sustainers, Modifications, each split by size family S / M / L / XL, then by depth, modules, roofs, facades, dividers, baseplates...). Working out which files make up *one* drawer, and printing them without missing a part, takes a lot of clicking.
-
-## ✨ Features at a glance
+## ✨ What you get (5 things)
 
 | | |
 |---|---|
-| 📋 **Builder** | Pick a drawer or sustainer, size and options → get the complete list of files to print, with quantities, print time, weight and hardware counts. |
-| 🎛️ **Every part, with a switch** | All parts of the unit are listed (keys, handle, roofs, dividers, baseplates, locks, hinges…). Switch any on or off; totals, *Copy list* and *Gather* follow. |
-| 🧊 **Live 3D preview** | A render of the exact unit you configured: rounded modules, key, label, runner stoppers, roofs (grid / bowl / table / under-table / heavyweight), lid, lock latches and hinges. Flip it to see the back. |
-| 🎨 **Color picker** | Try 8 Matte and 13 Basic colors on a 3D tower. Click a part to recolor, 🎲 shuffle, reset, save color templates, import / export. |
-| 🏷️ **Filament tags** | Every STL is tagged Matte, Basic or TPU, and each tag is filled with the color you picked. |
-| ✅ **Print checklist** | Tick parts off as they print, with a saved progress bar. Copy the list or gather the files into one folder. |
-| 🔍 **3D file preview** | Orbit any STL in the browser with real size and triangle count, wireframe, open in slicer, show in folder. |
-| 🗂️ **Search the whole pack** | Instant search and filters across all 700+ files, with thumbnails. |
-| 📖 **Manuals** | The official PDFs next to a reference gallery. |
-| 🌐 **English / 中文** · 📱 **phone-friendly** · 🌗 **light and dark** | One click to switch language; works on phones and follows your system theme. |
+| 📋 **Plan a print** | Pick drawer or sustainer, size, options → the full list of files to print. Switch any part on or off. Watch it in a live 3D preview. |
+| 🎨 **Pick colors** | 8 Matte + 13 Basic colors on a 3D tower. Shuffle, save templates, import / export. |
+| 🏷️ **Know the filament** | Every STL is tagged Matte / Basic / TPU, filled with your chosen color. |
+| ✅ **Print it** | Tick parts off, saved progress, copy the list, gather the files into one folder. |
+| 🔍 **Browse the pack** | Search 700+ files, orbit any STL in 3D, read the manuals. English / 中文, phone-friendly. |
 
-## 🔎 Feature details
+## 🔎 Details (click one to open)
 
-### 📋 Builder: "what do I need to print?"
+<details>
+<summary><b>📋 Plan a print</b></summary>
 
-![Builder showing an M4 2F drawer with 5 of 13 parts ticked off](docs/builder-drawer.png)
+- **Pick:** drawer / sustainer, width S–XL, depth 3–7, height 1F / 2F / 4F, quantity.
+- **Options:** lock type, roof (none / bowl / grid / heavyweight (L, XL) / table / under-table), handle, dividers, baseplate, locks per unit.
+- **Spec strip:** size, Gridfinity grid, print time, filament weight (where published).
+- **Tags:** "2 pcs in file" = print once. "Supports" = turn supports on.
+- **Hardware counts:** bolts and other non-printed parts.
 
-Pick a unit and the hub lists every file you need, so nothing gets missed.
+![Sustainer in the Builder](docs/builder-sustainer.png)
 
-- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / heavyweight cover with its bar handle / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate. The shapes follow the real product: rounded modules, a centered rotary key with a horizontal lever (set low on 2F / 4F boxes), a seam down the middle of tall facades, screw dimples, a small label, pill-shaped runner stoppers on the left wall, sustainer lock latches (a holder plate with a hooked clip over the lid edge; one on S / M, two on L / XL by default) in a recessed pocket with columns of bolts, hinge top plates with four screws, a handle about 126 mm wide, and two feet. The sustainer lid is a flat-topped plate with a bevelled front edge, side tabs and hinge-side tab pads; the lock latches and the hinges hang within the lid's height (the hinge spans the same height as the latch) and never rise above the roof.
-- **Front / back view** – the ↻ button on the preview swings the camera round to the back, where a sustainer's hinges and hinge rods are.
-- **Unit type** – Drawer or Sustainer (hinged-lid box).
-- **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
-- **Options** – lock style, roof for the top unit (none / bowl / grid / heavyweight (L and XL) / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
-- **Spec strip** – outer and inside dimensions, Gridfinity grid size, and estimated print time and filament weight (published figures, where available).
-- **Every part is in the list, each with an include switch** – the list shows all the files the unit could use (both key types, top handle, every roof, dividers, Gridfinity baseplates, manual supports, the full lock set, hinges, rods and so on). Parts your options select start switched on, the rest start off; flip any switch to leave a part out or add it. Across all sizes, depths and heights every sustainer file in the pack appears somewhere in the list (including the alternative facades); the drawer files that never appear are the L² / XL² families, which the Builder has no size for, and the loose grid-divider pieces. Parts that are off are greyed and skipped by the file count, tag totals, progress bar, *Copy list* and *Gather*. Your switches are remembered; changing an option (roof, handle, lock, …) resets them to that option's defaults.
-- **Parts list** – grouped into Body, Slides / latch / lock, Top of the stack, Optional, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
-- **Filament finish** – every part is tagged **Matte**, **Basic** or **TPU** (the suggested filament), and the Builder header counts how many of each you need so you can plan filament swaps. The tag is also shown in *All files* and included in *Copy list*, and the tag is filled with the color you picked for that part in the Colors tab (parts without a color role, such as runners, keep the plain tag). Every STL has a recommendation.
-- **Smart tags** – "2 pcs in file" marks files that already contain a pair (print once); "Supports" marks files that need support material.
-- **Hardware counts** – bolts and other non-printed parts, with quantities.
-- **Part names** – the official exploded diagram, one click away.
+</details>
 
-![Parts with include switches: greyed rows are switched off](docs/parts-switches.png)
+<details>
+<summary><b>🎛️ Every part has a switch</b></summary>
 
-*Switches on the right: the hidden key, roofs, handle and baseplates are listed but off until you need them.*
+- The list shows **all** files the unit could use: both key types, handle, every roof, dividers, baseplates, lock set, hinges.
+- Parts your options select start **on**. The rest start **off** (greyed). Flip any switch.
+- Off parts are skipped by the file count, tag totals, progress bar, *Copy list* and *Gather*.
+- Changing an option resets the switches to that option's defaults.
+- Not listed: L² / XL² families (no such size in the Builder) and the loose grid-divider pieces.
 
-![Builder showing an M4 2F sustainer](docs/builder-sustainer.png)
+![Parts with switches](docs/parts-switches.png)
 
-*The sustainer view adds hinges & rods, a lock set and a locks-per-unit counter.*
+</details>
 
-![Live preview for different sizes and shapes](docs/builder-preview.png)
+<details>
+<summary><b>🧊 Live 3D preview</b></summary>
 
-![Sustainer hinges seen from the back](docs/sustainer-hinge.png)
+- Follows size, depth, height, quantity (up to 6 high), lock, roof, handle. Drag to rotate. **↻ flips to the back.**
+- Outside only, shaped like the real product: rounded modules, centered rotary key, label, runner stoppers, feet.
+- **Sustainer:** flat lid with bevelled edge and side tabs, hooked lock latches (1 on S / M, 2 on L / XL), hinges with rods at the back. Latch and hinge never rise above the roof.
+- **Roofs:** grid (low ribs), bowl (shallow dish), table (thin groove), under-table (screw holes), heavyweight (thick lid + bar handle).
+- Uses your Colors-tab colors. Needs no STL files.
 
-*A sustainer from the front, from the back (hinges and rods) and from the back with custom hinge colors.*
+![Six sizes and shapes](docs/builder-preview.png)
 
-*The preview for six different configurations (from the top left): S3 1F drawer, M4 2F drawer with grid roof and handle, L5 4F drawer with bowl roof and handle, XL3 1F drawer with under-table mount, and M4 2F and XL sustainers.*
+![Sustainer from the back](docs/sustainer-hinge.png)
 
-| Suggested finish | Parts |
+</details>
+
+<details>
+<summary><b>🎨 Color picker</b></summary>
+
+- **Palettes:** Matte (White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado). Basic (Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green).
+- **11 parts:** Body, Facade, Roof · Handle, Key lock, Key cap, Lock latch, Hinge, Hinge rod, Label, Runner stopper. Click a part in 3D or in the list.
+- 🎲 **Shuffle** · ↺ **Reset colors**.
+- **Templates:** *Save* stores the combo as color dots. Click to load, × to delete.
+- **Import / Export:** `colors.json`. On-screen colors are approximate: check a real swatch.
+
+![Colors tab](docs/colors-custom-en.png)
+
+</details>
+
+<details>
+<summary><b>🏷️ Filament tags</b></summary>
+
+- Shown in the Builder and *All files*, added to *Copy list*. Filled with the color you picked.
+- Rules live in `material()` in `index.html`. Change them there.
+
+| Finish | Parts |
 |---|---|
-| **Matte** | Modules, boxes, roofs, facades, baseplates, dividers (including Grid Dividers), wheel cover |
-| **Basic** | Handles, runners, key and key cap, latch, springs, rails, labels, facade caps; sustainer hinges, rods and lock set; L² accessories; manual supports; backbones, bases, feet, pegboard attachments, wall mounts; wheel bushing, disk and jig |
+| **Matte** | Modules, boxes, roofs, facades, baseplates, dividers, wheel cover |
+| **Basic** | Handles, runners, key, latch, springs, rails, labels; hinges, rods, locks; accessories; supports; backbones, bases, feet, pegboard, wall mounts; wheel parts |
 | **TPU** | Wheel tyre |
 
-The rules live in the `material()` function in `index.html`, so you can adjust them.
+</details>
 
-### 🎨 Color picker
+<details>
+<summary><b>✅ Print · 🔍 Browse · 🌐 Language · 📱 Phone</b></summary>
 
-![Colors tab: the stack view](docs/colors-stack-en.png)
+- **Checklist:** tick parts off (saved in your browser), **Copy list**, **Gather into folder** (`_Print Jobs/<name>`).
+- **3D file preview:** orbit / zoom / pan, wireframe, ← / → between parts, **Open in slicer**, **Show in folder**, or drop any STL on the panel.
+- **Search:** press `/`. Filter Drawers / Sustainers / Modifications / Images & PDFs. **Manuals:** the 5 official PDFs open in the hub.
+- **Language:** English / 中文 in one click.
+- **Phone:** the preview comes first; vertical swipes still scroll.
 
-Try filament colors on a rendered VAULT tower before you print. The tower is a simplified model built from plain shapes, so it works without any STL files, and it uses the same size and combination as the reference photo (S + S, L 1F, L 2F, sustainer, S 1F over S 1F beside S 2F, with grid roof and handle), seen front-on and turned slightly to the left, so the left side wall (where the runner stoppers are) shows.
+![3D file preview](docs/preview-3d.png)
 
-- **Matte palette (8):** White, Black, Lime, Grey, Pink, Light blue, Violet, Avocado. **Basic palette (13):** Orange, Red, Yellow, Green, Blue, Dark Blue, White, Beige, Black, Brown, Grey, Blue Grey, Dark Green. A part gets the palette that matches its finish tag.
-- **Eleven colorable parts:** Body, Facade, Roof (Matte); Top handle, Key lock, Key cap, Lock latch, Hinge, Hinge rod, Label, Runner stopper (Basic). The hinges are on the back of the sustainer: use the ↻ button in the Builder preview to see them. Pick a part in the list, or click it in the 3D view (hover shows its name), then pick a color.
-- **🎲 Shuffle** gives every part a random color.
-- **Templates** – *Save* stores the combination as a row of small color circles (one per distinct color, no name needed). Click one to load it, × to delete it (kept in your browser). **Reset colors** puts every part back to its default.
-- **Save / Import / Export** – all live in the Templates box. *Export* saves your picks as `colors.json`; *Import* loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
-- On-screen colors are approximate. Check a physical swatch before printing.
-
-![Colors tab with custom colors and saved templates](docs/colors-custom-en.png)
-
-### ✅ Print checklist
-
-- Tick parts off as they come off the printer; a progress bar shows how far you are. Progress is saved in your browser, and **Clear checks** resets it.
-- **Copy list** exports the checklist as plain text.
-- **Gather into folder** copies the whole parts list into one `_Print Jobs/<name>` folder, ready to drag into your slicer.
-
-### 🔍 3D preview
-
-![3D preview of an STL file](docs/preview-3d.png)
-
-- Orbit, zoom and pan any STL in the browser. Shows real size in mm and triangle count (works with 1M+ triangle files).
-- Wireframe and reset-view buttons; ← / → steps through the parts, Esc closes.
-- **Open in slicer** launches the file in your default app; **Show in folder** jumps to it in Finder / Explorer.
-- Drop any STL onto the preview panel to view it, even a file from outside the project.
-
-### 🗂️ All files
-
-![Searching all files](docs/files.png)
-
-- Instant search by file or folder name (press `/` to focus), with category filters: Drawers, Sustainers, Modifications, Images & PDFs.
-- Results are grouped by folder, with thumbnails, sizes, the suggested filament finish (Matte / Basic / TPU), and preview and show-in-folder buttons on every row.
-
-### 📖 Manuals
-
-- The five official PDFs open inside the hub, next to a gallery of the reference images.
-
-### 🌐 English / 中文
+![Search](docs/files.png)
 
 ![Chinese interface](docs/builder-zh.png)
 
-- Full interface in English and Chinese, switchable with one click. Picks your browser language on first run and remembers your choice.
+<p><img src="docs/mobile-builder.png" width="240" alt="Builder on a phone"> &nbsp; <img src="docs/mobile-colors.png" width="240" alt="Colors on a phone"></p>
 
-### 📱 Phone and tablet
+</details>
 
-<p>
-  <img src="docs/mobile-builder.png" width="260" alt="Builder on a phone">
-  &nbsp;&nbsp;
-  <img src="docs/mobile-colors.png" width="260" alt="Colors tab on a phone">
-</p>
+## 🛠️ Setup details
 
-- On narrow screens the preview and the 3D tower come first and the options follow below; vertical swipes still scroll the page.
-
-## Setup
-
-1. Download the VAULT files from your own Kickstarter / USSA account and unzip them.
-2. Copy the contents of this repository **into the root of that folder**, so it looks like:
-
-   ```
-   VAULT/
-   ├── 01. DRAWERS/
-   ├── 02. SUSTAINERS/
-   ├── 03. MODIFICATIONS/
-   ├── *.pdf
-   ├── index.html                    ← this repo
-   ├── Open VAULT Hub (Mac).command  ← this repo
-   ├── Open VAULT Hub (Windows).bat  ← this repo
-   └── _hub/                         ← this repo
-   ```
-3. Rebuild the file index once so it matches your copy:
-
-   ```
-   python3 _hub/update_index.py
-   ```
-4. Launch:
-   - **macOS** – double-click `Open VAULT Hub (Mac).command` (first time: right-click → Open).
-   - **Windows** – double-click `Open VAULT Hub (Windows).bat`. Uses Python if installed, otherwise a built-in PowerShell server.
-   - **Linux** – `python3 _hub/serve_hub.py`
-
-The hub opens at `http://127.0.0.1:8765`. Keep the terminal window open while you use it.
-
-> The Colors tab and the Builder preview are drawn from plain shapes, so they work without the STL files. The file list, thumbnails, 3D file preview and manuals need your copy of the VAULT files.
-
-> Opening `index.html` directly (double-click) still works for browsing, but browsers block local file access, so 3D preview and "Show in folder" are disabled. Use the launcher.
-
-### Optional: thumbnails
-
-Thumbnails are not included (they are renders of the STL files). To generate them, start the server on port 8799 and run the renderer (needs Node, Playwright and Chrome):
+<details>
+<summary>Folder layout, other systems, thumbnails</summary>
 
 ```
-VAULT_PORT=8799 python3 _hub/serve_hub.py
-node _hub/make_thumbs.mjs
-python3 _hub/update_index.py
+VAULT/
+├── 01. DRAWERS/
+├── 02. SUSTAINERS/
+├── 03. MODIFICATIONS/
+├── *.pdf
+├── index.html                    ← this repo
+├── Open VAULT Hub (Mac).command  ← this repo
+├── Open VAULT Hub (Windows).bat  ← this repo
+└── _hub/                         ← this repo
 ```
 
-## Requirements
+- **macOS:** double-click the `.command` (first time: right-click → Open).
+- **Windows:** double-click the `.bat`. It uses Python, or a built-in PowerShell server.
+- **Linux:** `python3 _hub/serve_hub.py`
+- **After you add or rename files:** `python3 _hub/update_index.py`
+- **Optional thumbnails** (not included; needs Node, Playwright, Chrome): `VAULT_PORT=8799 python3 _hub/serve_hub.py`, then `node _hub/make_thumbs.mjs`, then `python3 _hub/update_index.py`
 
-- Python 3 (macOS and Linux) – Windows can fall back to PowerShell
-- A modern browser
-- Internet access for the 3D views: the file preview, the Builder preview and the Colors tab (three.js is loaded from a CDN)
+The Colors tab and the Builder preview are drawn from plain shapes and work without the STL files. The file list, thumbnails, 3D file preview and manuals need your copy.
 
-## Privacy and security
+</details>
 
-The server binds to `127.0.0.1` only, serves only files inside the project folder, and its write actions (reveal, open, gather) require a custom header that other websites cannot send. Nothing is uploaded anywhere.
+## 🧯 If something breaks
 
-## Updating after you add or rename files
+1. **Terminal says Python not found** → install Python 3 from python.org, then double-click the launcher again.
+2. **Page opens but the file list is empty** → you skipped step 2. Run `python3 _hub/update_index.py`, then refresh.
+3. **3D views are blank** → no internet. three.js loads from a CDN. Reconnect and refresh.
+4. **Hub stops after a few seconds** → the terminal window was closed. Re-run the launcher and leave the window open.
+5. **"Show in folder" does nothing** → you opened `index.html` directly. Use the launcher.
 
-```
-python3 _hub/update_index.py
-```
+## 📌 Good to know
 
-## Contributing
+- **Private:** the server listens on `127.0.0.1` only and serves only your project folder. Nothing is uploaded.
+- **Contributing:** issues and PRs welcome, especially parts rules and translations.
+- **License:** code is MIT (see `LICENSE`). VAULT models, manuals and name belong to their owners and are **not** covered.
 
-Issues and pull requests are welcome, especially for new parts rules in the Builder and translations.
-
-## License
-
-Code in this repository: MIT (see `LICENSE`). The VAULT models, manuals and name belong to their respective owners and are **not** covered by this license.
+**Next:** open the hub, click **Builder**, pick **M · 4 · 2F**, and watch the 3D preview change.
