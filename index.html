@@ -386,8 +386,12 @@ button.thumb:hover { border-color: var(--line-strong); }
 .tpl { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .tplchip { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
 .tplchip button { border: 0; background: none; padding: 5px 10px; font-size: 13px; color: var(--muted); }
+.tplchip button { display: inline-flex; align-items: center; gap: 6px; }
+.tplchip .dots { display: inline-flex; gap: 3px; }
+.tplchip .sw { width: 12px; height: 12px; }
 .tplchip button:hover { color: var(--text); }
-.tplchip button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); }
+.tplchip:has(> button[aria-pressed="true"]) { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.tplchip button[aria-pressed="true"] { color: var(--text); }
 .tplchip .x { padding: 5px 9px 5px 2px; color: var(--faint); }
 .col-note { color: var(--faint); font-size: 12px; margin: 0; }
 .sw { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(128, 128, 128, .55); flex: none; display: inline-block; }
@@ -574,7 +578,7 @@ const store = {
 const I18N = {
   en: {
     langBtn: '中文', subtitle: 'Print hub', tabBuild: 'Builder', tabFiles: 'All files', tabManuals: 'Manuals', tabColors: 'Colors',
-    colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current', colTplName: 'Template name', colTplSaved: n => `Saved “${n}”`, colTplLoaded: n => `Loaded “${n}”`, colTplDel: 'Delete template', colTplDelAsk: n => `Delete the template “${n}”?`, colTplOverwrite: n => `Replace the existing template “${n}”?`, colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
+    colPart: 'Part', colColor: 'Color', colShuffle: 'Shuffle', colReset: 'Reset colors', colTpl: 'Templates', colTplDefault: 'Default', colTplSave: '+ Save current colors', colTplExists: 'That color combination is already saved', colTplSavedPlain: 'Template saved', colTplLoaded: n => `Loaded ${n}`, colTplDel: 'Delete template', colNo3d: 'The 3D view could not start', colAll: n => `Use for all Matte parts`,
     colDownload: 'Download', colImport: 'Import', colImportDone: n => `Imported ${n} colors`, colImportFail: 'No color picks found in that file',
     colNote: 'On-screen colors are approximate. Check against a physical swatch before printing.',
     role_body: 'Body', role_facade: 'Facade', role_roof: 'Roof', role_handle: 'Top handle', role_label: 'Label', role_stopper: 'Runner stopper', role_key: 'Key lock', role_keycap: 'Key cap', role_hinge: 'Hinge', role_lock: 'Lock latch',
@@ -614,7 +618,7 @@ const I18N = {
   },
   zh: {
     langBtn: 'English', subtitle: '打印控制台', tabBuild: '配置清单', tabFiles: '全部文件', tabManuals: '说明书', tabColors: '配色',
-    colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplName: '模板名称', colTplSaved: n => `已保存“${n}”`, colTplLoaded: n => `已载入“${n}”`, colTplDel: '删除模板', colTplDelAsk: n => `删除模板“${n}”?`, colTplOverwrite: n => `替换已有的模板“${n}”?`, colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
+    colPart: '零件', colColor: '颜色', colShuffle: '随机配色', colReset: '重置配色', colTpl: '配色模板', colTplDefault: '默认', colTplSave: '+ 保存当前配色', colTplExists: '这个配色组合已经保存过了', colTplSavedPlain: '模板已保存', colTplLoaded: n => `已载入 ${n}`, colTplDel: '删除模板', colNo3d: '无法启动 3D 视图', colAll: n => `所有哑光零件用同一颜色`,
     colDownload: '下载', colImport: '导入', colImportDone: n => `已导入 ${n} 项配色`, colImportFail: '该文件中没有可识别的配色',
     colNote: '屏幕上的颜色仅供参考,打印前请对照实物色卡确认。',
     role_body: '主体', role_facade: '前面板', role_roof: '顶盖', role_handle: '顶部提手', role_label: '标签', role_stopper: '止动块', role_key: '旋转锁', role_keycap: '旋钮手柄', role_hinge: '铰链', role_lock: '锁扣',
@@ -1463,13 +1467,12 @@ const col = { enginePromise: null, engine: null, tower: null, home: null };
 // Templates: named sets of color picks kept in this browser, loaded with one click.
 const templates = () => store.get('colorTemplates', []);
 const saveTemplates = list => store.set('colorTemplates', list);
-// A new template is named after its colors by default: one colored heart per distinct color, in the order of the part list.
-const COLOR_EMOJI = {
-  white: '🤍', black: '🖤', grey: '🩶', bluegrey: '🩶', pink: '🩷', red: '❤️', orange: '🧡', yellow: '💛', beige: '🤎', brown: '🤎',
-  lime: '💚', avocado: '💚', green: '💚', darkgreen: '💚', lightblue: '🩵', blue: '💙', darkblue: '💙', violet: '💜',
-};
-const suggestedName = () => [...new Set(ROLES.map(r => COLOR_EMOJI[colorOf(r).id] ?? '⬜'))].join('');
+// A template without a typed name is shown as its colors: one small circle per distinct color, in the order of the part list.
+const swatchDots = pick => [...new Map(ROLES.map(r => { const c = PALETTE[ROLE_FINISH[r]].find(x => x.id === (pick?.[r] ?? ROLE_DEFAULT[r])); return [c.hex, c]; })).values()]
+  .map(c => `<i class="sw" style="background:${c.hex}" title="${esc(colorName(c))}"></i>`).join('');
+const templateLabel = (tpl, name) => `<span class="dots">${swatchDots(tpl.choice)}</span>${name ? `<span>${esc(name)}</span>` : ''}`;   // no names: a template is just its colors
 const snapshot = () => ({ choice: Object.fromEntries(ROLES.map(r => [r, colorOf(r).id])) });
+const colorNames = pick => [...new Set(ROLES.map(r => colorName(PALETTE[ROLE_FINISH[r]].find(x => x.id === (pick?.[r] ?? ROLE_DEFAULT[r])))))].join(' · ');
 const matchesTemplate = tpl => ROLES.every(r => (tpl.choice?.[r] ?? ROLE_DEFAULT[r]) === colorOf(r).id);
 const loadTemplate = tpl => { colorUI.choice = { ...(tpl.choice ?? {}) }; };
 
@@ -1504,8 +1507,8 @@ function colorsExport() {
 function renderColors() {
   const role = colorUI.role, finish = ROLE_FINISH[role];
   $('#col-config').innerHTML =
-    field(t('colTpl'), `<div class="tpl"><span class="tplchip"><button type="button" data-ctpl="default" aria-pressed="${matchesTemplate({ choice: {} })}">${esc(t('colTplDefault'))}</button></span>${templates().map((x, i) =>
-      `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${esc(x.name)}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><button type="button" class="btn" data-cact="save">${esc(t('colTplSave'))}</button>`) +
+    field(t('colTpl'), `<div class="tpl"><span class="tplchip"><button type="button" data-ctpl="default" aria-pressed="${matchesTemplate({ choice: {} })}">${templateLabel({ choice: {} }, t('colTplDefault'))}</button></span>${templates().map((x, i) =>
+      `<span class="tplchip"><button type="button" data-ctpl="${i}" aria-pressed="${matchesTemplate(x)}">${templateLabel(x, '')}</button><button type="button" class="x" data-ctpl-del="${i}" title="${esc(t('colTplDel'))}" aria-label="${esc(t('colTplDel'))}">×</button></span>`).join('')}</div><button type="button" class="btn" data-cact="save">${esc(t('colTplSave'))}</button>`) +
     field(t('colPart'), `<div class="plist">${ROLES.map(r => {
       const c = colorOf(r);
       return `<button type="button" class="prow" data-crole="${r}" aria-pressed="${r === role}"><i class="sw" style="background:${c.hex}"></i><span class="nm">${esc(t('role_' + r))}</span><span class="badge mat ${ROLE_FINISH[r]}">${esc(t(ROLE_FINISH[r]))}</span><span class="cn">${esc(colorName(c))}</span></button>`;
@@ -1751,22 +1754,19 @@ $('#view-colors').addEventListener('click', async e => {
     const tpl = b.dataset.ctpl === 'default' ? { name: t('colTplDefault'), choice: {} } : templates()[Number(b.dataset.ctpl)];
     if (!tpl) return;
     loadTemplate(tpl);
-    toast(t('colTplLoaded', tpl.name));
+    toast(t('colTplLoaded', colorNames(tpl.choice)));
   }
   else if (b.dataset.ctplDel) {
-    const list = templates(), tpl = list[Number(b.dataset.ctplDel)];
-    if (!tpl || !confirm(t('colTplDelAsk', tpl.name))) return;
+    const list = templates();
     list.splice(Number(b.dataset.ctplDel), 1);
     saveTemplates(list);
   }
   else if (b.dataset.cact === 'save') {
-    const name = (prompt(t('colTplName'), suggestedName()) ?? '').trim().slice(0, 40);
-    if (!name) return;
-    const list = templates(), at = list.findIndex(x => x.name === name);
-    if (at >= 0 && !confirm(t('colTplOverwrite', name))) return;
-    if (at >= 0) list[at] = { name, ...snapshot() }; else list.push({ name, ...snapshot() });
+    const list = templates();
+    if (list.some(matchesTemplate)) { toast(t('colTplExists')); return; }   // that exact combination is already saved
+    list.push(snapshot());
     saveTemplates(list);
-    toast(t('colTplSaved', name));
+    toast(t('colTplSavedPlain'));
   }
   else if (b.id === 'col-clear') colorUI.choice = {};
   else if (b.dataset.cact === 'all') { const c = colorOf(role).id; ROLES.filter(r => ROLE_FINISH[r] === 'matte').forEach(r => { colorUI.choice[r] = c; }); }
