@@ -10,27 +10,30 @@ A local browser hub for finding your way around the VAULT modular stacking toolb
 
 The VAULT file pack has 700+ STL files spread over dozens of nested folders (Drawers, Sustainers, Modifications, each split by size family S / M / L / XL, then by depth, modules, roofs, facades, dividers, baseplates...). Working out which files make up *one* drawer, and printing them without missing a part, takes a lot of clicking.
 
-## Highlights
+## ✨ Features at a glance
 
-- **Builder** – choose a drawer or sustainer, size and options, and get the complete list of files to print, with quantities, print time and weight estimates and hardware counts.
-- **Live preview** – a 3D render of the exact unit you configured (every width, depth, height, quantity, lock, roof and handle), updating as you click.
-- **Filament finish tags** – every STL is tagged Matte, Basic or TPU, and each tag is filled with the color you picked for that part.
-- **Color picker** – 8 Matte and 13 Basic colors on a 3D tower, click-to-recolor, shuffle, saved color templates, import / export.
-- **Print checklist** – tick parts off with a saved progress bar, copy the list, or gather all the files into one folder for your slicer.
-- **3D file preview** – orbit any STL in the browser with size and triangle count, wireframe and "open in slicer".
-- **Search all files** – instant search and filters over the whole pack, with thumbnails.
-- **Manuals** – the official PDFs next to a reference gallery.
-- **English / 中文**, light and dark theme that follow your system, and a layout that works on phones.
+| | |
+|---|---|
+| 📋 **Builder** | Pick a drawer or sustainer, size and options → get the complete list of files to print, with quantities, print time, weight and hardware counts. |
+| 🎛️ **Every part, with a switch** | All parts of the unit are listed (keys, handle, roofs, dividers, baseplates, locks, hinges…). Switch any on or off; totals, *Copy list* and *Gather* follow. |
+| 🧊 **Live 3D preview** | A render of the exact unit you configured: rounded modules, key, label, runner stoppers, roofs (grid / bowl / table / under-table / heavyweight), lid, lock latches and hinges. Flip it to see the back. |
+| 🎨 **Color picker** | Try 8 Matte and 13 Basic colors on a 3D tower. Click a part to recolor, 🎲 shuffle, reset, save color templates, import / export. |
+| 🏷️ **Filament tags** | Every STL is tagged Matte, Basic or TPU, and each tag is filled with the color you picked. |
+| ✅ **Print checklist** | Tick parts off as they print, with a saved progress bar. Copy the list or gather the files into one folder. |
+| 🔍 **3D file preview** | Orbit any STL in the browser with real size and triangle count, wireframe, open in slicer, show in folder. |
+| 🗂️ **Search the whole pack** | Instant search and filters across all 700+ files, with thumbnails. |
+| 📖 **Manuals** | The official PDFs next to a reference gallery. |
+| 🌐 **English / 中文** · 📱 **phone-friendly** · 🌗 **light and dark** | One click to switch language; works on phones and follows your system theme. |
 
-## Features
+## 🔎 Feature details
 
-### Builder: "what do I need to print?"
+### 📋 Builder: "what do I need to print?"
 
 ![Builder showing an M4 2F drawer with 5 of 13 parts ticked off](docs/builder-drawer.png)
 
 Pick a unit and the hub lists every file you need, so nothing gets missed.
 
-- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / heavyweight cover with its bar handle / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate. The shapes follow the real product: rounded modules, a centered rotary key with a horizontal lever (set low on 2F / 4F boxes), a seam down the middle of tall facades, screw dimples, a small label, pill-shaped runner stoppers on the left wall, sustainer lock latches (a holder plate with a hooked clip over the lid edge; one on S / M, two on L / XL by default) in a recessed pocket with columns of bolts, hinge top plates with four screws, a handle about 126 mm wide, and two feet.
+- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / heavyweight cover with its bar handle / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate. The shapes follow the real product: rounded modules, a centered rotary key with a horizontal lever (set low on 2F / 4F boxes), a seam down the middle of tall facades, screw dimples, a small label, pill-shaped runner stoppers on the left wall, sustainer lock latches (a holder plate with a hooked clip over the lid edge; one on S / M, two on L / XL by default) in a recessed pocket with columns of bolts, hinge top plates with four screws, a handle about 126 mm wide, and two feet. The sustainer lid is a flat-topped plate with a bevelled front edge, side tabs and hinge-side tab pads; the lock latches and the hinges hang within the lid's height (the hinge spans the same height as the latch) and never rise above the roof.
 - **Front / back view** – the ↻ button on the preview swings the camera round to the back, where a sustainer's hinges and hinge rods are.
 - **Unit type** – Drawer or Sustainer (hinged-lid box).
 - **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
@@ -67,7 +70,7 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 
 The rules live in the `material()` function in `index.html`, so you can adjust them.
 
-### Color picker
+### 🎨 Color picker
 
 ![Colors tab: the stack view](docs/colors-stack-en.png)
 
@@ -82,13 +85,13 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 
 ![Colors tab with custom colors and saved templates](docs/colors-custom-en.png)
 
-### Print checklist
+### ✅ Print checklist
 
 - Tick parts off as they come off the printer; a progress bar shows how far you are. Progress is saved in your browser, and **Clear checks** resets it.
 - **Copy list** exports the checklist as plain text.
 - **Gather into folder** copies the whole parts list into one `_Print Jobs/<name>` folder, ready to drag into your slicer.
 
-### 3D preview
+### 🔍 3D preview
 
 ![3D preview of an STL file](docs/preview-3d.png)
 
@@ -97,24 +100,24 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 - **Open in slicer** launches the file in your default app; **Show in folder** jumps to it in Finder / Explorer.
 - Drop any STL onto the preview panel to view it, even a file from outside the project.
 
-### All files
+### 🗂️ All files
 
 ![Searching all files](docs/files.png)
 
 - Instant search by file or folder name (press `/` to focus), with category filters: Drawers, Sustainers, Modifications, Images & PDFs.
 - Results are grouped by folder, with thumbnails, sizes, the suggested filament finish (Matte / Basic / TPU), and preview and show-in-folder buttons on every row.
 
-### Manuals
+### 📖 Manuals
 
 - The five official PDFs open inside the hub, next to a gallery of the reference images.
 
-### English / 中文
+### 🌐 English / 中文
 
 ![Chinese interface](docs/builder-zh.png)
 
 - Full interface in English and Chinese, switchable with one click. Picks your browser language on first run and remembers your choice.
 
-### Phone and tablet
+### 📱 Phone and tablet
 
 <p>
   <img src="docs/mobile-builder.png" width="260" alt="Builder on a phone">
