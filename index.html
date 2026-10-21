@@ -242,8 +242,11 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
   .pick.p-h { grid-column: span 4; }
   .pick.p-n { grid-column: span 2; }
 }
-.unit-pick .seg button { min-height: 44px; justify-content: center; }
-.unit-pick .stepper { display: flex; width: 100%; height: 52px; justify-content: space-between; }
+/* Every picker control is the same height, whether its buttons carry a mm line or not. */
+.unit-pick { --pick-h: 58px; }
+.unit-pick .seg, .unit-pick .stepper { height: var(--pick-h); box-sizing: border-box; }
+.unit-pick .seg button { justify-content: center; }
+.unit-pick .stepper { display: flex; width: 100%; justify-content: space-between; }
 .unit-pick .stepper button { height: 100%; width: 38px; }
 .progress { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--muted); }
 .bar { flex: 1; height: 6px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
