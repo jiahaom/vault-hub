@@ -131,6 +131,11 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 .view[hidden] { display: none !important; }
 
 /* ---------- Builder ---------- */
+.bcol { position: sticky; top: 84px; display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - 108px); overflow: auto; }
+.bcol .config { position: static; max-height: none; overflow: visible; }
+.bp { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; flex: none; }
+.bp-stage { position: relative; height: 250px; background: radial-gradient(ellipse at 50% 25%, #eceded, #bfc2c7); }
+.bp-stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
 .builder { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
 .config {
   position: sticky; top: 84px;
@@ -414,7 +419,7 @@ button.thumb:hover { border-color: var(--line-strong); }
   .colors { grid-template-columns: 1fr; }
   .col-main { order: -1; }
     .builder, .manuals { grid-template-columns: 1fr; }
-  .config, .doclist { position: static; max-height: none; }
+  .config, .doclist, .bcol { position: static; max-height: none; overflow: visible; }
   .brand-sub { display: none; }
 }
 @media (max-width: 640px) {
@@ -465,7 +470,10 @@ button.thumb:hover { border-color: var(--line-strong); }
   <!-- Builder -->
   <section class="view" id="view-build">
     <div class="builder">
-      <aside class="config" id="config"></aside>
+      <div class="bcol">
+        <div class="bp" id="bp"><div class="bp-stage" id="bp-stage"></div></div>
+        <aside class="config" id="config"></aside>
+      </div>
       <div class="results" id="results"></div>
     </div>
   </section>
@@ -1056,6 +1064,7 @@ function renderBuilder() {
   store.set('state', state);
   renderConfig();
   renderResults();
+  renderPreview();
 }
 
 $('#config').addEventListener('click', e => {
@@ -1537,13 +1546,12 @@ function renderColors() {
 
 function colorMessage(html) { const m = $('#col-msg'); m.innerHTML = html ? `<div class="box">${html}</div>` : ''; m.hidden = !html; }
 
-const colorEngine = () => (col.enginePromise ??= makeColorEngine());
-async function makeColorEngine() {
+// Shared 3D studio for the Colors tab and the Builder preview: renderer, lights, soft floor shadow and orbit controls.
+async function createStudio(stage, fov, isActive) {
   const THREE = await import('three');
   const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
   const { RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js');
   const { RoundedBoxGeometry } = await import('three/addons/geometries/RoundedBoxGeometry.js');
-  const stage = $('#col-stage');
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
@@ -1551,7 +1559,7 @@ async function makeColorEngine() {
   stage.prepend(renderer.domElement);
   const scene = new THREE.Scene();
   scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-  const camera = new THREE.PerspectiveCamera(12, 1, 1, 20000);
+  const camera = new THREE.PerspectiveCamera(fov, 1, 1, 20000);
   scene.add(camera);
   const sun = new THREE.DirectionalLight(0xffffff, 1.25);
   sun.position.set(40, 1200, 560);
@@ -1582,21 +1590,21 @@ async function makeColorEngine() {
   };
   new ResizeObserver(resize).observe(stage);
   renderer.setAnimationLoop(() => {
-    if (tab !== 'colors') return;
+    if (!isActive()) return;
     controls.update();
     renderer.render(scene, camera);
   });
-  col.engine = { THREE, RoundedBoxGeometry, scene, camera, controls, group, resize, renderer };
-  attachColorPicking(col.engine);
-  return col.engine;
+  return { THREE, RoundedBoxGeometry, scene, camera, controls, group, resize, renderer };
 }
+const colorEngine = () => (col.enginePromise ??= createStudio($('#col-stage'), 12, () => tab === 'colors').then(e => { col.engine = e; attachColorPicking(e); return e; }));
 
 const colorMaterial = (THREE, finish, hex) => finish === 'basic'
   ? new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.38, clearcoat: 0.3, clearcoatRoughness: 0.35, envMapIntensity: 0.8 })
   : new THREE.MeshStandardMaterial({ color: hex, roughness: 0.95, metalness: 0, envMapIntensity: 0.85 });
 
-/* --- A simplified tower of drawers and a sustainer, built from plain shapes (no STL files needed). --- */
-// Size and combination follow the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
+/* --- Simplified drawers and sustainers built from plain shapes (no STL files needed). --- */
+// The Colors tab shows a tower that follows the reference photo: S1F + S1F / L1F / L2F / sustainer L2F / (S1F over S1F) + S2F, with roof and handle.
+// The Builder preview shows the unit you configured with the same shapes.
 const STACK = { S: 164.8, L: 329.6, F1: 52.5, F2: 105, DEPTH: 190, LID: 22 };
 function stackUnits() {
   const { S, L, F1, F2 } = STACK;
@@ -1624,9 +1632,9 @@ function labelTexture(THREE, dark) {
   return tex;
 }
 
-function buildTower(e) {
+// Helpers bound to one scene group; every mesh carries its Colors-tab role so it can be recolored and picked.
+function shapeKit(e) {
   const { THREE, RoundedBoxGeometry: RBG } = e;
-  const { L, DEPTH, LID } = STACK;
   const g = new THREE.Group();
   const mats = {};
   const mat = role => mats[role] ??= colorMaterial(THREE, ROLE_FINISH[role], colorOf(role).hex);
@@ -1648,48 +1656,134 @@ function buildTower(e) {
     text.position.set(cx - w / 2 + 40, y + h / 2 + ly, 9.3);
     g.add(text);
   };
-  for (const u of stackUnits()) {
-    const { cx, w, y, h } = u;
-    // Runner stoppers lock the drawer on its rail: flat plates flush with the box's left side wall, about a third of the way back
-    // from the front, one per 1F and two per 2F. Only the stack's left wall is visible, so only those boxes get them.
-    if (cx - w / 2 === -L / 2) {
-      for (const f of h < 60 ? [0.5] : u.kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3]) add(rb(0.9, 10.5, 18, 1), mat('stopper'), -L / 2 + 0.75, y + h * f, -0.28 * DEPTH, 'stopper');
-    }
-    if (u.kind === 'drawer') {
-      add(rb(w - 1.5, h - 1.5, DEPTH, 3), mat('body'), cx, y + h / 2, -DEPTH / 2, 'body');
-      add(rb(w - 3, h - 3.5, 8, 4), mat('facade'), cx, y + h / 2, 3.5, 'facade');
-      const ky = y + h / 2 + (h > 60 ? -0.17 * h : 0), kx = cx + 0.07 * w;
-      const base = add(new THREE.CylinderGeometry(17, 17, 6, 40), mat('key'), kx, ky, 10.5, 'key');
-      base.rotation.x = Math.PI / 2;
-      add(rb(13, 38, 9, 3), mat('keycap'), kx, ky, 17.5, 'keycap');
-      label(cx, w, y, h, h > 60 ? -0.2 * h : -0.06 * h);
-    } else {
-      add(rb(w - 1.5, h - LID - 1, DEPTH, 3), mat('body'), cx, y + (h - LID - 1) / 2, -DEPTH / 2, 'body');
-      add(rb(w, LID, DEPTH + 2, 5), mat('roof'), cx, y + h - LID / 2, -DEPTH / 2 + 1, 'roof');
-      add(rb(w - 3, h - LID - 3.5, 8, 4), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
-      for (const s of [-1, 1]) {
-        add(rb(54, 62, 10, 4), mat('lock'), cx + s * 0.235 * w, y + h - 34, 9, 'lock');
-        add(rb(26, 5, 3, 2), slot, cx + s * 0.235 * w, y + h - 34, 14.5);
-      }
-      for (const sx of [-1, 1]) for (const yy of [10, h - LID - 8]) {
-        const b = add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 10), y + yy, 8);
-        b.rotation.x = Math.PI / 2;
-      }
-      label(cx, w, y, h, -h * 0.2);
-    }
+  return { THREE, g, mats, labelMat, mat, fixed, bolt, slot, rb, add, label };
+}
+
+function addDrawer(k, { cx, w, y, h }, depth, lock = 'key') {
+  const { THREE, add, mat, rb, label } = k;
+  add(rb(w - 1.5, h - 1.5, depth, 3), mat('body'), cx, y + h / 2, -depth / 2, 'body');
+  add(rb(w - 3, h - 3.5, 8, 4), mat('facade'), cx, y + h / 2, 3.5, 'facade');
+  const ky = y + h / 2 + (h > 60 ? -0.17 * h : 0), kx = cx + 0.07 * w;
+  if (lock === 'hidden') {   // hidden key: just a small round cover on the facade
+    add(new THREE.CylinderGeometry(6, 6, 3, 28), mat('key'), kx, ky, 9, 'key').rotation.x = Math.PI / 2;
+  } else {
+    add(new THREE.CylinderGeometry(17, 17, 6, 40), mat('key'), kx, ky, 10.5, 'key').rotation.x = Math.PI / 2;
+    add(rb(13, 38, 9, 3), mat('keycap'), kx, ky, 17.5, 'keycap');
   }
-  // Grid roof and top handle.
-  const rw = L + 2, ry = STACK_TOP + 5;
-  add(rb(rw, 10, DEPTH + 4, 3), mat('roof'), 0, ry, -DEPTH / 2, 'roof');
-  for (let i = 0; i <= 8; i++) add(new THREE.BoxGeometry(2.6, 5, DEPTH + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / 8), ry + 6, -DEPTH / 2, 'roof');
-  for (let i = 0; i <= 4; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, ry + 6, -DEPTH + 4 + i * ((DEPTH - 8) / 4), 'roof');
+  label(cx, w, y, h, h > 60 ? -0.2 * h : -0.06 * h);
+}
+
+function addSustainer(k, { cx, w, y, h }, depth, locks = 2) {
+  const { THREE, add, mat, rb, label, bolt, slot } = k;
+  const { LID } = STACK;
+  add(rb(w - 1.5, h - LID - 1, depth, 3), mat('body'), cx, y + (h - LID - 1) / 2, -depth / 2, 'body');
+  add(rb(w, LID, depth + 2, 5), mat('roof'), cx, y + h - LID / 2, -depth / 2 + 1, 'roof');
+  add(rb(w - 3, h - LID - 3.5, 8, 4), mat('facade'), cx, y + (h - LID - 1) / 2, 3.5, 'facade');
+  const n = Math.max(0, Math.min(locks, Math.floor(w / 70))), lh = Math.min(62, h - 8);
+  for (let i = 0; i < n; i++) {
+    const lx = cx + ((i + 0.5) / n - 0.5) * w, ly = y + h - lh / 2 - 2;
+    add(rb(54, lh, 10, 4), mat('lock'), lx, ly, 9, 'lock');
+    add(rb(26, 5, 3, 2), slot, lx, ly, 14.5);
+  }
+  for (const sx of [-1, 1]) for (const yy of [10, h - LID - 8]) add(new THREE.CylinderGeometry(4.5, 4.5, 2, 20), bolt, cx + sx * (w / 2 - 10), y + yy, 8).rotation.x = Math.PI / 2;
+  label(cx, w, y, h, -h * 0.2);
+}
+
+// Runner stoppers lock the drawer on its rail: flat plates flush with the box's left side wall, about a third of the way back
+// from the front, one per 1F and two per 2F. Only the left wall of the stack is visible, so only boxes on that edge get them.
+function addStoppers(k, { y, h, kind }, depth, wallX) {
+  const fractions = h < 60 ? [0.5] : h > 150 ? [0.87, 0.62, 0.38, 0.13] : kind === 'sustainer' ? [0.7, 0.3] : [0.74, 0.3];
+  for (const f of fractions) k.add(k.rb(0.9, 10.5, 18, 1), k.mat('stopper'), wallX, y + h * f, -0.28 * depth, 'stopper');
+}
+
+// Roof styles of the top unit: grid, bowl, table and under-table mount.
+function addRoof(k, style, w, depth, y) {
+  const { THREE, add, mat, rb } = k;
+  const rw = w + 2;
+  add(rb(rw, 10, depth + 4, 3), mat('roof'), 0, y + 5, -depth / 2, 'roof');
+  if (style === 'grid') {
+    const nx = Math.max(2, Math.round(rw / 42)), nz = Math.max(2, Math.round(depth / 42));
+    for (let i = 0; i <= nx; i++) add(new THREE.BoxGeometry(2.6, 5, depth + 2), mat('roof'), -rw / 2 + 4 + i * ((rw - 8) / nx), y + 11, -depth / 2, 'roof');
+    for (let i = 0; i <= nz; i++) add(new THREE.BoxGeometry(rw - 2, 5, 2.6), mat('roof'), 0, y + 11, -depth + 4 + i * ((depth - 8) / nz), 'roof');
+  } else if (style === 'bowl') {   // a shallow tray: raised rim all round
+    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 13, -depth - 0.5, 'roof');
+    add(new THREE.BoxGeometry(rw, 7, 3), mat('roof'), 0, y + 13, 1.5, 'roof');
+    for (const sx of [-1, 1]) add(new THREE.BoxGeometry(3, 7, depth + 4), mat('roof'), sx * (rw / 2 - 1.5), y + 13, -depth / 2, 'roof');
+  } else if (style === 'mount') {   // under-table mount: four flanges to screw the unit to a desk
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) add(rb(24, 4, 26, 2), mat('roof'), sx * (rw / 2 + 10), y + 3, -depth / 2 + sz * (depth / 2 - 4), 'roof');
+  }
+}
+
+function addHandle(k, base, depth) {
+  const { THREE, add, mat } = k;
   const rr = (w, h, r) => { const s = new THREE.Shape(); s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.absarc(w / 2 - r, -h / 2 + r, r, -Math.PI / 2, 0); s.lineTo(w / 2, h / 2 - r); s.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI / 2); s.lineTo(-w / 2 + r, h / 2); s.absarc(-w / 2 + r, h / 2 - r, r, Math.PI / 2, Math.PI); s.lineTo(-w / 2, -h / 2 + r); s.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5); return s; };
   const shape = rr(158, 54, 16);
   shape.holes.push(new THREE.Path(rr(112, 24, 12).getPoints(24)));
   const hg = new THREE.ExtrudeGeometry(shape, { depth: 36, bevelEnabled: true, bevelSize: 2.5, bevelThickness: 2.5, bevelSegments: 3, curveSegments: 16 });
   hg.translate(0, 0, -18);
-  add(hg, mat('handle'), 0, ry + 5 + 27, -DEPTH * 0.45, 'handle');
-  return { group: g, mats, labelMat };
+  add(hg, mat('handle'), 0, base + 27, -depth * 0.45, 'handle');
+}
+
+// The Colors tab tower.
+function buildTower(e) {
+  const k = shapeKit(e);
+  const { L, DEPTH } = STACK;
+  for (const u of stackUnits()) {
+    if (u.cx - u.w / 2 === -L / 2) addStoppers(k, u, DEPTH, -L / 2 + 0.75);
+    if (u.kind === 'drawer') addDrawer(k, u, DEPTH); else addSustainer(k, u, DEPTH, 2);
+  }
+  addRoof(k, 'grid', L, DEPTH, STACK_TOP);
+  addHandle(k, STACK_TOP + 10, DEPTH);
+  return { group: k.g, mats: k.mats, labelMat: k.labelMat };
+}
+
+// The Builder preview: the configured unit (size, shape, lock, roof, handle), stacked `count` high.
+function buildPreviewUnit(e, st) {
+  const k = shapeKit(e);
+  const w = SPEC.width[st.w], depth = SPEC.length(st.d), drawer = st.type === 'drawer';
+  const pitch = (drawer ? { '1F': 52.5, '2F': 105, '4F': 210 } : { '1F': 66, '2F': 105, '4F': 210 })[st.h];
+  const n = Math.max(1, Math.min(st.count | 0, 6));
+  for (let i = 0; i < n; i++) {
+    const u = { kind: st.type, cx: 0, w, y: i * pitch, h: pitch };
+    if (drawer) addDrawer(k, u, depth, st.lock); else addSustainer(k, u, depth, st.locks);
+    addStoppers(k, u, depth, -w / 2 + 0.75);
+  }
+  let base = n * pitch;
+  if (drawer) {
+    const style = /Under/i.test(st.roof) ? 'mount' : /Grid/i.test(st.roof) ? 'grid' : /Bowl/i.test(st.roof) ? 'bowl' : /Table/i.test(st.roof) ? 'table' : '';
+    if (style) { addRoof(k, style, w, depth, base); base += 10; }
+    if (st.handle) addHandle(k, base, depth);
+  }
+  return k;
+}
+
+const bp = { enginePromise: null, engine: null, kit: null, token: 0 };
+const bpEngine = () => (bp.enginePromise ??= createStudio($('#bp-stage'), 14, () => tab === 'build').then(e => {
+  e.controls.enableZoom = e.controls.enablePan = false;
+  e.renderer.domElement.style.touchAction = 'pan-y';   // one-finger vertical swipes still scroll the page
+  return (bp.engine = e);
+}));
+function disposeGroup(g) {
+  g.traverse(o => { o.geometry?.dispose(); if (o.material) [].concat(o.material).forEach(m => { m.map?.dispose(); m.dispose(); }); });
+}
+async function renderPreview() {
+  const token = ++bp.token;
+  let e;
+  try { e = await bpEngine(); } catch { $('#bp').hidden = true; return; }
+  if (token !== bp.token) return;
+  for (const g of [...e.group.children]) { disposeGroup(g); e.group.remove(g); }
+  bp.kit = buildPreviewUnit(e, state);
+  e.group.add(bp.kit.g);
+  e.resize();
+  const { THREE } = e;
+  const box = new THREE.Box3().setFromObject(e.group);
+  const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+  const vfov = THREE.MathUtils.degToRad(e.camera.fov), hfov = 2 * Math.atan(Math.tan(vfov / 2) * e.camera.aspect);
+  const dist = Math.max((size.y / 2) / Math.tan(vfov / 2), (size.x / 2) / Math.tan(hfov / 2)) * 1.32 + size.z / 2;
+  e.controls.target.copy(center);
+  e.camera.position.copy(center).add(new THREE.Vector3(-0.3, 0.2, 1).normalize().multiplyScalar(dist));
+  e.camera.near = dist / 100; e.camera.far = dist * 20; e.camera.updateProjectionMatrix();
+  e.controls.update();
 }
 
 // Builds the tower once; after that a color change only recolors it.

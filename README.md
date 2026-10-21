@@ -2,13 +2,25 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-A local browser hub for finding your way around the VAULT modular stacking toolbox print files. It turns hundreds of loose STL files and nested folders into a searchable library with 3D previews and a "what do I need to print?" builder.
+A local browser hub for finding your way around the VAULT modular stacking toolbox print files. It turns hundreds of loose STL files and nested folders into a searchable library with 3D previews, a "what do I need to print?" builder with a live preview of the unit you configured, and a color picker for trying filament colors before you print.
 
 > **Unofficial fan tool.** Not affiliated with or endorsed by USSA. This repository contains **no** STL, PDF or image files from the VAULT project. You supply your own copy of the files you received as a backer / customer (see [Setup](#setup)).
 
 ## The problem
 
 The VAULT file pack has 700+ STL files spread over dozens of nested folders (Drawers, Sustainers, Modifications, each split by size family S / M / L / XL, then by depth, modules, roofs, facades, dividers, baseplates...). Working out which files make up *one* drawer, and printing them without missing a part, takes a lot of clicking.
+
+## Highlights
+
+- **Builder** – choose a drawer or sustainer, size and options, and get the complete list of files to print, with quantities, print time and weight estimates and hardware counts.
+- **Live preview** – a 3D render of the exact unit you configured (every width, depth, height, quantity, lock, roof and handle), updating as you click.
+- **Filament finish tags** – every STL is tagged Matte, Basic or TPU, and each tag is filled with the color you picked for that part.
+- **Color picker** – 8 Matte and 13 Basic colors on a 3D tower, click-to-recolor, shuffle, saved color templates, import / export.
+- **Print checklist** – tick parts off with a saved progress bar, copy the list, or gather all the files into one folder for your slicer.
+- **3D file preview** – orbit any STL in the browser with size and triangle count, wireframe and "open in slicer".
+- **Search all files** – instant search and filters over the whole pack, with thumbnails.
+- **Manuals** – the official PDFs next to a reference gallery.
+- **English / 中文**, light and dark theme that follow your system, and a layout that works on phones.
 
 ## Features
 
@@ -18,6 +30,7 @@ The VAULT file pack has 700+ STL files spread over dozens of nested folders (Dra
 
 Pick a unit and the hub lists every file you need, so nothing gets missed.
 
+- **Live preview** – a 3D render at the top of the options that follows every choice and shows the external parts only: body, facade, key lock and label (drawer) or lid, latches and bolts (sustainer), plus the roof (grid / bowl / table / under-table mount) and handle. It uses the colors from the Colors tab. Drag to rotate.
 - **Unit type** – Drawer or Sustainer (hinged-lid box).
 - **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
 - **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
@@ -31,6 +44,10 @@ Pick a unit and the hub lists every file you need, so nothing gets missed.
 ![Builder showing an M4 2F sustainer](docs/builder-sustainer.png)
 
 *The sustainer view adds hinges & rods, a lock set and a locks-per-unit counter.*
+
+![Live preview for different sizes and shapes](docs/builder-preview.png)
+
+*The preview for six different configurations (from the top left): S3 1F drawer, M4 2F drawer with grid roof and handle, L5 4F drawer with bowl roof and handle, XL3 1F drawer with under-table mount, and M4 2F and XL sustainers.*
 
 | Suggested finish | Parts |
 |---|---|
@@ -52,6 +69,8 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 - **Templates** – *Save* stores the combination as a row of small color circles (one per distinct color, no name needed). Click one to load it, × to delete it (kept in your browser). **Reset colors** puts every part back to its default.
 - **Save / Import / Export** – all live in the Templates box. *Export* saves your picks as `colors.json`; *Import* loads such a file (or a template) back in, so picks can be shared or kept with the project. The same file is what the chosen colors will be added to the part labels from later.
 - On-screen colors are approximate. Check a physical swatch before printing.
+
+![Colors tab with custom colors and saved templates](docs/colors-custom-en.png)
 
 ### Print checklist
 
@@ -85,6 +104,16 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 
 - Full interface in English and Chinese, switchable with one click. Picks your browser language on first run and remembers your choice.
 
+### Phone and tablet
+
+<p>
+  <img src="docs/mobile-builder.png" width="260" alt="Builder on a phone">
+  &nbsp;&nbsp;
+  <img src="docs/mobile-colors.png" width="260" alt="Colors tab on a phone">
+</p>
+
+- On narrow screens the preview and the 3D tower come first and the options follow below; vertical swipes still scroll the page.
+
 ## Setup
 
 1. Download the VAULT files from your own Kickstarter / USSA account and unzip them.
@@ -113,6 +142,8 @@ Try filament colors on a rendered VAULT tower before you print. The tower is a s
 
 The hub opens at `http://127.0.0.1:8765`. Keep the terminal window open while you use it.
 
+> The Colors tab and the Builder preview are drawn from plain shapes, so they work without the STL files. The file list, thumbnails, 3D file preview and manuals need your copy of the VAULT files.
+
 > Opening `index.html` directly (double-click) still works for browsing, but browsers block local file access, so 3D preview and "Show in folder" are disabled. Use the launcher.
 
 ### Optional: thumbnails
@@ -129,7 +160,7 @@ python3 _hub/update_index.py
 
 - Python 3 (macOS and Linux) – Windows can fall back to PowerShell
 - A modern browser
-- Internet access for the 3D preview (three.js is loaded from a CDN)
+- Internet access for the 3D views: the file preview, the Builder preview and the Colors tab (three.js is loaded from a CDN)
 
 ## Privacy and security
 
