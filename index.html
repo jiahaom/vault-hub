@@ -207,12 +207,44 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px; }
 .summary h1 small { font-size: 15px; font-weight: 500; color: var(--muted); }
 .summary .facts { color: var(--muted); font-size: 13px; margin-top: 4px; }
 .summary .acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.specs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .spec { background: var(--panel-2); box-shadow: 0 0 0 .5px var(--line); padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .spec span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
 .spec b { font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .spec b i { font-style: normal; font-weight: 500; font-size: 12px; color: var(--muted); }
 .spec small { font-size: 11.5px; color: var(--faint); }
+/* Spec cells always fill their rows: phone = Outer on its own row, then pairs; medium = 3 + 2; wide = one row. */
+.specs[data-n="3"] .spec:first-child, .specs[data-n="5"] .spec:first-child { grid-column: span 2; }
+@container hero (min-width: 480px) {
+  .specs[data-n="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .specs[data-n="5"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .specs[data-n="3"] .spec:first-child { grid-column: auto; }
+  .specs[data-n="5"] .spec { grid-column: span 2; }
+  .specs[data-n="5"] .spec:nth-child(n+4) { grid-column: span 3; }
+}
+@container hero (min-width: 760px) {
+  .specs[data-n] { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .specs[data-n] .spec:nth-child(n) { grid-column: auto; }
+}
+/* Unit picker in the hero, laid out by the hero's own width: wide = Unit · Width / Depth · Height · How many; narrow = Unit · How many,
+   then Width, Depth and Height on their own rows. */
+.summary { container: hero / inline-size; }
+.unit-pick { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 14px 16px; }
+.pick { min-width: 0; grid-column: span 6; }
+.pick > .lbl { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+.pick.p-type { grid-column: span 4; }
+.pick.p-n { grid-column: span 2; }
+@container hero (min-width: 600px) {
+  .unit-pick { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .pick.p-type { grid-column: span 4; }
+  .pick.p-w { grid-column: span 8; }
+  .pick.p-d { grid-column: span 6; }
+  .pick.p-h { grid-column: span 4; }
+  .pick.p-n { grid-column: span 2; }
+}
+.unit-pick .seg button { min-height: 44px; justify-content: center; }
+.unit-pick .stepper { display: flex; width: 100%; height: 52px; justify-content: space-between; }
+.unit-pick .stepper button { height: 100%; width: 38px; }
 .progress { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--muted); }
 .bar { flex: 1; height: 6px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
 .bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 999px; transition: width .3s ease; }
@@ -429,6 +461,12 @@ button.thumb:hover { border-color: var(--line-strong); }
   .col-main { order: -1; }
     .builder, .manuals { grid-template-columns: 1fr; }
   .config, .doclist, .bcol { position: static; max-height: none; overflow: visible; }
+  /* One column: pick the unit first (hero), then the preview and the options, then the parts. */
+  .bcol, .results { display: contents; }
+  .builder { gap: 16px; }
+  .builder .summary { order: -2; min-width: 0; }
+  .builder .bp { order: -1; }
+  .builder .section, .builder .config { min-width: 0; }
   .brand-sub { display: none; }
 }
 @media (max-width: 640px) {
@@ -442,7 +480,6 @@ button.thumb:hover { border-color: var(--line-strong); }
   .thumb { width: 40px; height: 40px; }
   .row .badges, .row .sz { display: none; }
   .badge.mat.mat-sm { display: inline-flex; }
-  .specs { grid-template-columns: 1fr 1fr; }
   .col-hint { display: none; }
   .col-bar .btn { flex: 1; justify-content: center; }
   .col-stage { height: 64vh; min-height: 380px; }
@@ -598,7 +635,7 @@ const I18N = {
     hub: 'Hub running', hubTip: 'Started from the launcher — 3D preview, Show in folder and Gather are all available.',
     liveTip: 'Served locally — 3D preview works. Start from the launcher to also get Show in folder.',
     staticTip: 'Opened by double-clicking index.html, so the browser can’t read STL files or open folders. Use “Open VAULT Hub (Mac).command” or “Open VAULT Hub (Windows).bat” in this folder instead.',
-    type: 'Unit', drawer: 'Drawer', sustainer: 'Sustainer', width: 'Width', depth: 'Depth', outer: 'outer, mm',
+    type: 'Unit', drawer: 'Drawer', sustainer: 'Sustainer', width: 'Width', depth: 'Depth', 
     height: 'Height', count: 'How many', lock: 'Lock', lockKey: 'Key', lockHidden: 'Hidden key',
     roof: 'Roof for the top unit', none: 'None', handle: 'Top handle', baseplate: 'Gridfinity baseplate',
     plain: 'Plain', oneHandle: '1 handle', twoHandles: '2 handles', modStyle: 'Module style', lid: 'Lid',
@@ -638,7 +675,7 @@ const I18N = {
     hub: '控制台已启动', hubTip: '已通过启动器打开——3D 预览、在文件夹中显示、汇总文件均可用。',
     liveTip: '已通过本地服务打开，可 3D 预览。用启动器打开还可以“在文件夹中显示”。',
     staticTip: '当前是双击 index.html 打开的，浏览器无法读取 STL 或打开文件夹。请改用本文件夹中的“Open VAULT Hub (Mac).command”或“Open VAULT Hub (Windows).bat”。',
-    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', width: '宽度', depth: '深度', outer: '外形 mm',
+    type: '类型', drawer: '抽屉', sustainer: '翻盖收纳盒', width: '宽度', depth: '深度', 
     height: '高度', count: '数量', lock: '锁', lockKey: '钥匙锁', lockHidden: '隐藏钥匙',
     roof: '最顶层盖板', none: '无', handle: '顶部提手', baseplate: 'Gridfinity 底板',
     plain: '无把手', oneHandle: '单把手', twoHandles: '双把手', modStyle: '盒体样式', lid: '盖子',
@@ -1068,20 +1105,15 @@ const opts = (key, options) => `<div class="opts">${options.map(o =>
 const chips = (key, options) => `<div class="chips">${options.map(o =>
   `<button type="button" class="chip" data-set="${key}" data-val="${esc(o.val)}" aria-pressed="${String(state[key]) === String(o.val)}">${esc(o.label)}</button>`).join('')}</div>`;
 const field = (label, body, small = '') => `<div class="field"><div class="lbl">${esc(label)}${small ? `<small>${esc(small)}</small>` : ''}</div>${body}</div>`;
-const stepper = (key, label) => `<div class="row-inline field"><div class="lbl">${esc(label)}</div>
-  <div class="stepper"><button type="button" data-step="${key}" data-val="-1" aria-label="−">−</button><output>${state[key]}</output><button type="button" data-step="${key}" data-val="1" aria-label="+">+</button></div></div>`;
+const stepperCtl = key => `<div class="stepper"><button type="button" data-step="${key}" data-val="-1" aria-label="−">−</button><output>${state[key]}</output><button type="button" data-step="${key}" data-val="1" aria-label="+">+</button></div>`;
+const stepper = (key, label) => `<div class="row-inline field"><div class="lbl">${esc(label)}</div>${stepperCtl(key)}</div>`;
 const toggle = (key, label) => `<label class="row-inline field"><div class="lbl">${esc(label)}</div>
   <span class="switch"><input type="checkbox" data-toggle="${key}"${state[key] ? ' checked' : ''}><span></span></span></label>`;
 
 function renderConfig() {
   const { w, d } = state;
   const drawer = state.type === 'drawer';
-  let html = field(t('type'), seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }]));
-  html += field(t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: `${mm(SPEC.width[v])}mm` }))), t('outer'));
-  html += field(t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: v, small: `${SPEC.length(v)}mm`, disabled: !HEIGHTS.some(h => available(w, v, h)) }))), t('outer'));
-  html += field(t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: `${SPEC.height[state.type][v]}mm`, disabled: !available(w, d, v) }))), t('outer'));
-  html += stepper('count', t('count'));
-  html += '<div class="divider"></div>';
+  let html = '';
   if (drawer) {
     html += field(t('lock'), seg('lock', [{ val: 'key', label: t('lockKey') }, { val: 'hidden', label: t('lockHidden') }]));
     html += field(t('roof'), opts('roof', [{ val: '', label: t('none') }, ...drawerRoofs().map(r => ({ val: r.id, label: r.label, file: r.files[0] }))]));
@@ -1117,6 +1149,19 @@ function renderConfig() {
   $('#config').innerHTML = html;
 }
 
+// Unit, width, depth, height and count sit in the hero, right above the sizes they produce.
+function unitPicker() {
+  const { w, d } = state;
+  const pick = (cls, label, body) => `<div class="pick ${cls}"><div class="lbl">${esc(label)}</div>${body}</div>`;
+  return `<div class="unit-pick">
+    ${pick('p-type', t('type'), seg('type', [{ val: 'drawer', label: t('drawer') }, { val: 'sustainer', label: t('sustainer') }]))}
+    ${pick('p-w', t('width'), seg('w', WIDTHS.map(v => ({ val: v, label: v, small: `${mm(SPEC.width[v])}mm` }))))}
+    ${pick('p-d', t('depth'), seg('d', DEPTHS.map(v => ({ val: v, label: v, small: `${SPEC.length(v)}mm`, disabled: !HEIGHTS.some(h => available(w, v, h)) }))))}
+    ${pick('p-h', t('height'), seg('h', HEIGHTS.map(v => ({ val: v, label: v, small: `${SPEC.height[state.type][v]}mm`, disabled: !available(w, d, v) }))))}
+    ${pick('p-n', t('count'), stepperCtl('count'))}
+  </div>`;
+}
+
 function specGrid() {
   const { type, w, d, h } = state;
   const ins = SPEC.inside[type];
@@ -1125,13 +1170,14 @@ function specGrid() {
   const pr = SPEC.print[type][w];
   const est = pr?.[h];
   const cell = (label, value, sub = '') => `<div class="spec"><span>${esc(label)}</span><b>${value}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
-  return `<div class="specs">
-    ${cell(t('specOuter'), `${outer} <i>mm</i>`, t('specWLH'))}
-    ${cell(t('specInside'), inside === '—' ? '—' : `${inside} <i>mm</i>`, t('specWLH'))}
-    ${cell(t('specGrid'), `${SPEC.gridWidth[w]} × ${d}`, t('specGridSub'))}
-    ${est ? cell(t('specPrint', h), `${est[0]} <i>h</i> · ${est[1]} <i>g</i>`, d === 3 ? t('specPerUnit') : t('specX3')) : ''}
-    ${pr?.roof ? cell(t('specRoof'), `${pr.roof[0]} <i>h</i> · ${pr.roof[1]} <i>g</i>`, d === 3 ? t('specOnce') : t('specX3')) : ''}
-  </div>`;
+  const cells = [
+    cell(t('specOuter'), `${outer} <i>mm</i>`, t('specWLH')),
+    cell(t('specInside'), inside === '—' ? '—' : `${inside} <i>mm</i>`, t('specWLH')),
+    cell(t('specGrid'), `${SPEC.gridWidth[w]} × ${d}`, t('specGridSub')),
+    est && cell(t('specPrint', h), `${est[0]} <i>h</i> · ${est[1]} <i>g</i>`, d === 3 ? t('specPerUnit') : t('specX3')),
+    pr?.roof && cell(t('specRoof'), `${pr.roof[0]} <i>h</i> · ${pr.roof[1]} <i>g</i>`, d === 3 ? t('specOnce') : t('specX3')),
+  ].filter(Boolean);
+  return `<div class="specs" data-n="${cells.length}" style="--n:${cells.length}">${cells.join('')}</div>`;
 }
 
 function renderResults() {
@@ -1151,6 +1197,7 @@ function renderResults() {
         <button class="btn" data-act="copy">${ICON.copy}<span>${esc(t('copyList'))}</span></button>
         <button class="btn primary" data-act="gather" title="_Print Jobs/…">${ICON.gather}<span>${esc(t('gather'))}</span></button>
       </div>
+      ${unitPicker()}
       ${specGrid()}
       <div class="progress"><span><b>${done}</b> / ${unique.length} ${esc(t('printed'))}</span><div class="bar"><i style="width:${unique.length ? done / unique.length * 100 : 0}%"></i></div>
         ${done ? `<button class="btn" data-act="clear" style="padding:4px 10px;font-size:12px">${esc(t('clear'))}</button>` : ''}</div>
@@ -1174,7 +1221,7 @@ function renderBuilder() {
   renderPreview();
 }
 
-$('#config').addEventListener('click', e => {
+$('.builder').addEventListener('click', e => {   // the options panel and the unit picker in the hero
   const gd = e.target.closest('[data-gd]');
   if (gd) { (state.gdLens ||= {})[gd.dataset.gd] = !state.gdLens[gd.dataset.gd]; state.inc = {}; renderBuilder(); return; }
   const mod = e.target.closest('[data-mod]');
