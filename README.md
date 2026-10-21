@@ -2,13 +2,9 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-A local, offline-first browser hub for finding your way around the VAULT modular stacking toolbox print files. It turns hundreds of loose STL files and nested folders into a searchable library with 3D previews and a "what do I need to print?" builder.
+A local browser hub for finding your way around the VAULT modular stacking toolbox print files. It turns hundreds of loose STL files and nested folders into a searchable library with 3D previews and a "what do I need to print?" builder.
 
 > **Unofficial fan tool.** Not affiliated with or endorsed by USSA. This repository contains **no** STL, PDF or image files from the VAULT project. You supply your own copy of the files you received as a backer / customer (see [Setup](#setup)).
-
-![Builder: choose a unit and get the parts to print](docs/builder.png)
-
-![Search all files with thumbnails](docs/files.png)
 
 ## The problem
 
@@ -16,15 +12,56 @@ The VAULT file pack has 700+ STL files spread over dozens of nested folders (Dra
 
 ## Features
 
-- **Builder** – pick type (drawer / sustainer), size, depth and height. The hub lists every part to print with quantities, flags files that already contain a pair, and shows estimated print time and filament weight where published data exists.
-- **Print checklist** – tick parts off as they come off the printer. Progress is saved in your browser.
-- **Gather into folder** – copy a whole parts list into one `_Print Jobs/<name>` folder, ready to drag into your slicer.
-- **Copy list** – export the checklist as plain text.
-- **All files** – instant search by file or folder name, filter by Drawers / Sustainers / Modifications / Images & PDFs, with thumbnails.
-- **3D preview** – orbit, zoom and inspect any STL in the browser, or drag an STL onto the page.
-- **Show in folder / Open in slicer** – jump to the file in Finder / Explorer, or open it with your default app.
-- **Manuals tab** – the official PDFs in one place.
-- **English / 中文** interface, switchable at any time.
+### Builder: "what do I need to print?"
+
+![Builder showing an M4 2F drawer with 5 of 13 parts ticked off](docs/builder-drawer.png)
+
+Pick a unit and the hub lists every file you need, so nothing gets missed.
+
+- **Unit type** – Drawer or Sustainer (hinged-lid box).
+- **Size** – width S / M / L / XL, depth 3–7, height 1F / 2F / 4F, each with its outer size in mm, plus a quantity.
+- **Options** – lock style, roof for the top unit (none / bowl / grid / table / under-table mount), top handle, dividers, Gridfinity baseplate, locks per unit.
+- **Spec strip** – outer and inside dimensions, Gridfinity grid size, and estimated print time and filament weight (published figures, where available).
+- **Parts list** – grouped into Body, Slides / latch / lock, Hinges & rods, Lock set and Hardware, with a thumbnail, quantity and file size for each part.
+- **Smart tags** – "2 pcs in file" marks files that already contain a pair (print once); "Supports" marks files that need support material.
+- **Hardware counts** – bolts and other non-printed parts, with quantities.
+- **Part names** – the official exploded diagram, one click away.
+
+![Builder showing an M4 2F sustainer](docs/builder-sustainer.png)
+
+*The sustainer view adds hinges & rods, a lock set and a locks-per-unit counter.*
+
+### Print checklist
+
+- Tick parts off as they come off the printer; a progress bar shows how far you are. Progress is saved in your browser, and **Clear checks** resets it.
+- **Copy list** exports the checklist as plain text.
+- **Gather into folder** copies the whole parts list into one `_Print Jobs/<name>` folder, ready to drag into your slicer.
+
+### 3D preview
+
+![3D preview of an STL file](docs/preview-3d.png)
+
+- Orbit, zoom and pan any STL in the browser. Shows real size in mm and triangle count (works with 1M+ triangle files).
+- Wireframe and reset-view buttons; ← / → steps through the parts, Esc closes.
+- **Open in slicer** launches the file in your default app; **Show in folder** jumps to it in Finder / Explorer.
+- Drop any STL onto the preview panel to view it, even a file from outside the project.
+
+### All files
+
+![Searching all files](docs/files.png)
+
+- Instant search by file or folder name (press `/` to focus), with category filters: Drawers, Sustainers, Modifications, Images & PDFs.
+- Results are grouped by folder, with thumbnails, sizes, preview and show-in-folder buttons on every row.
+
+### Manuals
+
+- The five official PDFs open inside the hub, next to a gallery of the reference images.
+
+### English / 中文
+
+![Chinese interface](docs/builder-zh.png)
+
+- Full interface in English and Chinese, switchable with one click. Picks your browser language on first run and remembers your choice.
 
 ## Setup
 
